@@ -1,13 +1,21 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import { Request } from 'express';
 import { AppError } from '../middleware/error';
 
-const uploadDir = path.join(process.cwd(), '..', '..', 'uploads');
+const isVercel = process.env.VERCEL === '1';
+const uploadDir = isVercel
+  ? path.join(os.tmpdir(), 'uploads')
+  : path.join(process.cwd(), 'uploads');
 
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('[MediaService] Storage directory notice:', err);
 }
 
 const storage = multer.diskStorage({
