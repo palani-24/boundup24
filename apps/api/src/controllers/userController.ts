@@ -11,7 +11,9 @@ import { AppError } from '../middleware/error';
 export const getProfile = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const { username } = req.params;
-    const targetUser = await User.findOne({ username: username.toLowerCase() });
+    const targetUser = username && username !== 'me'
+      ? await User.findOne({ username: username.toLowerCase() })
+      : await User.findById(req.user!._id);
     if (!targetUser) {
       return next(new AppError('User profile not found', 404));
     }

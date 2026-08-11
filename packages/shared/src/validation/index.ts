@@ -38,7 +38,7 @@ export const CreatePostSchema = z.object({
       z.object({
         url: z.string().min(1),
         type: z.enum(['IMAGE', 'VIDEO']),
-        aspectRatio: z.enum(['1:1', '4:5', '16:9', '9:16']),
+        aspectRatio: z.enum(['1:1', '4:5', '16:9', '9:16']).optional().default('1:1'),
         thumbnailUrl: z.string().optional(),
       })
     )
