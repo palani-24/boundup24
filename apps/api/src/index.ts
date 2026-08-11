@@ -37,9 +37,13 @@ if (process.env.VERCEL !== '1') {
 
 app.set('io', io);
 
-// Background DB Connection trigger for Serverless
-app.use((_req, _res, next) => {
-  connectDB().catch((err) => console.error('[BOUNDUP API] Async DB Error:', err));
+// Synchronously await DB Connection for Serverless requests
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('[BOUNDUP API] DB Middleware Error:', err);
+  }
   next();
 });
 
@@ -62,8 +66,8 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Root & Health Check Endpoints
-app.get(['/', '/health', '/api/health'], (_req, res) => {
+// Health Check Endpoints
+app.get(['/health', '/api/health'], (_req, res) => {
   res.status(200).json({
     status: 'ok',
     service: 'BOUNDUP API',
