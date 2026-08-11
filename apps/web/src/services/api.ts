@@ -1,4 +1,4 @@
-const API_BASE = (import.meta as any).env?.VITE_API_URL || '/api';
+const API_BASE = (import.meta as any).env?.VITE_API_URL || 'https://boundup24-api.vercel.app/api';
 
 export interface ApiResponse<T = any> {
   success: boolean;
