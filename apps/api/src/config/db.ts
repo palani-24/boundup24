@@ -8,10 +8,16 @@ export const connectDB = async () => {
     return;
   }
 
-  const connUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/boundup';
+  let connUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/boundup';
+  
+  // Clean up angle brackets if user copied template brackets into Vercel environment variables
+  if (connUri.includes('<') || connUri.includes('>')) {
+    connUri = connUri.replace(/<([^>]+)>/g, '$1').replace(/[<>]/g, '');
+  }
+
   try {
     const conn = await mongoose.connect(connUri, {
-      serverSelectionTimeoutMS: 4000, // 4s timeout to prevent Vercel 10s function timeout
+      serverSelectionTimeoutMS: 3000,
     });
     isConnected = conn.connection.readyState;
     console.log(`[BOUNDUP API] MongoDB Connected: ${conn.connection.host}`);
