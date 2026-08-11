@@ -11,13 +11,12 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
-.env.example
 
-# Uploads directory contents (except .gitkeep)
+# Uploads
 uploads/*
 !uploads/.gitkeep
 
-# Operating system files
+# Operating system
 .DS_Store
 Thumbs.db
 
