@@ -3,7 +3,7 @@ import { AuthRequest } from '../middleware/auth';
 import { Conversation } from '../models/Conversation';
 import { Message } from '../models/Message';
 import { User } from '../models/User';
-import { SendMessageSchema } from '@boundup/shared';
+import { SendMessageSchema } from '../../../../packages/shared/src';
 import { AppError } from '../middleware/error';
 
 export const getConversations = async (req: AuthRequest, res: Response, next: NextFunction) => {

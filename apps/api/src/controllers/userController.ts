@@ -5,7 +5,7 @@ import { Follow } from '../models/Follow';
 import { Block } from '../models/Block';
 import { Report } from '../models/Report';
 import { Notification } from '../models/Notification';
-import { UpdateProfileSchema } from '@boundup/shared';
+import { UpdateProfileSchema } from '../../../../packages/shared/src';
 import { AppError } from '../middleware/error';
 
 export const getProfile = async (req: AuthRequest, res: Response, next: NextFunction) => {

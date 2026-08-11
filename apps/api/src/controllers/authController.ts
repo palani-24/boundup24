@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
-import { RegisterSchema, LoginSchema } from '@boundup/shared';
+import { RegisterSchema, LoginSchema } from '../../../../packages/shared/src';
 import { AppError } from '../middleware/error';
 import { AuthRequest } from '../middleware/auth';
 

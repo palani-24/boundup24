@@ -8,7 +8,7 @@ import { User } from '../models/User';
 import { Hashtag } from '../models/Hashtag';
 import { Notification } from '../models/Notification';
 import { getRankedFeed } from '../services/feedService';
-import { CreatePostSchema, CreateCommentSchema } from '@boundup/shared';
+import { CreatePostSchema, CreateCommentSchema } from '../../../../packages/shared/src';
 import { AppError } from '../middleware/error';
 
 export const createPost = async (req: AuthRequest, res: Response, next: NextFunction) => {
