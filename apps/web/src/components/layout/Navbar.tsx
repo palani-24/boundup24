@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Avatar } from '../ui/Avatar';
+import { Logo } from '../ui/Logo';
 
 interface NavbarProps {
   onCreateClick?: () => void;
@@ -50,13 +51,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
       <aside className="hidden md:flex flex-col fixed left-0 top-0 h-screen w-64 border-r border-brand-border bg-white/90 backdrop-blur-md z-40 px-4 py-6 justify-between select-none">
         <div className="flex flex-col gap-6">
           {/* Logo Branding */}
-          <NavLink to="/home" className="flex flex-col px-3">
-            <span className="font-heading font-extrabold text-2xl tracking-tight text-brand-primary">
-              BOUNDUP
-            </span>
-            <span className="text-[10px] font-semibold text-brand-muted tracking-wide -mt-1">
-              Connect. Share. Discover.
-            </span>
+          <NavLink to="/home" className="px-2">
+            <Logo size="md" showTagline={true} />
           </NavLink>
 
           {/* Navigation Links */}

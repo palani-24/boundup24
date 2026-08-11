@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Camera, MessageSquare, Bell } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
+import { Logo } from '../ui/Logo';
 
 interface HeaderProps {
   onCreateClick?: () => void;
@@ -29,9 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Brand Logo */}
       <NavLink to="/home" className="flex items-center gap-2">
-        <span className="font-heading font-extrabold text-xl tracking-tight text-brand-primary">
-          BOUNDUP
-        </span>
+        <Logo size="sm" showTagline={false} />
       </NavLink>
 
       {/* Action Icons */}

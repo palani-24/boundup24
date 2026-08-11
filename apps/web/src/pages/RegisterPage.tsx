@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { Logo } from '../components/ui/Logo';
 import { useAuthStore } from '../store/useAuthStore';
 
 export const RegisterPage: React.FC = () => {
@@ -28,10 +29,7 @@ export const RegisterPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center p-4 bg-brand-bg select-none">
       <div className="w-full max-w-md bg-white border border-brand-border rounded-24px p-8 shadow-glass flex flex-col gap-6">
         <div className="flex flex-col items-center text-center">
-          <h1 className="font-heading font-extrabold text-3xl text-brand-primary tracking-tight">BOUNDUP</h1>
-          <p className="text-xs font-semibold text-brand-muted tracking-wide mt-1">
-            Create your account to start connecting
-          </p>
+          <Logo size="lg" showTagline={true} />
         </div>
 
         {errorMsg && (
