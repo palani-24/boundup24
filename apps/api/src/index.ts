@@ -19,15 +19,21 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-// Socket.IO Setup
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-    credentials: true,
-  },
-});
-
-setupSocketHandlers(io);
+// Conditionally setup Socket.IO for non-serverless environments
+let io: Server | null = null;
+if (process.env.VERCEL !== '1') {
+  try {
+    io = new Server(server, {
+      cors: {
+        origin: '*',
+        credentials: true,
+      },
+    });
+    setupSocketHandlers(io);
+  } catch (err) {
+    console.warn('[BOUNDUP API] Socket.IO Notice:', err);
+  }
+}
 
 app.set('io', io);
 
