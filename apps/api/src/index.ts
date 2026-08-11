@@ -66,8 +66,8 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Health Check Endpoints
-app.get(['/health', '/api/health'], (_req, res) => {
+// Root & Health Check Endpoints
+app.get(['/', '/api', '/health', '/api/health'], (_req, res) => {
   res.status(200).json({
     status: 'ok',
     service: 'BOUNDUP API',
