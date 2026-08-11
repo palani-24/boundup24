@@ -22,7 +22,8 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@boundup/shared": ["../../packages/shared/src"]
     }
   },
   "include": ["src"]

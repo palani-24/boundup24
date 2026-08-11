@@ -21,7 +21,7 @@ export const createPost = async (req: AuthRequest, res: Response, next: NextFunc
     if (validated.caption) {
       const extracted = validated.caption.match(/#[\w]+/g);
       if (extracted) {
-        tags = [...new Set([...tags, ...extracted.map((t) => t.replace('#', '').toLowerCase())])];
+        tags = [...new Set([...tags, ...extracted.map((t: string) => t.replace('#', '').toLowerCase())])];
       }
     }
 
