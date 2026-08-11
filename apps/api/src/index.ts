@@ -31,12 +31,15 @@ const io = new Server(server, {
 
 setupSocketHandlers(io);
 
-// Make socket.io instance accessible in controllers via req.app.get('io')
 app.set('io', io);
 
-// Auto-connect DB middleware for Serverless & standalone environments
+// Safe Auto-connect DB middleware for Vercel Serverless
 app.use(async (_req, _res, next) => {
-  await connectDB();
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('[BOUNDUP API] DB Middleware Error:', err);
+  }
   next();
 });
 
@@ -54,26 +57,27 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 500,
+  max: 1000,
   message: 'Too many requests from this IP, please try again later.',
 });
 app.use('/api', limiter);
 
 // Serve static uploads
-const uploadsDir = path.join(process.cwd(), '..', '..', 'uploads');
+const uploadsDir = path.join(process.cwd(), 'uploads');
 app.use('/uploads', express.static(uploadsDir));
+
+// Root and Health Endpoints
+app.get(['/', '/health', '/api', '/api/health'], (_req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'BOUNDUP API',
+    environment: process.env.NODE_ENV || 'production',
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // API Routes
 app.use('/api', routes);
-
-// Base Health Check
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', service: 'BOUNDUP API', timestamp: new Date().toISOString() });
-});
-
-app.get('/', (_req, res) => {
-  res.json({ status: 'ok', service: 'BOUNDUP API', timestamp: new Date().toISOString() });
-});
 
 // Error Handler
 app.use(errorHandler);
