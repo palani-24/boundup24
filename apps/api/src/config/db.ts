@@ -11,7 +11,7 @@ export const connectDB = async () => {
   const connUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/boundup';
   try {
     const conn = await mongoose.connect(connUri, {
-      bufferCommands: false,
+      serverSelectionTimeoutMS: 4000, // 4s timeout to prevent Vercel 10s function timeout
     });
     isConnected = conn.connection.readyState;
     console.log(`[BOUNDUP API] MongoDB Connected: ${conn.connection.host}`);

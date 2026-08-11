@@ -19,8 +19,6 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-const clientUrl = process.env.CLIENT_URL || '*';
-
 // Socket.IO Setup
 const io = new Server(server, {
   cors: {
@@ -33,13 +31,9 @@ setupSocketHandlers(io);
 
 app.set('io', io);
 
-// Safe Auto-connect DB middleware for Vercel Serverless
-app.use(async (_req, _res, next) => {
-  try {
-    await connectDB();
-  } catch (err) {
-    console.error('[BOUNDUP API] DB Middleware Error:', err);
-  }
+// Background DB Connection trigger for Serverless
+app.use((_req, _res, next) => {
+  connectDB().catch((err) => console.error('[BOUNDUP API] Async DB Error:', err));
   next();
 });
 
@@ -62,13 +56,9 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Serve static uploads
-const uploadsDir = path.join(process.cwd(), 'uploads');
-app.use('/uploads', express.static(uploadsDir));
-
-// Root and Health Endpoints
-app.get(['/', '/health', '/api', '/api/health'], (_req, res) => {
-  res.json({
+// Root & Health Check Endpoints
+app.get(['/', '/health', '/api/health'], (_req, res) => {
+  res.status(200).json({
     status: 'ok',
     service: 'BOUNDUP API',
     environment: process.env.NODE_ENV || 'production',
