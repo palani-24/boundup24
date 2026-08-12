@@ -1,4 +1,10 @@
-const API_BASE = (import.meta as any).env?.VITE_API_URL || 'https://boundup24-api.vercel.app/api';
+const getApiBase = (): string => {
+  const envUrl = (import.meta as any).env?.VITE_API_URL;
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
+    return envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
+  }
+  return '/api';
+};
 
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -33,7 +39,8 @@ export const apiFetch = async <T = any>(endpoint: string, options: RequestInit =
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  const apiBase = getApiBase();
+  const response = await fetch(`${apiBase}${endpoint}`, {
     ...options,
     headers,
   });
