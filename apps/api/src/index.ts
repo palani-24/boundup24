@@ -55,13 +55,19 @@ app.use(
     credentials: true,
   })
 );
-app.use((req: any, res: any, next: any) => {
-  if (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body)) {
-    return next();
-  }
-  return express.json({ limit: '10mb' })(req, res, next);
-});
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+if (process.env.VERCEL !== '1') {
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+} else {
+  app.use((req: any, _res: any, next: any) => {
+    if (typeof req.body === 'string') {
+      try {
+        req.body = JSON.parse(req.body);
+      } catch (_) {}
+    }
+    next();
+  });
+}
 
 // Rate Limiting
 const limiter = rateLimit({
