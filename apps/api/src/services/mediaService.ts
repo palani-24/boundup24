@@ -34,11 +34,15 @@ const storage = isVercel
     });
 
 const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm'];
-  if (allowedTypes.includes(file.mimetype)) {
+  const allowedTypes = [
+    'image/jpeg', 'image/png', 'image/webp',
+    'video/mp4', 'video/webm',
+    'audio/webm', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/m4a'
+  ];
+  if (allowedTypes.includes(file.mimetype) || file.mimetype.startsWith('audio/')) {
     cb(null, true);
   } else {
-    cb(new AppError('Invalid file format. Only JPEG, PNG, WEBP, MP4, and WEBM are allowed.', 400) as any, false);
+    cb(new AppError('Invalid file format. Allowed: Images, Videos, and Audio files.', 400) as any, false);
   }
 };
 

@@ -11,6 +11,7 @@ import {
   User,
   Settings,
   ShieldAlert,
+  Users,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Avatar } from '../ui/Avatar';
@@ -28,6 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
     { label: 'Home', path: '/home', icon: Home },
     { label: 'Search', path: '/search', icon: Search },
     { label: 'Explore', path: '/explore', icon: Compass },
+    { label: 'Communities', path: '/communities', icon: Users },
     { label: 'Reels', path: '/reels', icon: Film },
     { label: 'Messages', path: '/messages', icon: MessageSquare },
     { label: 'Notifications', path: '/notifications', icon: Bell },
@@ -39,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
 
   const mobileNavItems = [
     { label: 'Home', path: '/home', icon: Home },
-    { label: 'Search', path: '/search', icon: Search },
+    { label: 'Communities', path: '/communities', icon: Users },
     { label: 'Create', path: '#create', icon: PlusSquare, onClick: onCreateClick },
     { label: 'Reels', path: '/reels', icon: Film },
     { label: 'Profile', path: user ? `/profile/${user.username}` : '/login', icon: User, isAvatar: true },

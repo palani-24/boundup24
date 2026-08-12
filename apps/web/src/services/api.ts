@@ -46,3 +46,36 @@ export const apiFetch = async <T = any>(endpoint: string, options: RequestInit =
 
   return data;
 };
+
+export const api = {
+  get: async (endpoint: string, config?: { params?: Record<string, any> }): Promise<any> => {
+    let url = endpoint;
+    if (config?.params) {
+      const searchParams = new URLSearchParams();
+      Object.entries(config.params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          searchParams.append(key, String(value));
+        }
+      });
+      const queryString = searchParams.toString();
+      if (queryString) {
+        url += (url.includes('?') ? '&' : '?') + queryString;
+      }
+    }
+    const res = await apiFetch(url, { method: 'GET' });
+    return { data: res };
+  },
+  post: async (endpoint: string, body?: any, config?: { headers?: Record<string, string> }): Promise<any> => {
+    const isFormData = body instanceof FormData;
+    const res = await apiFetch(endpoint, {
+      method: 'POST',
+      body: isFormData ? body : JSON.stringify(body),
+      headers: config?.headers,
+    });
+    return { data: res };
+  },
+  delete: async (endpoint: string): Promise<any> => {
+    const res = await apiFetch(endpoint, { method: 'DELETE' });
+    return { data: res };
+  },
+};

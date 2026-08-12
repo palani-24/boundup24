@@ -24,8 +24,8 @@ export const connectDB = async () => {
     const conn = await mongoose.connect(connUri, {
       serverSelectionTimeoutMS: 5000,
     });
-    isConnected = conn.connection.readyState;
-    console.log(`[BOUNDUP API] MongoDB Connected: ${conn.connection.host}`);
+    const hostName = conn.connection.host || conn.connection.name || 'Atlas';
+    console.log(`[BOUNDUP API] MongoDB Connected: ${hostName}`);
   } catch (error) {
     console.error(`[BOUNDUP API] MongoDB Connection Error:`, error);
   }

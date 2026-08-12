@@ -11,6 +11,8 @@ import {
   savePost,
   unsavePost,
   deletePost,
+  votePoll,
+  getAICaptionSuggestions,
 } from '../controllers/postController';
 import { protect } from '../middleware/auth';
 import { upload } from '../services/mediaService';
@@ -19,12 +21,14 @@ const router = Router();
 
 router.get('/feed', protect, getFeed);
 router.post('/', protect, upload.array('mediaFiles', 10), createPost);
+router.post('/ai-caption', protect, getAICaptionSuggestions);
 router.get('/user/:userId', protect, getUserPosts);
 router.get('/:id', protect, getPostById);
 router.delete('/:id', protect, deletePost);
 
 router.post('/:id/like', protect, likePost);
 router.delete('/:id/like', protect, unlikePost);
+router.post('/:id/vote', protect, votePoll);
 
 router.get('/:id/comments', protect, getComments);
 router.post('/:id/comments', protect, createComment);

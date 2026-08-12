@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Camera, MessageSquare, Bell } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Logo } from '../ui/Logo';
+import { ThemeSelector } from '../ui/ThemeSelector';
 
 interface HeaderProps {
   onCreateClick?: () => void;
@@ -35,6 +36,8 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Action Icons */}
       <div className="flex items-center gap-1">
+        <ThemeSelector />
+
         <NavLink
           to="/notifications"
           className="relative p-2 text-brand-text hover:bg-brand-primary/10 rounded-full transition-colors"

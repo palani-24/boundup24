@@ -2,11 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-color: #FF5722;
+  --primary-hover: #E64A19;
+  --bg-color: #FCF9F8;
+  --card-bg: #FFFFFF;
+  --text-main: #1C1B1B;
+  --text-muted: #6B7280;
+  --border-color: rgba(28, 27, 27, 0.08);
+}
+
+.dark {
+  --bg-color: #0F172A;
+  --card-bg: #1E293B;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
 @layer base {
   body {
-    background-color: #FCF9F8;
-    color: #1C1B1B;
+    background-color: var(--bg-color);
+    color: var(--text-main);
     font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -16,24 +35,24 @@
 
 /* Glassmorphism Utilities */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 87, 34, 0.08);
+  border: 1px solid var(--border-color);
 }
 
 .glass-nav {
-  background: rgba(252, 249, 248, 0.9);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(28, 27, 27, 0.06);
+  border-top: 1px solid var(--border-color);
 }
 
 .glass-header {
-  background: rgba(252, 249, 248, 0.85);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(28, 27, 27, 0.06);
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* Story Ring Amber to Orange Gradient */

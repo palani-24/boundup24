@@ -4,6 +4,7 @@ export interface ICommentDocument extends Document {
   post: mongoose.Types.ObjectId;
   author: mongoose.Types.ObjectId;
   content: string;
+  audioUrl?: string;
   parentComment?: mongoose.Types.ObjectId;
   repliesCount: number;
   likesCount: number;
@@ -26,8 +27,11 @@ const CommentSchema = new Schema<ICommentDocument>(
     },
     content: {
       type: String,
-      required: true,
-      maxLength: 1000,
+      default: '',
+    },
+    audioUrl: {
+      type: String,
+      default: '',
     },
     parentComment: {
       type: Schema.Types.ObjectId,

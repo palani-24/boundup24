@@ -18,6 +18,8 @@ export interface IUserDocument extends Document {
   followersCount: number;
   followingCount: number;
   dob?: Date;
+  badges?: string[];
+  closeFriends?: mongoose.Types.ObjectId[];
   comparePassword(candidate: string): Promise<boolean>;
   createdAt: Date;
   updatedAt: Date;
@@ -100,6 +102,17 @@ const UserSchema = new Schema<IUserDocument>(
     dob: {
       type: Date,
     },
+    badges: [
+      {
+        type: String,
+      },
+    ],
+    closeFriends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,

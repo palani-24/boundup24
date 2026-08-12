@@ -19,6 +19,9 @@ import { SettingsPage } from './pages/SettingsPage';
 import { PostDetailPage } from './pages/PostDetailPage';
 import { HashtagPage } from './pages/HashtagPage';
 import { AdminPage } from './pages/AdminPage';
+import { CommunitiesPage } from './pages/CommunitiesPage';
+import { LiveStreamModal } from './components/live/LiveStreamModal';
+import { Radio } from 'lucide-react';
 
 // Protected Route Wrapper
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -44,6 +47,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 const MainLayout: React.FC = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isLiveOpen, setIsLiveOpen] = useState(false);
   const location = useLocation();
 
   const isAuthRoute = location.pathname === '/login' || location.pathname === '/register';
@@ -71,6 +75,7 @@ const MainLayout: React.FC = () => {
               <Route path="/home" element={<HomePage onCreateClick={() => setIsCreateOpen(true)} />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/explore" element={<ExplorePage />} />
+              <Route path="/communities" element={<CommunitiesPage />} />
               <Route path="/reels" element={<ReelsPage />} />
               <Route path="/messages" element={<MessagesPage />} />
               <Route path="/messages/:conversationId" element={<MessagesPage />} />
@@ -84,11 +89,29 @@ const MainLayout: React.FC = () => {
           </main>
         </div>
 
+        {/* FLOATING LIVE STREAM LAUNCHER BUTTON */}
+        <button
+          onClick={() => setIsLiveOpen(true)}
+          className="fixed bottom-20 right-5 md:bottom-6 md:right-6 z-40 bg-red-600 text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 hover:bg-red-700 transition-transform active:scale-95 animate-pulse"
+          title="Join / Go Live"
+        >
+          <Radio className="w-5 h-5" />
+          <span className="text-xs font-black uppercase tracking-wider hidden sm:inline">Go Live</span>
+        </button>
+
         {/* NAVIGATION (DESKTOP SIDEBAR + MOBILE BOTTOM BAR) */}
         <Navbar onCreateClick={() => setIsCreateOpen(true)} />
 
         {/* CREATE POST MODAL */}
         <CreatePostModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
+
+        {/* LIVE STREAM MODAL */}
+        <LiveStreamModal
+          isOpen={isLiveOpen}
+          roomId="boundup-main-stage"
+          hostName="Elena Vance"
+          onClose={() => setIsLiveOpen(false)}
+        />
       </div>
     </ProtectedRoute>
   );

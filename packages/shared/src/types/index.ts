@@ -28,6 +28,8 @@ export interface IUser {
   followersCount: number;
   followingCount: number;
   dob?: string;
+  badges?: string[];
+  closeFriends?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -42,6 +44,7 @@ export enum AspectRatio {
 export enum MediaType {
   IMAGE = 'IMAGE',
   VIDEO = 'VIDEO',
+  AUDIO = 'AUDIO',
 }
 
 export interface IMediaItem {
@@ -59,6 +62,21 @@ export enum PostType {
   VIDEO = 'VIDEO',
   CAROUSEL = 'CAROUSEL',
   TEXT = 'TEXT',
+  AUDIO = 'AUDIO',
+}
+
+export interface IPollOption {
+  id: string;
+  text: string;
+  votes: string[]; // User IDs who voted for this option
+}
+
+export interface IPoll {
+  id: string;
+  question: string;
+  options: IPollOption[];
+  totalVotes: number;
+  userVotedOptionId?: string;
 }
 
 export interface IPost {
@@ -77,6 +95,10 @@ export interface IPost {
   isSaved?: boolean;
   isCommentsDisabled: boolean;
   isLikeCountHidden: boolean;
+  visibility?: 'PUBLIC' | 'CLOSE_FRIENDS';
+  poll?: IPoll;
+  audioUrl?: string;
+  communityId?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -87,6 +109,7 @@ export interface IComment {
   postId: string;
   author: IUser;
   content: string;
+  audioUrl?: string;
   parentCommentId?: string;
   repliesCount: number;
   likesCount: number;
@@ -116,6 +139,8 @@ export interface IStory {
   mediaType: MediaType;
   caption?: string;
   stickers?: any[];
+  visibility?: 'PUBLIC' | 'CLOSE_FRIENDS';
+  poll?: IPoll;
   viewsCount: number;
   hasViewed?: boolean;
   expiresAt: string;
@@ -158,6 +183,7 @@ export interface IMessage {
   replyToMessageId?: string;
   reactions: IMessageReaction[];
   readBy: string[]; // array of user IDs
+  isVanishMode?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -171,6 +197,7 @@ export interface IConversation {
   avatarUrl?: string;
   lastMessage?: IMessage;
   unreadCount?: number;
+  isVanishMode?: boolean;
   updatedAt: string;
   createdAt: string;
 }
@@ -204,8 +231,24 @@ export interface INotification {
 export interface ISavedCollection {
   id: string;
   name: string;
+  description?: string;
   coverUrl?: string;
+  posts: string[]; // Array of Post IDs
   postsCount: number;
+  createdAt: string;
+}
+
+export interface ICommunity {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  coverUrl?: string;
+  avatarUrl?: string;
+  category: string;
+  membersCount: number;
+  isJoined?: boolean;
+  createdBy: string;
   createdAt: string;
 }
 
@@ -230,3 +273,4 @@ export interface IReport {
   status: ReportStatus;
   createdAt: string;
 }
+

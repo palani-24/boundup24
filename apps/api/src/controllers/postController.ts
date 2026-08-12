@@ -13,27 +13,33 @@ import { AppError } from '../middleware/error';
 
 export const createPost = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const validated = CreatePostSchema.parse(req.body);
+    const { media, caption, location, isCommentsDisabled, isLikeCountHidden, visibility, poll, audioUrl, communityId } = req.body;
     const userId = req.user!._id;
 
     // Extract hashtags from caption or explicit payload
-    let tags = validated.hashtags || [];
-    if (validated.caption) {
-      const extracted = validated.caption.match(/#[\w]+/g);
+    let tags = req.body.hashtags || [];
+    if (caption) {
+      const extracted = caption.match(/#[\w]+/g);
       if (extracted) {
         tags = [...new Set([...tags, ...extracted.map((t: string) => t.replace('#', '').toLowerCase())])];
       }
     }
 
+    const postType = audioUrl ? 'AUDIO' : (media && media.length > 1) ? 'CAROUSEL' : media?.[0]?.type || 'IMAGE';
+
     const post = await Post.create({
       author: userId,
-      media: validated.media,
-      type: validated.media.length > 1 ? 'CAROUSEL' : validated.media[0]?.type || 'IMAGE',
-      caption: validated.caption || '',
+      media: media || [],
+      type: postType,
+      caption: caption || '',
       hashtags: tags,
-      location: validated.location || '',
-      isCommentsDisabled: validated.isCommentsDisabled || false,
-      isLikeCountHidden: validated.isLikeCountHidden || false,
+      location: location || '',
+      isCommentsDisabled: isCommentsDisabled || false,
+      isLikeCountHidden: isLikeCountHidden || false,
+      visibility: visibility || 'PUBLIC',
+      poll: poll || undefined,
+      audioUrl: audioUrl || '',
+      community: communityId || null,
     });
 
     // Increment user post count
@@ -48,7 +54,7 @@ export const createPost = async (req: AuthRequest, res: Response, next: NextFunc
       );
     }
 
-    const populatedPost = await post.populate('author', 'username fullName avatarUrl isVerified category');
+    const populatedPost = await post.populate('author', 'username fullName avatarUrl isVerified category badges');
 
     res.status(201).json({
       success: true,
@@ -200,7 +206,7 @@ export const getComments = async (req: AuthRequest, res: Response, next: NextFun
 export const createComment = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const validated = CreateCommentSchema.parse(req.body);
+    const { content, audioUrl, parentCommentId } = req.body;
     const userId = req.user!._id;
 
     const post = await Post.findById(id);
@@ -210,8 +216,9 @@ export const createComment = async (req: AuthRequest, res: Response, next: NextF
     const comment = await Comment.create({
       post: id,
       author: userId,
-      content: validated.content,
-      parentComment: validated.parentCommentId || null,
+      content: content || '',
+      audioUrl: audioUrl || '',
+      parentComment: parentCommentId || null,
     });
 
     await Post.findByIdAndUpdate(id, { $inc: { commentsCount: 1 } });
@@ -223,11 +230,11 @@ export const createComment = async (req: AuthRequest, res: Response, next: NextF
         type: 'COMMENT',
         post: post._id,
         comment: comment._id,
-        text: validated.content.slice(0, 50),
+        text: content ? content.slice(0, 50) : 'Audio comment',
       });
     }
 
-    const populated = await comment.populate('author', 'username fullName avatarUrl isVerified');
+    const populated = await comment.populate('author', 'username fullName avatarUrl isVerified badges');
 
     res.status(201).json({
       success: true,
@@ -235,9 +242,55 @@ export const createComment = async (req: AuthRequest, res: Response, next: NextF
       data: { comment: populated },
     });
   } catch (error: any) {
-    if (error.name === 'ZodError') {
-      return next(new AppError(error.errors[0]?.message || 'Invalid comment', 400));
+    next(error);
+  }
+};
+
+export const votePoll = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const { optionId } = req.body;
+    const userId = req.user!._id;
+
+    const post = await Post.findById(id);
+    if (!post || !post.poll) {
+      return next(new AppError('Poll not found on this post', 404));
     }
+
+    // Remove user previous vote if any
+    post.poll.options.forEach((opt: any) => {
+      opt.votes = opt.votes.filter((v: any) => v.toString() !== userId.toString());
+    });
+
+    // Find option and add vote
+    const targetOpt = post.poll.options.find((opt: any) => opt._id?.toString() === optionId || opt.id === optionId);
+    if (targetOpt) {
+      targetOpt.votes.push(userId as any);
+    }
+
+    await post.save();
+
+    res.json({
+      success: true,
+      message: 'Vote registered successfully',
+      poll: post.poll,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAICaptionSuggestions = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const { prompt, category } = req.body;
+    const { generateAICaption } = await import('../services/aiService');
+    const result = await generateAICaption(prompt || '', category || 'General');
+
+    res.json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
     next(error);
   }
 };

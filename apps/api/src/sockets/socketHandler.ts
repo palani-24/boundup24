@@ -60,6 +60,37 @@ export const setupSocketHandlers = (io: Server) => {
       socket.to(`conversation:${conversationId}`).emit('typing:stop', { conversationId, userId });
     });
 
+    // Vanish Mode socket event
+    socket.on('chat:vanish_toggle', ({ conversationId, isVanishMode }: { conversationId: string; isVanishMode: boolean }) => {
+      io.to(`conversation:${conversationId}`).emit('chat:vanish_toggle', { conversationId, isVanishMode });
+    });
+
+    // Live Stream / Spaces Socket Events
+    socket.on('live:join', ({ roomId, username, avatarUrl }: { roomId: string; username: string; avatarUrl?: string }) => {
+      socket.join(`live:${roomId}`);
+      io.to(`live:${roomId}`).emit('live:user_joined', { userId, username, avatarUrl, timestamp: new Date() });
+    });
+
+    socket.on('live:leave', ({ roomId, username }: { roomId: string; username: string }) => {
+      socket.leave(`live:${roomId}`);
+      io.to(`live:${roomId}`).emit('live:user_left', { userId, username });
+    });
+
+    socket.on('live:chat', ({ roomId, message, username, avatarUrl }: { roomId: string; message: string; username: string; avatarUrl?: string }) => {
+      io.to(`live:${roomId}`).emit('live:chat', {
+        id: Date.now().toString(),
+        userId,
+        username,
+        avatarUrl,
+        message,
+        timestamp: new Date().toISOString(),
+      });
+    });
+
+    socket.on('live:reaction', ({ roomId, emoji }: { roomId: string; emoji: string }) => {
+      io.to(`live:${roomId}`).emit('live:reaction', { userId, emoji, id: Math.random().toString() });
+    });
+
     socket.on('disconnect', () => {
       if (userId) {
         onlineUsers.delete(userId);
