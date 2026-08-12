@@ -12,6 +12,7 @@ import {
   Settings,
   ShieldAlert,
   Users,
+  BarChart3,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Avatar } from '../ui/Avatar';
@@ -31,6 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
     { label: 'Explore', path: '/explore', icon: Compass },
     { label: 'Communities', path: '/communities', icon: Users },
     { label: 'Reels', path: '/reels', icon: Film },
+    { label: 'Analytics', path: '/analytics', icon: BarChart3 },
     { label: 'Messages', path: '/messages', icon: MessageSquare },
     { label: 'Notifications', path: '/notifications', icon: Bell },
     { label: 'Create', path: '#create', icon: PlusSquare, onClick: onCreateClick },

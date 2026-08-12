@@ -2,20 +2,34 @@ import { Post, IPostDocument } from '../models/Post';
 import { Follow } from '../models/Follow';
 
 export const getRankedFeed = async (userId: string, page = 1, limit = 10): Promise<IPostDocument[]> => {
+  // Ensure rich demo data is seeded if database is fresh
+  try {
+    const { seedInitialDemoData } = await import('./seedService');
+    await seedInitialDemoData();
+  } catch (_) {}
+
   // 1. Get user's following IDs
   const follows = await Follow.find({ follower: userId, status: 'ACCEPTED' }).select('following');
   const followingIds = follows.map((f) => f.following);
 
-  // Include user's own posts as well
+  // Include user's own posts
   const authorIds = [...followingIds, userId];
 
-  // 2. Fetch candidate posts
+  // 2. Fetch candidate posts (if following posts are few, include general public posts)
   const skip = (page - 1) * limit;
-  const posts = await Post.find({ author: { $in: authorIds } })
-    .populate('author', 'username fullName avatarUrl isVerified isPrivate category')
+  let posts = await Post.find({ author: { $in: authorIds } })
+    .populate('author', 'username fullName avatarUrl isVerified isPrivate category badges')
     .sort({ createdAt: -1 })
     .skip(skip)
-    .limit(limit * 2); // fetch extra to rank
+    .limit(limit * 2);
+
+  if (posts.length < 3) {
+    posts = await Post.find({ visibility: { $ne: 'CLOSE_FRIENDS' } })
+      .populate('author', 'username fullName avatarUrl isVerified isPrivate category badges')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit * 2);
+  }
 
   // 3. Rank candidate posts using formula:
   // score = recencyScore + relationshipScore + engagementScore

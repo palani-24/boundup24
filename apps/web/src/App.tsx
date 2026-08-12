@@ -20,6 +20,7 @@ import { PostDetailPage } from './pages/PostDetailPage';
 import { HashtagPage } from './pages/HashtagPage';
 import { AdminPage } from './pages/AdminPage';
 import { CommunitiesPage } from './pages/CommunitiesPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
 import { LiveStreamModal } from './components/live/LiveStreamModal';
 import { Radio } from 'lucide-react';
 
@@ -77,6 +78,7 @@ const MainLayout: React.FC = () => {
               <Route path="/explore" element={<ExplorePage />} />
               <Route path="/communities" element={<CommunitiesPage />} />
               <Route path="/reels" element={<ReelsPage />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="/messages" element={<MessagesPage />} />
               <Route path="/messages/:conversationId" element={<MessagesPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
