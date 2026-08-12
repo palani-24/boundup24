@@ -51,7 +51,7 @@ app.use(async (_req, _res, next) => {
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(
   cors({
-    origin: '*',
+    origin: true,
     credentials: true,
   })
 );
@@ -67,7 +67,7 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // Root & Health Check Endpoints
-app.get(['/', '/api', '/health', '/api/health'], (_req, res) => {
+app.get(['/api/health', '/health'], (_req, res) => {
   res.status(200).json({
     status: 'ok',
     service: 'BOUNDUP API',
@@ -76,8 +76,9 @@ app.get(['/', '/api', '/health', '/api/health'], (_req, res) => {
   });
 });
 
-// API Routes
+// API Routes (Mounted on both /api and / for serverless route mapping compatibility)
 app.use('/api', routes);
+app.use('/', routes);
 
 // Error Handler
 app.use(errorHandler);

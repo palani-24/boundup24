@@ -39,19 +39,33 @@ export const apiFetch = async <T = any>(endpoint: string, options: RequestInit =
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const apiBase = getApiBase();
-  const response = await fetch(`${apiBase}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  try {
+    const apiBase = getApiBase();
+    const response = await fetch(`${apiBase}${endpoint}`, {
+      ...options,
+      headers,
+    });
 
-  const data = await response.json();
+    const contentType = response.headers.get('content-type');
+    let data: any = {};
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      data = { message: text ? text.slice(0, 150) : `HTTP Error ${response.status}` };
+    }
 
-  if (!response.ok) {
-    throw new Error(data.message || 'An error occurred during API request');
+    if (!response.ok) {
+      throw new Error(data.message || data.error || `Server request failed (${response.status})`);
+    }
+
+    return data;
+  } catch (err: any) {
+    if (err.name === 'TypeError' && (err.message.includes('fetch') || err.message.includes('NetworkError'))) {
+      throw new Error('Unable to reach API server. Please refresh or try Instant Demo Login.');
+    }
+    throw err;
   }
-
-  return data;
 };
 
 export const api = {
