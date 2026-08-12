@@ -59,19 +59,20 @@ export const LoginPage: React.FC = () => {
 
   const handleDemoLogin = async () => {
     setErrorMsg('');
+    const demoPass = 'password123';
     setLoginInput('k2d');
-    setPassword('password123');
+    setPassword(demoPass);
     try {
-      await login({ login: 'k2d', password: 'password123' });
+      await login({ login: 'k2d', password: demoPass });
       navigate('/home');
     } catch (err) {
-      // Fallback demo signup
       try {
+        const randomId = Math.floor(1000 + Math.random() * 9000);
         await register({
-          fullName: 'Palani Developer',
-          username: 'k2d',
-          email: 'p94509107@gmail.com',
-          password: 'password123',
+          fullName: 'BoundUp Creator',
+          username: `creator_${randomId}`,
+          email: `creator_${randomId}@boundup.com`,
+          password: demoPass,
         });
         navigate('/home');
       } catch (regErr: any) {
