@@ -33,7 +33,10 @@ export const ReelPlayer: React.FC<ReelPlayerProps> = ({ post }) => {
   };
 
   return (
-    <div className="relative w-full max-w-sm h-[80vh] bg-black rounded-24px overflow-hidden shadow-2xl flex flex-col justify-between my-4 border border-brand-border select-none">
+    <div
+      onClick={() => setIsMuted(!isMuted)}
+      className="relative w-full max-w-sm h-[80vh] bg-black rounded-24px overflow-hidden shadow-2xl flex flex-col justify-between my-4 border border-brand-border select-none cursor-pointer group"
+    >
       {/* VIDEO ELEMENT */}
       {media?.type === 'VIDEO' ? (
         <video
@@ -48,12 +51,25 @@ export const ReelPlayer: React.FC<ReelPlayerProps> = ({ post }) => {
         <img src={media?.url} alt="Reel media" className="absolute inset-0 w-full h-full object-cover" />
       )}
 
-      {/* MUTE CONTROLLER */}
+      {/* SOUND BADGE TOGGLE */}
       <button
-        onClick={() => setIsMuted(!isMuted)}
-        className="absolute top-4 right-4 p-2 bg-black/50 text-white rounded-full backdrop-blur-md z-10"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsMuted(!isMuted);
+        }}
+        className="absolute top-4 right-4 p-2.5 bg-black/60 hover:bg-black/80 text-white rounded-full backdrop-blur-md z-20 flex items-center gap-1.5 transition-transform active:scale-90"
       >
-        {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+        {isMuted ? (
+          <>
+            <VolumeX className="w-4 h-4 text-red-400" />
+            <span className="text-[10px] font-bold text-gray-200">Tap for Sound</span>
+          </>
+        ) : (
+          <>
+            <Volume2 className="w-4 h-4 text-emerald-400 animate-pulse" />
+            <span className="text-[10px] font-bold text-emerald-400">Audio Playing</span>
+          </>
+        )}
       </button>
 
       <div className="h-full flex flex-col justify-end p-4 z-10 bg-gradient-to-t from-black/80 via-black/20 to-transparent text-white">

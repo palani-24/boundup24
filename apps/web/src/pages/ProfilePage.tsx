@@ -249,10 +249,19 @@ export const ProfilePage: React.FC = () => {
                       </>
                     )}
                   </Button>
-
-                  <Button variant="secondary" onClick={handleStartChat}>
-                    <MessageSquare className="w-4 h-4 mr-1.5" /> Message
-                  </Button>
+                  {isFollowing ? (
+                    <Button variant="outline" className="flex-1" onClick={handleStartChat}>
+                      <MessageSquare className="w-4 h-4 mr-1.5" /> Message
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      className="flex-1 opacity-60 cursor-not-allowed border border-brand-border"
+                      onClick={() => alert(`Follow @${profile.username} first to enable direct messaging.`)}
+                    >
+                      <MessageSquare className="w-4 h-4 mr-1.5" /> Message (Follow first)
+                    </Button>
+                  )}
                 </>
               )}
             </div>

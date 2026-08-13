@@ -15,7 +15,7 @@ export const getRankedFeed = async (userId: string, page = 1, limit = 10): Promi
   // Include user's own posts
   const authorIds = [...followingIds, userId];
 
-  // 2. Fetch candidate posts (if following posts are few, include general public posts)
+  // 2. Fetch candidate posts strictly for followed authors and self
   const skip = (page - 1) * limit;
   let posts = await Post.find({ author: { $in: authorIds } })
     .populate('author', 'username fullName avatarUrl isVerified isPrivate category badges')
@@ -23,7 +23,8 @@ export const getRankedFeed = async (userId: string, page = 1, limit = 10): Promi
     .skip(skip)
     .limit(limit * 2);
 
-  if (posts.length < 3) {
+  // If user has not followed anyone yet, fallback to public feed so fresh users have content to explore
+  if (followingIds.length === 0 && posts.length === 0) {
     posts = await Post.find({ visibility: { $ne: 'CLOSE_FRIENDS' } })
       .populate('author', 'username fullName avatarUrl isVerified isPrivate category badges')
       .sort({ createdAt: -1 })
