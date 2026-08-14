@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, CheckCircle, Volume2, VolumeX, Mic, Lock, Users } from 'lucide-react';
+import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, CheckCircle, Volume2, VolumeX, Mic, Lock, Users, Sparkles, Flame, Smile, Lightbulb } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar } from '../ui/Avatar';
 import { IPost } from '@boundup/shared';
@@ -10,6 +10,8 @@ import { PollCard } from './PollCard';
 import { AudioPlayer } from '../ui/AudioPlayer';
 import { VoiceRecorderModal } from '../ui/VoiceRecorderModal';
 import { SaveCollectionModal } from '../profile/SaveCollectionModal';
+import { ShareToFriendsModal } from '../common/ShareToFriendsModal';
+import { CommentsDrawerModal } from '../common/CommentsDrawerModal';
 
 interface PostCardProps {
   post: IPost;
@@ -20,16 +22,16 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
   const { user } = useAuthStore();
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
+  const [commentsCount, setCommentsCount] = useState(post.commentsCount || 0);
   const [isSaved, setIsSaved] = useState(post.isSaved || false);
   const [showHeartAnimation, setShowHeartAnimation] = useState(false);
-  const [showComments, setShowComments] = useState(false);
-  const [comments, setComments] = useState<any[]>([]);
-  const [commentInput, setCommentInput] = useState('');
-  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [showCommentsModal, setShowCommentsModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
   const [showSaveModal, setShowSaveModal] = useState(false);
-  const [showVoiceRecorder, setShowVoiceRecorder] = useState(false);
+  const [selectedReaction, setSelectedReaction] = useState<string | null>(post.userReaction || null);
+  const [showReactionPicker, setShowReactionPicker] = useState(false);
 
   // Double tap to like handler
   const handleDoubleTap = () => {
@@ -57,6 +59,15 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
     }
   };
 
+  const handleReactionSelect = (reactionEmoji: string) => {
+    setSelectedReaction(reactionEmoji);
+    setShowReactionPicker(false);
+    if (!isLiked) {
+      setIsLiked(true);
+      setLikesCount((prev) => prev + 1);
+    }
+  };
+
   const handleSaveToggle = async () => {
     const nextState = !isSaved;
     setIsSaved(nextState);
@@ -73,92 +84,48 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
     }
   };
 
-  const loadComments = async () => {
-    setShowComments(true);
-    try {
-      const res = await apiFetch(`/posts/${post.id}/comments`);
-      if (res.success) {
-        setComments(res.data.comments);
-      }
-    } catch (err) {}
-  };
-
-  const handleAddComment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!commentInput.trim() || isSubmittingComment) return;
-
-    setIsSubmittingComment(true);
-    try {
-      const res = await apiFetch(`/posts/${post.id}/comments`, {
-        method: 'POST',
-        body: JSON.stringify({ content: commentInput }),
-      });
-      if (res.success) {
-        setComments([res.data.comment, ...comments]);
-        setCommentInput('');
-        if (onPostUpdate) onPostUpdate();
-      }
-    } catch (err) {
-      alert('Failed to post comment');
-    } finally {
-      setIsSubmittingComment(false);
-    }
-  };
-
-  const handleVoiceCommentRecorded = async (file: File) => {
-    try {
-      const formData = new FormData();
-      formData.append('media', file);
-      const uploadRes = await api.post('/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
-      const audioUrl = uploadRes.data?.url;
-      if (audioUrl) {
-        const commentRes = await apiFetch(`/posts/${post.id}/comments`, {
-          method: 'POST',
-          body: JSON.stringify({ content: '', audioUrl }),
-        });
-        if (commentRes.success) {
-          setComments([commentRes.data.comment, ...comments]);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const currentMedia = post.media && post.media.length > 0 ? post.media[activeMediaIndex] : null;
 
   return (
-    <article className="w-full bg-white dark:bg-slate-800 border border-brand-border dark:border-slate-700/80 rounded-24px my-4 overflow-hidden shadow-soft transition-all duration-300 hover:shadow-ambient select-none">
+    <article className="w-full bg-white dark:bg-slate-900/90 border border-brand-border dark:border-slate-800 rounded-24px my-4 overflow-hidden shadow-soft hover:shadow-ambient transition-all duration-300 select-none backdrop-blur-md">
       {/* POST HEADER */}
-      <header className="flex items-center justify-between p-4 border-b border-brand-border/40 dark:border-slate-700/50">
+      <header className="flex items-center justify-between p-4 border-b border-brand-border/40 dark:border-slate-800/60">
         <NavLink to={`/profile/${post.author.username}`} className="flex items-center gap-3 group">
           <Avatar src={post.author.avatarUrl} alt={post.author.fullName} size="md" />
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-sm text-brand-text dark:text-gray-100 group-hover:text-brand-primary transition-colors">
-                {post.author.username}
+              <span className="font-extrabold text-sm text-brand-text dark:text-gray-100 group-hover:text-brand-primary transition-colors">
+                @{post.author.username}
               </span>
-              {post.author.isVerified && <CheckCircle className="w-4 h-4 text-brand-primary fill-brand-primary/10" />}
+              {post.author.isVerified && <CheckCircle className="w-4 h-4 text-blue-500 fill-blue-500/10" />}
               {post.visibility === 'CLOSE_FRIENDS' && (
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-bold flex items-center gap-1">
                   <Lock className="w-3 h-3" /> Close Friends
                 </span>
               )}
             </div>
-            {post.location && <span className="text-[11px] text-brand-muted dark:text-slate-400">{post.location}</span>}
+            <span className="text-[11px] text-brand-muted dark:text-slate-400">
+              {post.location || post.author.category || 'Creator'}
+            </span>
           </div>
         </NavLink>
-        <button className="text-brand-muted dark:text-slate-400 hover:text-brand-text p-2 rounded-full hover:bg-black/5 dark:hover:bg-slate-700 transition-colors">
+        <button className="text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white p-2 rounded-full hover:bg-black/5 dark:hover:bg-slate-800 transition-colors">
           <MoreHorizontal className="w-5 h-5" />
         </button>
       </header>
 
+      {/* CAPTION (IF ANY) BEFORE MEDIA */}
+      {post.caption && (
+        <div className="px-4 py-2.5">
+          <p className="text-xs text-brand-text dark:text-gray-200 leading-relaxed font-medium">
+            {post.caption}
+          </p>
+        </div>
+      )}
+
       {/* MEDIA DISPLAY OR AUDIO DISPLAY */}
       {post.audioUrl || post.type === 'AUDIO' ? (
-        <div className="p-6 bg-gradient-to-r from-orange-500/10 to-amber-500/10 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center">
+        <div className="p-6 bg-gradient-to-r from-brand-primary/10 via-purple-500/10 to-amber-500/10 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center border-y border-brand-border/40 dark:border-slate-800">
           <AudioPlayer src={post.audioUrl || ''} />
         </div>
       ) : currentMedia ? (
@@ -177,9 +144,9 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
               />
               <button
                 onClick={() => setIsMuted(!isMuted)}
-                className="absolute top-3 right-3 p-2 bg-black/60 text-white rounded-full backdrop-blur-sm"
+                className="absolute top-3 right-3 p-2 bg-black/60 text-white rounded-full backdrop-blur-md"
               >
-                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
               </button>
             </div>
           ) : (
@@ -201,7 +168,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
                 exit={{ scale: 0, opacity: 0 }}
                 className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
               >
-                <Heart className="w-24 h-24 text-white fill-white drop-shadow-lg" />
+                <Heart className="w-24 h-24 text-brand-primary fill-brand-primary drop-shadow-2xl" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -210,34 +177,70 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
 
       {/* INTERACTIVE POLL */}
       {post.poll && (
-        <div className="px-4">
+        <div className="px-4 py-2">
           <PollCard postId={post.id} poll={post.poll} currentUserId={user?.id} />
         </div>
       )}
 
       {/* ACTION BAR */}
-      <div className="p-4 flex flex-col gap-2">
+      <div className="p-4 flex flex-col gap-2 relative">
+        {/* MULTI REACTION PICKER POPUP */}
+        {showReactionPicker && (
+          <div className="absolute -top-12 left-4 z-30 bg-white dark:bg-slate-800 border border-brand-border dark:border-slate-700 rounded-full px-3 py-1.5 shadow-2xl flex items-center gap-3 animate-bounce">
+            {[
+              { emoji: '❤️', label: 'Heart' },
+              { emoji: '🔥', label: 'Fire' },
+              { emoji: '😂', label: 'Haha' },
+              { emoji: '😮', label: 'Wow' },
+              { emoji: '💡', label: 'Insightful' },
+            ].map((r) => (
+              <button
+                key={r.label}
+                onClick={() => handleReactionSelect(r.emoji)}
+                className="text-lg hover:scale-130 transition-transform active:scale-90"
+                title={r.label}
+              >
+                {r.emoji}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button
-              onClick={handleLikeToggle}
-              className="text-brand-text dark:text-gray-200 hover:opacity-80 transition-transform active:scale-125"
-            >
-              <Heart
-                className={`w-6 h-6 transition-colors ${
-                  isLiked ? 'text-brand-primary fill-brand-primary' : 'text-brand-text dark:text-gray-200'
-                }`}
-              />
-            </button>
+            {/* LIKE & REACTION TRIGGER */}
+            <div className="relative flex items-center gap-1">
+              <button
+                onClick={handleLikeToggle}
+                onMouseEnter={() => setShowReactionPicker(true)}
+                className="text-brand-text dark:text-gray-200 hover:opacity-80 transition-transform active:scale-125 flex items-center gap-1"
+              >
+                {selectedReaction ? (
+                  <span className="text-xl">{selectedReaction}</span>
+                ) : (
+                  <Heart
+                    className={`w-6 h-6 transition-colors ${
+                      isLiked ? 'text-brand-primary fill-brand-primary' : 'text-brand-text dark:text-gray-200'
+                    }`}
+                  />
+                )}
+              </button>
+            </div>
 
+            {/* COMMENT BUTTON (OPEN COMMENTS DRAWER) */}
             <button
-              onClick={loadComments}
-              className="text-brand-text dark:text-gray-200 hover:opacity-80 transition-transform active:scale-110"
+              onClick={() => setShowCommentsModal(true)}
+              className="text-brand-text dark:text-gray-200 hover:text-brand-primary transition-transform active:scale-110 flex items-center gap-1"
             >
               <MessageCircle className="w-6 h-6 stroke-[2]" />
             </button>
 
-            <button className="text-brand-text dark:text-gray-200 hover:opacity-80 transition-transform active:scale-110">
+            {/* SHARE BUTTON (OPEN SHARE TO FRIENDS MODAL) */}
+            <button
+              onClick={() => setShowShareModal(true)}
+              className="text-brand-text dark:text-gray-200 hover:text-brand-primary transition-transform active:scale-110"
+              title="Share to Friends via DM"
+            >
               <Send className="w-6 h-6 stroke-[2]" />
             </button>
           </div>
@@ -247,125 +250,35 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
             className="text-brand-text dark:text-gray-200 hover:opacity-80 transition-transform active:scale-110"
           >
             <Bookmark
-              className={`w-6 h-6 ${isSaved ? 'text-brand-primary fill-brand-primary' : 'text-brand-text dark:text-gray-200'}`}
+              className={`w-6 h-6 ${isSaved ? 'text-amber-400 fill-amber-400' : 'text-brand-text dark:text-gray-200'}`}
             />
           </button>
         </div>
 
-        {/* LIKES COUNT */}
-        {!post.isLikeCountHidden && (
-          <div className="text-xs font-extrabold text-brand-text dark:text-gray-200">
-            {likesCount} {likesCount === 1 ? 'like' : 'likes'}
-          </div>
-        )}
-
-        {/* CAPTION & HASHTAGS */}
-        {post.caption && (
-          <p className="text-sm text-brand-text dark:text-gray-200 leading-relaxed">
-            <NavLink to={`/profile/${post.author.username}`} className="font-bold mr-2 hover:underline">
-              {post.author.username}
-            </NavLink>
-            {post.caption}
-          </p>
-        )}
-
-        {/* HASHTAGS PILLS */}
-        {post.hashtags && post.hashtags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 my-1">
-            {post.hashtags.map((tag) => (
-              <NavLink
-                key={tag}
-                to={`/hashtag/${tag}`}
-                className="text-xs font-semibold text-brand-primary hover:underline bg-brand-primary/10 px-2 py-0.5 rounded-full"
-              >
-                #{tag}
-              </NavLink>
-            ))}
-          </div>
-        )}
-
-        {/* COMMENTS PREVIEW */}
-        <button
-          onClick={loadComments}
-          className="text-xs text-brand-muted dark:text-slate-400 font-medium hover:text-brand-text dark:hover:text-gray-200 text-left mt-1"
-        >
-          {post.commentsCount > 0
-            ? `View all ${post.commentsCount} comments`
-            : 'Add a comment...'}
-        </button>
+        {/* LIKES COUNT & COMMENTS TRIGGER LINK */}
+        <div className="flex flex-col text-xs mt-1 font-bold text-brand-text dark:text-gray-100">
+          <span>{likesCount} likes</span>
+          <button
+            onClick={() => setShowCommentsModal(true)}
+            className="text-[11px] text-brand-muted dark:text-slate-400 font-semibold hover:underline text-left mt-1"
+          >
+            View all {commentsCount} comments...
+          </button>
+        </div>
       </div>
 
-      {/* COMMENTS MODAL / DRAWER */}
-      {showComments && (
-        <div className="p-4 border-t border-brand-border dark:border-slate-700 bg-gray-50/50 dark:bg-slate-900/50">
-          <div className="flex justify-between items-center mb-3">
-            <h4 className="font-bold text-xs text-brand-text dark:text-gray-200 uppercase tracking-wider font-heading">Comments</h4>
-            <button onClick={() => setShowComments(false)} className="text-xs font-semibold text-brand-muted dark:text-slate-400 hover:text-brand-text">
-              Close
-            </button>
-          </div>
-
-          <form onSubmit={handleAddComment} className="flex items-center gap-2 mb-4">
-            <input
-              type="text"
-              placeholder="Write a comment..."
-              value={commentInput}
-              onChange={(e) => setCommentInput(e.target.value)}
-              className="flex-1 h-9 bg-white dark:bg-slate-800 border border-brand-border dark:border-slate-700 rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary dark:text-gray-100"
-            />
-            
-            <button
-              type="button"
-              onClick={() => setShowVoiceRecorder(true)}
-              className="h-9 w-9 bg-gray-100 dark:bg-slate-700 text-orange-500 rounded-12px flex items-center justify-center hover:bg-orange-100 transition-colors"
-              title="Record Voice Comment"
-            >
-              <Mic className="w-4 h-4" />
-            </button>
-
-            <button
-              type="submit"
-              disabled={!commentInput.trim() || isSubmittingComment}
-              className="h-9 px-4 bg-brand-primary text-white text-xs font-bold rounded-12px hover:bg-brand-accent transition-colors disabled:opacity-50"
-            >
-              Post
-            </button>
-          </form>
-
-          <div className="flex flex-col gap-3 max-h-60 overflow-y-auto pr-1">
-            {comments.map((c) => (
-              <div key={c._id || c.id} className="flex items-start gap-2.5 text-xs">
-                <Avatar src={c.author.avatarUrl} alt={c.author.fullName} size="sm" />
-                <div className="flex flex-col bg-white dark:bg-slate-800 p-2.5 rounded-12px border border-brand-border/40 dark:border-slate-700 w-full">
-                  <span className="font-bold text-brand-text dark:text-gray-200">{c.author.username}</span>
-                  {c.audioUrl ? (
-                    <div className="mt-1">
-                      <AudioPlayer src={c.audioUrl} />
-                    </div>
-                  ) : (
-                    <p className="text-brand-text dark:text-gray-300 mt-0.5">{c.content}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* SHARE MODAL & COMMENTS MODAL */}
+      {showShareModal && <ShareToFriendsModal post={post} onClose={() => setShowShareModal(false)} />}
+      {showCommentsModal && (
+        <CommentsDrawerModal
+          post={post}
+          onClose={() => setShowCommentsModal(false)}
+          onCommentAdded={() => setCommentsCount((prev) => prev + 1)}
+        />
       )}
-
-      {/* Save Collection Modal */}
-      <SaveCollectionModal
-        isOpen={showSaveModal}
-        postId={post.id}
-        onClose={() => setShowSaveModal(false)}
-      />
-
-      {/* Voice Recorder Modal */}
-      <VoiceRecorderModal
-        isOpen={showVoiceRecorder}
-        onClose={() => setShowVoiceRecorder(false)}
-        onAudioRecorded={handleVoiceCommentRecorded}
-      />
+      {showSaveModal && (
+        <SaveCollectionModal isOpen={showSaveModal} postId={post.id} onClose={() => setShowSaveModal(false)} />
+      )}
     </article>
   );
 };
-
