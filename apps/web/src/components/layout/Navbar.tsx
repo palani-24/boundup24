@@ -52,7 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
   return (
     <>
       {/* DESKTOP SIDEBAR */}
-      <aside className="hidden md:flex flex-col fixed left-0 top-0 h-screen w-64 border-r border-brand-border bg-white/90 backdrop-blur-md z-40 px-4 py-6 justify-between select-none">
+      <aside className="hidden md:flex flex-col fixed left-0 top-0 h-screen w-64 border-r border-brand-border/60 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md z-40 px-4 py-6 justify-between select-none">
         <div className="flex flex-col gap-6">
           {/* Logo Branding */}
           <NavLink to="/home" className="px-2">
@@ -60,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
           </NavLink>
 
           {/* Navigation Links */}
-          <nav className="flex flex-col gap-1.5 mt-2">
+          <nav className="flex flex-col gap-1 mt-1">
             {desktopNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -70,9 +70,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
                   <button
                     key={item.label}
                     onClick={item.onClick}
-                    className="flex items-center gap-3.5 px-3 py-3 rounded-16px text-brand-text hover:bg-brand-primary/10 hover:text-brand-primary transition-colors text-sm font-semibold min-h-[44px]"
+                    className="flex items-center gap-3.5 px-3.5 py-2.5 rounded-16px text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 hover:text-brand-primary dark:hover:text-brand-primary transition-all text-sm font-bold min-h-[44px]"
                   >
-                    <Icon className="w-6 h-6 stroke-[2]" />
+                    <Icon className="w-5 h-5 stroke-[2] text-brand-primary" />
                     <span>{item.label}</span>
                   </button>
                 );
@@ -83,17 +83,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
                   key={item.label}
                   to={item.path}
                   className={({ isActive }) =>
-                    `flex items-center gap-3.5 px-3 py-3 rounded-16px transition-colors text-sm font-semibold min-h-[44px] ${
+                    `flex items-center gap-3.5 px-3.5 py-2.5 rounded-16px transition-all text-sm font-bold min-h-[44px] ${
                       isActive
-                        ? 'bg-brand-primary text-white shadow-soft'
-                        : 'text-brand-text hover:bg-brand-primary/10 hover:text-brand-primary'
+                        ? 'bg-gradient-to-r from-brand-primary to-orange-500 text-white shadow-md'
+                        : 'text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 hover:text-brand-primary dark:hover:text-brand-primary'
                     }`
                   }
                 >
                   {item.isAvatar && user ? (
                     <Avatar src={user.avatarUrl} alt={user.fullName} size="sm" />
                   ) : (
-                    <Icon className="w-6 h-6 stroke-[2]" />
+                    <Icon className="w-5 h-5 stroke-[2]" />
                   )}
                   <span>{item.label}</span>
                 </NavLink>
@@ -106,19 +106,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
         {user && (
           <NavLink
             to={`/profile/${user.username}`}
-            className="flex items-center gap-3 p-2.5 rounded-16px hover:bg-brand-primary/5 transition-colors border border-brand-border/40"
+            className="flex items-center gap-3 p-2.5 rounded-16px hover:bg-brand-primary/10 transition-colors border border-brand-border/60 dark:border-slate-800 bg-brand-bg/50 dark:bg-slate-800/50"
           >
             <Avatar src={user.avatarUrl} alt={user.fullName} size="md" />
             <div className="flex flex-col truncate">
-              <span className="text-xs font-bold text-brand-text truncate">{user.fullName}</span>
-              <span className="text-[11px] text-brand-muted truncate">@{user.username}</span>
+              <span className="text-xs font-extrabold text-brand-text dark:text-gray-100 truncate">{user.fullName}</span>
+              <span className="text-[11px] text-brand-muted dark:text-slate-400 truncate">@{user.username}</span>
             </div>
           </NavLink>
         )}
       </aside>
 
-      {/* MOBILE BOTTOM NAVIGATION */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[64px] glass-nav z-40 flex items-center justify-around px-2">
+      {/* MOBILE BOTTOM NAVIGATION BAR */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[64px] glass-nav z-40 flex items-center justify-around px-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-brand-border/60 dark:border-slate-800/80">
         {mobileNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
@@ -128,10 +128,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
               <button
                 key={item.label}
                 onClick={item.onClick}
-                className="flex flex-col items-center justify-center h-full w-14 text-brand-text active:scale-95 transition-transform"
+                className="flex flex-col items-center justify-center h-full w-14 active:scale-90 transition-transform"
+                aria-label="Create Post"
               >
-                <div className="w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center shadow-ambient">
-                  <Icon className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-full bg-gradient-to-r from-brand-primary to-orange-500 text-white flex items-center justify-center shadow-lg neon-glow-primary">
+                  <Icon className="w-6 h-6 stroke-[2.5]" />
                 </div>
               </button>
             );
@@ -141,26 +142,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick }) => {
             <NavLink
               key={item.label}
               to={item.path}
-              className="flex flex-col items-center justify-center h-full w-14 relative"
+              className="flex flex-col items-center justify-center h-full w-14 relative active:scale-90 transition-transform"
             >
               {item.isAvatar && user ? (
                 <Avatar
                   src={user.avatarUrl}
                   alt={user.fullName}
                   size="sm"
-                  className={isActive ? 'ring-2 ring-brand-primary' : ''}
+                  className={isActive ? 'ring-2 ring-brand-primary shadow-sm' : ''}
                 />
               ) : (
                 <Icon
                   className={`w-6 h-6 transition-colors ${
-                    isActive ? 'text-brand-primary stroke-[2.5]' : 'text-brand-muted stroke-[1.8]'
+                    isActive ? 'text-brand-primary stroke-[2.5]' : 'text-brand-muted dark:text-slate-400 stroke-[1.8]'
                   }`}
                 />
               )}
 
-              {/* Active Orange Dot Indicator */}
+              {/* Active Glow Dot Indicator */}
               {isActive && (
-                <span className="w-1.5 h-1.5 bg-brand-primary rounded-full absolute bottom-1.5" />
+                <span className="w-1.5 h-1.5 bg-brand-primary rounded-full absolute bottom-1.5 shadow-sm animate-pulse" />
               )}
             </NavLink>
           );

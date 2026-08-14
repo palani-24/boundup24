@@ -5,27 +5,31 @@
 :root {
   --primary-color: #FF5722;
   --primary-hover: #E64A19;
-  --bg-color: #FCF9F8;
+  --bg-color: #F8FAFC;
   --card-bg: #FFFFFF;
-  --text-main: #1C1B1B;
-  --text-muted: #6B7280;
-  --border-color: rgba(28, 27, 27, 0.08);
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --border-color: rgba(15, 23, 42, 0.08);
+  --accent-glow: rgba(255, 87, 34, 0.15);
 }
 
 .dark {
-  --bg-color: #0F172A;
-  --card-bg: #1E293B;
+  --bg-color: #0B0F17;
+  --card-bg: #151C2C;
   --text-main: #F8FAFC;
   --text-muted: #94A3B8;
-  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --accent-glow: rgba(255, 87, 34, 0.25);
 }
 
 @layer base {
   body {
     background-color: var(--bg-color);
     color: var(--text-main);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -33,31 +37,52 @@
   }
 }
 
-/* Glassmorphism Utilities */
+/* CINEMATIC & GLASSMORPHISM UTILITIES */
 .glass-panel {
   background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--border-color);
 }
 
 .glass-nav {
-  background: var(--card-bg);
+  background: rgba(21, 28, 44, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border-color);
 }
 
 .glass-header {
-  background: var(--card-bg);
+  background: rgba(21, 28, 44, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-color);
 }
 
-/* Story Ring Amber to Orange Gradient */
+/* NEON GRADIENT & GLOW BADGES */
+.neon-glow-primary {
+  box-shadow: 0 0 20px rgba(255, 87, 34, 0.35);
+}
+
+.neon-glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+}
+
+.neon-glow-emerald {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
+}
+
+/* Story Ring Neon Gradient */
 .story-ring-active {
-  background: linear-gradient(45deg, #FFC107, #FF5722);
+  background: linear-gradient(135deg, #FFC107, #FF5722, #EC4899, #8B5CF6);
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Scrollbar hide for story bars and category pills */
@@ -67,4 +92,20 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Custom Scrollbar for desktop */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 87, 34, 0.5);
 }
