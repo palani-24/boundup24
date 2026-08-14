@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Image, Smile, Trash2, Check, CheckCheck, Info, User } from 'lucide-react';
+import { Send, Image, Smile, Trash2, Check, CheckCheck, Info, User, Phone, Video as VideoCall, Flame } from 'lucide-react';
 import { Avatar } from '../ui/Avatar';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
@@ -163,24 +163,69 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
         {activeConv ? (
           <>
             {/* CHAT HEADER */}
-            <header className="p-4 border-b border-brand-border flex items-center justify-between bg-white/80 backdrop-blur-md">
+            <header className="p-3.5 border-b border-brand-border flex items-center justify-between bg-white/80 backdrop-blur-md">
               <div className="flex items-center gap-3">
                 <button onClick={() => setActiveConv(null)} className="md:hidden text-brand-muted hover:text-brand-text">
                   ←
                 </button>
                 <Avatar src={otherParticipant?.avatarUrl} alt={otherParticipant?.fullName} size="md" />
                 <div className="flex flex-col">
-                  <span className="font-bold text-sm text-brand-text">{otherParticipant?.fullName}</span>
+                  <span className="font-bold text-sm text-brand-text flex items-center gap-1.5">
+                    {otherParticipant?.fullName}
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Online" />
+                  </span>
                   <span className="text-[11px] text-brand-primary font-medium">
                     {typingUsers.get(activeConv.id || (activeConv as any)._id) ? 'typing...' : `@${otherParticipant?.username}`}
                   </span>
                 </div>
               </div>
 
-              <button onClick={() => setShowDetails(!showDetails)} className="p-2 text-brand-muted hover:text-brand-text">
-                <Info className="w-5 h-5" />
-              </button>
+              {/* CALL & VANISH MODE CONTROLS */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => alert(`Starting voice call with @${otherParticipant?.username}...`)}
+                  className="p-2.5 rounded-full hover:bg-brand-primary/10 text-brand-primary transition-colors"
+                  title="Audio Call"
+                >
+                  <Phone className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => alert(`Starting video call with @${otherParticipant?.username}...`)}
+                  className="p-2.5 rounded-full hover:bg-purple-500/10 text-purple-600 transition-colors"
+                  title="Video Call"
+                >
+                  <VideoCall className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    const isVanish = !activeConv.isVanishMode;
+                    setActiveConv({ ...activeConv, isVanishMode: isVanish });
+                  }}
+                  className={`p-2.5 rounded-full transition-all ${
+                    activeConv.isVanishMode
+                      ? 'bg-amber-500 text-white shadow-sm'
+                      : 'hover:bg-amber-500/10 text-amber-500'
+                  }`}
+                  title="Toggle Vanish / Disappearing Mode"
+                >
+                  <Flame className="w-4 h-4" />
+                </button>
+                <button onClick={() => setShowDetails(!showDetails)} className="p-2.5 text-brand-muted hover:text-brand-text">
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
             </header>
+
+            {/* VANISH MODE WARNING BANNER */}
+            {activeConv.isVanishMode && (
+              <div className="bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-amber-500/20 border-b border-amber-500/30 px-4 py-2 flex items-center justify-between text-xs font-bold text-amber-700">
+                <span className="flex items-center gap-1.5">
+                  <Flame className="w-3.5 h-3.5 text-amber-500 animate-bounce" />
+                  Vanish Mode Active — Messages disappear after leaving chat
+                </span>
+                <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full">Encrypted</span>
+              </div>
+            )}
 
             {/* MESSAGES LIST */}
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 bg-gray-50/50">

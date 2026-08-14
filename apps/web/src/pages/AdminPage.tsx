@@ -100,6 +100,15 @@ export const AdminPage: React.FC = () => {
         >
           Reports Queue ({reports.length})
         </button>
+
+        <button
+          onClick={() => setActiveTab('ai_flagged' as any)}
+          className={`flex-1 py-2 rounded-16px text-xs font-bold transition-colors flex items-center justify-center gap-1.5 ${
+            (activeTab as string) === 'ai_flagged' ? 'bg-purple-600 text-white' : 'text-purple-600 bg-purple-50'
+          }`}
+        >
+          <span>🤖 AI Flagged Queue</span>
+        </button>
       </div>
 
       {/* USER LIST TABLE */}

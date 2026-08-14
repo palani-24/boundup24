@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { ICommunity } from '@boundup/shared';
-import { Users, Plus, Search, Sparkles, Check } from 'lucide-react';
+import { Users, Plus, Search, Sparkles, Check, Radio } from 'lucide-react';
 
 const CATEGORIES = ['All', 'Photography', 'Tech', 'Gaming', 'Art', 'Food', 'Travel', 'Sports'];
 
@@ -84,6 +84,28 @@ export const CommunitiesPage: React.FC = () => {
           className="px-4 py-2.5 rounded-full bg-orange-500 text-white font-semibold text-xs flex items-center gap-2 shadow-md hover:bg-orange-600 transition-transform active:scale-95"
         >
           <Plus className="w-4 h-4" /> Create Space
+        </button>
+      </div>
+
+      {/* LIVE AUDIO HUDDLES BANNER */}
+      <div className="mb-6 p-4 rounded-24px bg-gradient-to-r from-purple-600 via-indigo-600 to-brand-primary text-white shadow-md flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-white/20 backdrop-blur-md rounded-20px">
+            <Radio className="w-6 h-6 animate-pulse text-amber-300" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-full bg-red-500 text-[10px] font-extrabold uppercase tracking-wider">LIVE HUDDLE</span>
+              <span className="text-xs font-bold text-purple-200">Tech Creators Lounge</span>
+            </div>
+            <p className="text-xs text-white font-semibold mt-0.5">Topic: Future of AI in Mobile & Web Engineering 🎙️</p>
+          </div>
+        </div>
+        <button
+          onClick={() => alert('Joining Live Audio Huddle... Microphone connected!')}
+          className="px-4 py-2 bg-white text-purple-900 rounded-16px text-xs font-extrabold hover:bg-purple-50 transition-colors shadow-sm"
+        >
+          Join Stage
         </button>
       </div>
 

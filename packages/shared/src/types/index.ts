@@ -30,6 +30,9 @@ export interface IUser {
   dob?: string;
   badges?: string[];
   closeFriends?: string[];
+  socialLinks?: { label: string; url: string }[];
+  coverVideoUrl?: string;
+  pinnedPostIds?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -93,6 +96,11 @@ export interface IPost {
   sharesCount: number;
   isLiked?: boolean;
   isSaved?: boolean;
+  reactions?: { [key: string]: number };
+  userReaction?: string;
+  isPinned?: boolean;
+  audioTitle?: string;
+  audioAuthor?: string;
   isCommentsDisabled: boolean;
   isLikeCountHidden: boolean;
   visibility?: 'PUBLIC' | 'CLOSE_FRIENDS';

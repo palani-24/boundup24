@@ -200,23 +200,39 @@ export const ProfilePage: React.FC = () => {
             </div>
 
             {/* Profile Information */}
-            <div className="flex flex-col gap-1 mt-1">
-              <span className="font-bold text-sm text-brand-text">{profile.fullName}</span>
-              <span className="text-xs font-semibold text-brand-primary bg-brand-primary/10 px-2 py-0.5 rounded-full w-fit">
-                {profile.category || 'Personal'}
-              </span>
-              {profile.bio && <p className="text-xs text-brand-muted leading-relaxed mt-1">{profile.bio}</p>}
-              {profile.website && (
-                <a
-                  href={profile.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs font-bold text-brand-primary hover:underline flex items-center gap-1 mt-1"
-                >
-                  <Globe className="w-3.5 h-3.5" />
-                  {profile.website.replace('https://', '').replace('http://', '')}
-                </a>
-              )}
+            <div className="flex flex-col gap-1.5 mt-1 w-full">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-sm text-brand-text">{profile.fullName}</span>
+                {profile.isVerified && (
+                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 text-[10px] font-extrabold flex items-center gap-1 border border-blue-500/20">
+                    ✓ Verified Creator
+                  </span>
+                )}
+                <span className="text-xs font-semibold text-brand-primary bg-brand-primary/10 px-2 py-0.5 rounded-full">
+                  {profile.category || 'Software Engineer & Creator'}
+                </span>
+              </div>
+              {profile.bio && <p className="text-xs text-brand-muted leading-relaxed mt-0.5">{profile.bio}</p>}
+              
+              {/* SOCIAL LINKS TREE (LINKTREE STYLE) */}
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                {(profile.socialLinks || [
+                  { label: 'Portfolio', url: 'https://boundup.app' },
+                  { label: 'GitHub', url: 'https://github.com' },
+                  { label: 'YouTube', url: 'https://youtube.com' }
+                ]).map((link, idx) => (
+                  <a
+                    key={idx}
+                    href={link.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-2.5 py-1 rounded-12px bg-brand-bg/80 border border-brand-border text-brand-text hover:border-brand-primary hover:text-brand-primary text-[11px] font-extrabold flex items-center gap-1.5 transition-all shadow-2xs"
+                  >
+                    <Globe className="w-3 h-3 text-brand-primary" />
+                    <span>{link.label}</span>
+                  </a>
+                ))}
+              </div>
             </div>
 
             {/* Action Buttons */}
