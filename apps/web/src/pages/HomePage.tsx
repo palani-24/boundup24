@@ -6,7 +6,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { Compass, Sparkles, Users, Clock, Mic, Radio, Hash, Flame } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { IPost } from '@boundup/shared';
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface HomePageProps {
   onCreateClick?: () => void;
@@ -51,41 +51,43 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
 
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col py-4 px-2 select-none">
-      {/* STORIES ROW */}
+      {/* STORIES ROW (INSTAGRAM GRADIENT RINGS) */}
       <StoriesRow storyGroups={storyGroups} onRefresh={fetchFeed} />
 
-      {/* LIVE AUDIO HUDDLE BANNER */}
-      <div className="my-3 p-3 bg-gradient-to-r from-purple-900/90 via-indigo-900/90 to-slate-900 border border-purple-500/30 rounded-20px shadow-lg text-white flex items-center justify-between backdrop-blur-md">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-purple-500/20 backdrop-blur-md rounded-14px border border-purple-400/40">
-            <Radio className="w-4 h-4 text-amber-300 animate-pulse" />
+      {/* LIVE AUDIO HUDDLE BANNER (CLEAN THEME COMPATIBLE) */}
+      <div className="my-3 p-3.5 bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px shadow-sm card-shadow flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-16px border border-purple-500/20">
+            <Radio className="w-5 h-5 animate-pulse text-purple-500" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="px-2 py-0.2 rounded-full bg-red-500 text-[9px] font-extrabold uppercase tracking-wider">LIVE</span>
-              <span className="text-xs font-extrabold text-purple-200">Creators Audio Room</span>
+              <span className="px-2 py-0.5 rounded-full bg-red-500 text-white text-[9px] font-black uppercase tracking-wider">
+                LIVE
+              </span>
+              <span className="text-xs font-extrabold text-brand-text dark:text-gray-100">Creators Audio Room</span>
             </div>
-            <p className="text-[11px] text-gray-200 font-semibold truncate max-w-[200px] sm:max-w-[260px]">
-              Discussing Cinematic Design & Mobile Web Apps 🎙️
+            <p className="text-[11px] text-brand-muted dark:text-slate-400 font-semibold truncate max-w-[200px] sm:max-w-[260px]">
+              Discussing Mobile Web Engineering & Design 🎙️
             </p>
           </div>
         </div>
         <button
-          onClick={() => alert('Joining Live Audio Room... Mic enabled!')}
-          className="px-3 py-1.5 bg-gradient-to-r from-brand-primary to-orange-500 text-white rounded-14px text-xs font-extrabold shadow-sm hover:opacity-90 transition-all flex items-center gap-1"
+          onClick={() => alert('Joining Live Audio Room... Mic connected!')}
+          className="px-4 py-2 bg-brand-primary text-white rounded-16px text-xs font-extrabold shadow-md hover:opacity-90 transition-all active:scale-95"
         >
           Join
         </button>
       </div>
 
-      {/* SMART FEED MODE SWITCHER */}
-      <div className="flex items-center justify-between my-2 bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-20px p-1.5 shadow-soft">
+      {/* MINIMALIST FEED MODE SWITCHER TABS */}
+      <div className="flex items-center justify-between my-2 bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px p-1.5 shadow-sm card-shadow">
         <div className="flex items-center gap-1 w-full">
           <button
             onClick={() => setFeedMode('forYou')}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-14px text-xs font-extrabold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-16px text-xs font-extrabold transition-all ${
               feedMode === 'forYou'
-                ? 'bg-gradient-to-r from-brand-primary to-orange-500 text-white shadow-md'
+                ? 'bg-brand-primary text-white shadow-md'
                 : 'text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white'
             }`}
           >
@@ -95,9 +97,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
 
           <button
             onClick={() => setFeedMode('following')}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-14px text-xs font-extrabold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-16px text-xs font-extrabold transition-all ${
               feedMode === 'following'
-                ? 'bg-gradient-to-r from-brand-primary to-orange-500 text-white shadow-md'
+                ? 'bg-brand-primary text-white shadow-md'
                 : 'text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white'
             }`}
           >
@@ -107,9 +109,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
 
           <button
             onClick={() => setFeedMode('latest')}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-14px text-xs font-extrabold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-16px text-xs font-extrabold transition-all ${
               feedMode === 'latest'
-                ? 'bg-gradient-to-r from-brand-primary to-orange-500 text-white shadow-md'
+                ? 'bg-brand-primary text-white shadow-md'
                 : 'text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white'
             }`}
           >
@@ -125,10 +127,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
           <button
             key={t}
             onClick={() => setActiveTag(t)}
-            className={`px-3 py-1 rounded-full text-xs font-extrabold flex items-center gap-1 whitespace-nowrap transition-all ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1 whitespace-nowrap transition-all ${
               activeTag === t
                 ? 'bg-brand-primary text-white shadow-sm'
-                : 'bg-white dark:bg-slate-800/80 text-brand-muted dark:text-slate-300 border border-brand-border dark:border-slate-700/70 hover:border-brand-primary'
+                : 'bg-white dark:bg-slate-900 text-brand-muted dark:text-slate-400 border border-brand-border dark:border-slate-800 hover:border-brand-primary'
             }`}
           >
             {t !== 'All' && <Hash className="w-3 h-3 text-brand-primary" />}
@@ -139,10 +141,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
 
       {/* QUICK VOICE POST BANNER */}
       {onCreateClick && (
-        <div className="mb-4 p-3.5 bg-gradient-to-r from-brand-primary/15 via-purple-500/10 to-amber-500/5 dark:from-slate-900 dark:to-slate-800 border border-brand-primary/30 dark:border-slate-700 rounded-20px flex items-center justify-between shadow-soft">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2.5 bg-gradient-to-br from-brand-primary to-orange-600 text-white rounded-14px shadow-md">
-              <Mic className="w-4 h-4" />
+        <div className="mb-4 p-3.5 bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px flex items-center justify-between shadow-sm card-shadow">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-brand-primary/10 text-brand-primary rounded-16px border border-brand-primary/20">
+              <Mic className="w-5 h-5" />
             </div>
             <div>
               <p className="text-xs font-extrabold text-brand-text dark:text-gray-100">Share a Voice Post</p>
@@ -153,7 +155,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
           </div>
           <button
             onClick={onCreateClick}
-            className="px-3.5 py-1.5 bg-brand-primary text-white rounded-14px text-xs font-extrabold shadow-sm hover:opacity-90 transition-opacity"
+            className="px-4 py-2 bg-brand-primary text-white rounded-16px text-xs font-extrabold shadow-sm hover:opacity-90 transition-opacity active:scale-95"
           >
             Record
           </button>

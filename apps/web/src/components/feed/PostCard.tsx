@@ -8,7 +8,6 @@ import { api, apiFetch } from '../../services/api';
 import { useAuthStore } from '../../store/useAuthStore';
 import { PollCard } from './PollCard';
 import { AudioPlayer } from '../ui/AudioPlayer';
-import { VoiceRecorderModal } from '../ui/VoiceRecorderModal';
 import { SaveCollectionModal } from '../profile/SaveCollectionModal';
 import { ShareToFriendsModal } from '../common/ShareToFriendsModal';
 import { CommentsDrawerModal } from '../common/CommentsDrawerModal';
@@ -87,7 +86,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
   const currentMedia = post.media && post.media.length > 0 ? post.media[activeMediaIndex] : null;
 
   return (
-    <article className="w-full bg-white dark:bg-slate-900/90 border border-brand-border dark:border-slate-800 rounded-24px my-4 overflow-hidden shadow-soft hover:shadow-ambient transition-all duration-300 select-none backdrop-blur-md">
+    <article className="w-full bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px my-3.5 overflow-hidden shadow-sm card-shadow transition-all duration-300 select-none">
       {/* POST HEADER */}
       <header className="flex items-center justify-between p-4 border-b border-brand-border/40 dark:border-slate-800/60">
         <NavLink to={`/profile/${post.author.username}`} className="flex items-center gap-3 group">
@@ -114,9 +113,9 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
         </button>
       </header>
 
-      {/* CAPTION (IF ANY) BEFORE MEDIA */}
+      {/* CAPTION BEFORE MEDIA */}
       {post.caption && (
-        <div className="px-4 py-2.5">
+        <div className="px-4 py-3">
           <p className="text-xs text-brand-text dark:text-gray-200 leading-relaxed font-medium">
             {post.caption}
           </p>
@@ -125,7 +124,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
 
       {/* MEDIA DISPLAY OR AUDIO DISPLAY */}
       {post.audioUrl || post.type === 'AUDIO' ? (
-        <div className="p-6 bg-gradient-to-r from-brand-primary/10 via-purple-500/10 to-amber-500/10 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center border-y border-brand-border/40 dark:border-slate-800">
+        <div className="p-6 bg-gradient-to-r from-brand-primary/10 via-purple-500/10 to-amber-500/10 dark:from-slate-950 dark:to-slate-900 flex items-center justify-center border-y border-brand-border/40 dark:border-slate-800">
           <AudioPlayer src={post.audioUrl || ''} />
         </div>
       ) : currentMedia ? (
@@ -227,7 +226,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
               </button>
             </div>
 
-            {/* COMMENT BUTTON (OPEN COMMENTS DRAWER) */}
+            {/* COMMENT BUTTON */}
             <button
               onClick={() => setShowCommentsModal(true)}
               className="text-brand-text dark:text-gray-200 hover:text-brand-primary transition-transform active:scale-110 flex items-center gap-1"
@@ -235,7 +234,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
               <MessageCircle className="w-6 h-6 stroke-[2]" />
             </button>
 
-            {/* SHARE BUTTON (OPEN SHARE TO FRIENDS MODAL) */}
+            {/* SHARE BUTTON */}
             <button
               onClick={() => setShowShareModal(true)}
               className="text-brand-text dark:text-gray-200 hover:text-brand-primary transition-transform active:scale-110"
