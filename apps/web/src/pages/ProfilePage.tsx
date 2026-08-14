@@ -32,16 +32,27 @@ export const ProfilePage: React.FC = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isFollowPending, setIsFollowPending] = useState(false);
   const [isSelf, setIsSelf] = useState(false);
-  const [activeTab, setActiveTab] = useState<'grid' | 'videos' | 'saved' | 'tagged'>('grid');
+  const [activeTab, setActiveTab] = useState<'grid' | 'videos' | 'saved' | 'tagged' | 'pinned'>('grid');
   const [isLoading, setIsLoading] = useState(true);
 
   // Edit Profile Modal State
   const [isEditing, setIsEditing] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showCloseFriendsModal, setShowCloseFriendsModal] = useState(false);
+
   const [fullNameInput, setFullNameInput] = useState('');
   const [bioInput, setBioInput] = useState('');
   const [websiteInput, setWebsiteInput] = useState('');
   const [categoryInput, setCategoryInput] = useState('');
   const [avatarUrlInput, setAvatarUrlInput] = useState('');
+  const [coverVideoInput, setCoverVideoInput] = useState('');
+  const [pronounsInput, setPronounsInput] = useState('He/Him');
+  const [locationInput, setLocationInput] = useState('Chennai, TN');
+  const [isPrivateInput, setIsPrivateInput] = useState(false);
+  const [socialLinksInput, setSocialLinksInput] = useState<{ label: string; url: string }[]>([
+    { label: 'Portfolio', url: 'https://boundup.app' },
+    { label: 'GitHub', url: 'https://github.com' },
+  ]);
 
   const fetchProfileData = async () => {
     setIsLoading(true);
@@ -102,9 +113,22 @@ export const ProfilePage: React.FC = () => {
     setFullNameInput(profile.fullName);
     setBioInput(profile.bio || '');
     setWebsiteInput(profile.website || '');
-    setCategoryInput(profile.category || 'Personal');
+    setCategoryInput(profile.category || 'Software Engineer');
     setAvatarUrlInput(profile.avatarUrl || '');
+    setCoverVideoInput(profile.coverVideoUrl || '');
+    setIsPrivateInput(profile.isPrivate || false);
+    if (profile.socialLinks && profile.socialLinks.length > 0) {
+      setSocialLinksInput(profile.socialLinks);
+    }
     setIsEditing(true);
+  };
+
+  const handleAddSocialLink = () => {
+    setSocialLinksInput([...socialLinksInput, { label: 'Social', url: 'https://' }]);
+  };
+
+  const handleRemoveSocialLink = (index: number) => {
+    setSocialLinksInput(socialLinksInput.filter((_, i) => i !== index));
   };
 
   const handleSaveProfile = async () => {
@@ -117,6 +141,9 @@ export const ProfilePage: React.FC = () => {
           website: websiteInput,
           category: categoryInput,
           avatarUrl: avatarUrlInput,
+          coverVideoUrl: coverVideoInput,
+          isPrivate: isPrivateInput,
+          socialLinks: socialLinksInput,
         }),
       });
 
@@ -171,10 +198,24 @@ export const ProfilePage: React.FC = () => {
   return (
     <div className="w-full max-w-3xl mx-auto py-4 px-3 select-none flex flex-col gap-6">
       {/* HEADER STATS CARD */}
-      <div className="w-full bg-white border border-brand-border rounded-24px p-6 shadow-soft flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+      <div className="w-full bg-white border border-brand-border rounded-24px p-6 shadow-soft flex flex-col gap-6 relative overflow-hidden">
+        {/* ANIMATED / IMAGE COVER BANNER */}
+        <div className="h-28 -mx-6 -mt-6 bg-gradient-to-r from-brand-primary/20 via-purple-600/20 to-amber-500/20 border-b border-brand-border relative flex items-end justify-end p-3">
+          <span className="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-black/40 text-white backdrop-blur-md border border-white/20">
+            📍 {locationInput} • {pronounsInput}
+          </span>
+        </div>
+
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 -mt-12">
           {/* Avatar */}
-          <Avatar src={profile.avatarUrl} alt={profile.fullName} size="xl" />
+          <div className="relative">
+            <Avatar src={profile.avatarUrl} alt={profile.fullName} size="xl" />
+            {profile.isVerified && (
+              <span className="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold shadow-md border-2 border-white">
+                ✓
+              </span>
+            )}
+          </div>
 
           {/* User Bio & Details */}
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left gap-3 w-full">
@@ -209,18 +250,14 @@ export const ProfilePage: React.FC = () => {
                   </span>
                 )}
                 <span className="text-xs font-semibold text-brand-primary bg-brand-primary/10 px-2 py-0.5 rounded-full">
-                  {profile.category || 'Software Engineer & Creator'}
+                  {profile.category || 'Software Engineer'}
                 </span>
               </div>
               {profile.bio && <p className="text-xs text-brand-muted leading-relaxed mt-0.5">{profile.bio}</p>}
               
               {/* SOCIAL LINKS TREE (LINKTREE STYLE) */}
               <div className="flex flex-wrap items-center gap-2 mt-2">
-                {(profile.socialLinks || [
-                  { label: 'Portfolio', url: 'https://boundup.app' },
-                  { label: 'GitHub', url: 'https://github.com' },
-                  { label: 'YouTube', url: 'https://youtube.com' }
-                ]).map((link, idx) => (
+                {(profile.socialLinks || socialLinksInput).map((link, idx) => (
                   <a
                     key={idx}
                     href={link.url}
@@ -242,7 +279,7 @@ export const ProfilePage: React.FC = () => {
                   <Button variant="outline" className="flex-1" onClick={handleOpenEdit}>
                     <Edit className="w-4 h-4 mr-1.5" /> Edit Profile
                   </Button>
-                  <Button variant="ghost" className="p-3">
+                  <Button variant="ghost" className="p-3" onClick={() => setShowShareModal(true)}>
                     <Share2 className="w-4 h-4" />
                   </Button>
                 </>
@@ -278,6 +315,9 @@ export const ProfilePage: React.FC = () => {
                       <MessageSquare className="w-4 h-4 mr-1.5" /> Message (Follow first)
                     </Button>
                   )}
+                  <Button variant="ghost" className="p-3" onClick={() => setShowShareModal(true)}>
+                    <Share2 className="w-4 h-4" />
+                  </Button>
                 </>
               )}
             </div>
@@ -358,56 +398,195 @@ export const ProfilePage: React.FC = () => {
         />
       )}
 
-      {/* EDIT PROFILE MODAL */}
+      {/* ADVANCED EDIT PROFILE MODAL */}
       {isEditing && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-24px max-w-md w-full p-6 shadow-glass flex flex-col gap-4">
-            <h3 className="text-lg font-bold text-brand-text font-heading">Edit Profile</h3>
-
-            <div className="flex flex-col gap-3">
-              <input
-                type="text"
-                placeholder="Avatar URL"
-                value={avatarUrlInput}
-                onChange={(e) => setAvatarUrlInput(e.target.value)}
-                className="h-10 border border-brand-border rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary"
-              />
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={fullNameInput}
-                onChange={(e) => setFullNameInput(e.target.value)}
-                className="h-10 border border-brand-border rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary"
-              />
-              <textarea
-                placeholder="Bio (max 150 chars)"
-                rows={3}
-                value={bioInput}
-                onChange={(e) => setBioInput(e.target.value)}
-                className="border border-brand-border rounded-12px p-3 text-xs focus:outline-none focus:border-brand-primary resize-none"
-              />
-              <input
-                type="text"
-                placeholder="Website URL"
-                value={websiteInput}
-                onChange={(e) => setWebsiteInput(e.target.value)}
-                className="h-10 border border-brand-border rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary"
-              />
-              <input
-                type="text"
-                placeholder="Category (e.g. Photography, Tech)"
-                value={categoryInput}
-                onChange={(e) => setCategoryInput(e.target.value)}
-                className="h-10 border border-brand-border rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary"
-              />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-24px max-w-lg w-full p-6 shadow-glass flex flex-col gap-4 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-brand-border pb-3">
+              <h3 className="text-lg font-extrabold text-brand-text font-heading">Edit Profile Options</h3>
+              <span className="text-xs text-brand-primary font-bold">@boundup</span>
             </div>
 
-            <div className="flex items-center gap-3 mt-2">
-              <Button variant="outline" className="flex-1" onClick={() => setIsEditing(false)}>
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="text-xs font-extrabold text-brand-text mb-1 block">Avatar Picture URL</label>
+                <input
+                  type="text"
+                  placeholder="https://images.unsplash.com/..."
+                  value={avatarUrlInput}
+                  onChange={(e) => setAvatarUrlInput(e.target.value)}
+                  className="w-full h-10 border border-brand-border rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-extrabold text-brand-text mb-1 block">Full Name</label>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={fullNameInput}
+                  onChange={(e) => setFullNameInput(e.target.value)}
+                  className="w-full h-10 border border-brand-border rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-extrabold text-brand-text mb-1 block">Bio Description</label>
+                <textarea
+                  placeholder="Bio (max 150 chars)"
+                  rows={3}
+                  value={bioInput}
+                  onChange={(e) => setBioInput(e.target.value)}
+                  className="w-full border border-brand-border rounded-12px p-3 text-xs focus:outline-none focus:border-brand-primary resize-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-extrabold text-brand-text mb-1 block">Category</label>
+                  <select
+                    value={categoryInput}
+                    onChange={(e) => setCategoryInput(e.target.value)}
+                    className="w-full h-10 border border-brand-border rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary bg-white"
+                  >
+                    <option value="Software Engineer">Software Engineer</option>
+                    <option value="Content Creator">Content Creator</option>
+                    <option value="Photographer">Photographer</option>
+                    <option value="Entrepreneur">Entrepreneur</option>
+                    <option value="Designer">Designer</option>
+                    <option value="Gamer">Gamer</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-extrabold text-brand-text mb-1 block">Pronouns</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. He/Him, They/Them"
+                    value={pronounsInput}
+                    onChange={(e) => setPronounsInput(e.target.value)}
+                    className="w-full h-10 border border-brand-border rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-extrabold text-brand-text mb-1 block">Location</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Chennai, TN / San Francisco"
+                  value={locationInput}
+                  onChange={(e) => setLocationInput(e.target.value)}
+                  className="w-full h-10 border border-brand-border rounded-12px px-3 text-xs focus:outline-none focus:border-brand-primary"
+                />
+              </div>
+
+              {/* SOCIAL LINKS TREE EDITOR */}
+              <div className="p-3 bg-gray-50 rounded-16px border border-brand-border/60">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-extrabold text-brand-text">Social Links Tree</span>
+                  <button
+                    type="button"
+                    onClick={handleAddSocialLink}
+                    className="text-[10px] font-bold text-brand-primary hover:underline"
+                  >
+                    + Add Link
+                  </button>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  {socialLinksInput.map((link, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="Label (e.g. GitHub)"
+                        value={link.label}
+                        onChange={(e) => {
+                          const updated = [...socialLinksInput];
+                          updated[idx].label = e.target.value;
+                          setSocialLinksInput(updated);
+                        }}
+                        className="w-1/3 h-8 border border-brand-border rounded-8px px-2 text-[11px]"
+                      />
+                      <input
+                        type="text"
+                        placeholder="URL (https://...)"
+                        value={link.url}
+                        onChange={(e) => {
+                          const updated = [...socialLinksInput];
+                          updated[idx].url = e.target.value;
+                          setSocialLinksInput(updated);
+                        }}
+                        className="flex-1 h-8 border border-brand-border rounded-8px px-2 text-[11px]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveSocialLink(idx)}
+                        className="text-red-500 text-xs font-bold px-1"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ACCOUNT PRIVACY TOGGLE */}
+              <div className="flex items-center justify-between p-3 bg-brand-primary/5 rounded-16px border border-brand-primary/20">
+                <div>
+                  <p className="text-xs font-extrabold text-brand-text">Private Account</p>
+                  <p className="text-[10px] text-brand-muted">Require follow approval before people can view posts</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={isPrivateInput}
+                  onChange={(e) => setIsPrivateInput(e.target.checked)}
+                  className="w-4 h-4 accent-brand-primary rounded cursor-pointer"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-brand-border">
+              <Button variant="ghost" onClick={() => setIsEditing(false)}>
                 Cancel
               </Button>
-              <Button variant="primary" className="flex-1" onClick={handleSaveProfile}>
+              <Button variant="primary" onClick={handleSaveProfile}>
                 Save Changes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SHARE PROFILE / QR CODE MODAL */}
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-24px max-w-sm w-full p-6 shadow-glass flex flex-col items-center text-center gap-4">
+            <h3 className="text-base font-extrabold text-brand-text font-heading">Share @{profile.username} Profile</h3>
+            <div className="p-4 bg-gradient-to-br from-brand-primary to-purple-600 rounded-24px shadow-md text-white flex flex-col items-center">
+              <div className="w-36 h-36 bg-white p-2 rounded-16px flex items-center justify-center shadow-inner mb-2">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://boundup.app/profile/${profile.username}`}
+                  alt="Profile QR Code"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <span className="text-xs font-extrabold tracking-wider">BOUNDUP CREATOR PASS</span>
+            </div>
+            <p className="text-xs text-brand-muted">Scan QR code or copy direct profile URL to invite friends.</p>
+            <div className="flex gap-2 w-full">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  navigator.clipboard.writeText(`https://boundup.app/profile/${profile.username}`);
+                  alert('Profile URL copied to clipboard!');
+                }}
+              >
+                Copy Link
+              </Button>
+              <Button variant="primary" className="flex-1" onClick={() => setShowShareModal(false)}>
+                Done
               </Button>
             </div>
           </div>
