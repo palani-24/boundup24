@@ -96,7 +96,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
               <span className="font-extrabold text-sm text-brand-text dark:text-gray-100 group-hover:text-brand-primary transition-colors">
                 @{post.author.username}
               </span>
-              <CheckCircle className="w-4 h-4 text-blue-500 fill-blue-500/10" />
+              <CheckCircle className="w-4 h-4 text-[#FF5A1F] fill-[#FF5A1F]/10" />
               <span className="text-[11px] text-brand-muted dark:text-slate-400 font-normal">• 2h</span>
             </div>
             <span className="text-[11px] text-brand-muted dark:text-slate-400 font-medium">
@@ -117,7 +117,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
           </p>
           <div className="flex flex-wrap gap-1.5 mt-2">
             {['#sunset', '#dreamer', '#worklife', '#BoundUp'].map((tag) => (
-              <span key={tag} className="text-xs font-bold text-brand-primary dark:text-orange-400 hover:underline cursor-pointer">
+              <span key={tag} className="text-xs font-bold text-[#FF5A1F] hover:underline cursor-pointer">
                 {tag}
               </span>
             ))}
@@ -127,7 +127,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
 
       {/* MEDIA DISPLAY OR AUDIO DISPLAY */}
       {post.audioUrl || post.type === 'AUDIO' ? (
-        <div className="p-6 bg-gradient-to-r from-brand-primary/10 via-purple-500/10 to-amber-500/10 dark:from-slate-950 dark:to-slate-900 flex items-center justify-center border-y border-brand-border/40 dark:border-slate-800">
+        <div className="p-6 bg-[#F7F7F7] flex items-center justify-center border-y border-[#E5E7EB]">
           <AudioPlayer src={post.audioUrl || ''} />
         </div>
       ) : currentMedia ? (
@@ -148,7 +148,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
                 onClick={() => setIsMuted(!isMuted)}
                 className="absolute top-3 right-3 p-2 bg-black/60 text-white rounded-full backdrop-blur-md"
               >
-                {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
+                {isMuted ? <VolumeX className="w-4 h-4 text-white" /> : <Volume2 className="w-4 h-4 text-[#FF5A1F]" />}
               </button>
             </div>
           ) : (
@@ -170,7 +170,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
                 exit={{ scale: 0, opacity: 0 }}
                 className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
               >
-                <Heart className="w-24 h-24 text-brand-primary fill-brand-primary drop-shadow-2xl" />
+                <Heart className="w-24 h-24 text-[#FF5A1F] fill-[#FF5A1F] drop-shadow-2xl" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -194,7 +194,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
           >
             <Heart
               className={`w-5 h-5 transition-colors ${
-                isLiked ? 'text-red-500 fill-red-500' : 'text-brand-text dark:text-gray-200'
+                isLiked ? 'text-[#FF5A1F] fill-[#FF5A1F]' : 'text-brand-text dark:text-gray-200'
               }`}
             />
             <span>{likesCount > 0 ? (likesCount >= 1000 ? `${(likesCount/1000).toFixed(1)}K` : likesCount) : '1.2K'}</span>
@@ -222,10 +222,10 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
         {/* BOOKMARK BUTTON */}
         <button
           onClick={handleSaveToggle}
-          className="text-brand-text dark:text-gray-200 hover:text-amber-500 transition-colors"
+          className="text-brand-text dark:text-gray-200 hover:text-[#FF5A1F] transition-colors"
         >
           <Bookmark
-            className={`w-5 h-5 ${isSaved ? 'text-amber-500 fill-amber-500' : ''}`}
+            className={`w-5 h-5 ${isSaved ? 'text-[#FF5A1F] fill-[#FF5A1F]' : ''}`}
           />
         </button>
       </div>

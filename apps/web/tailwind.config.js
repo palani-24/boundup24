@@ -5,15 +5,14 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: '#FF5722',
-          secondary: '#FFC107',
-          bg: '#FCF9F8',
-          text: '#1C1B1B',
-          muted: '#5B4039',
-          accent: '#B02F00',
-          tertiary: '#6833EA',
+          primary: '#FF5A1F',
+          secondary: '#FF7A00',
+          bg: '#F7F7F7',
+          text: '#111111',
+          muted: '#666666',
+          accent: '#FF5A1F',
           lightBg: '#FFFFFF',
-          border: 'rgba(255, 87, 34, 0.12)',
+          border: '#E5E7EB',
         },
       },
       fontFamily: {

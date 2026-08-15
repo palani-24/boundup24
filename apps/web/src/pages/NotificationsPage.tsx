@@ -122,10 +122,8 @@ export const NotificationsPage: React.FC = () => {
                 onClick={(e) => {
                   const target = e.currentTarget;
                   target.innerText = target.innerText === 'Follow Back' ? 'Following' : 'Follow Back';
-                  target.classList.toggle('bg-blue-600');
-                  target.classList.toggle('bg-gray-200');
                 }}
-                className="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-full text-xs font-extrabold shadow-sm transition-all"
+                className="px-4 py-1.5 bg-[#FF5A1F] hover:opacity-90 text-white rounded-full text-xs font-extrabold shadow-sm transition-all"
               >
                 Follow Back
               </button>

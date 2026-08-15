@@ -496,7 +496,7 @@ export const ProfilePage: React.FC = () => {
             <h1 className="font-heading font-extrabold text-2xl text-brand-text dark:text-gray-100">
               {profile.fullName || 'Karthik K'}
             </h1>
-            <CheckCircle className="w-5 h-5 text-blue-500 fill-blue-500/10" />
+            <CheckCircle className="w-5 h-5 text-[#FF5A1F] fill-[#FF5A1F]/10" />
           </div>
           <span className="text-xs text-brand-muted dark:text-slate-400 font-medium -mt-2">@{profile.username}</span>
 

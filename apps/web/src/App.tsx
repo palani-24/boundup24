@@ -6,116 +6,103 @@ import { Header } from './components/layout/Header';
 import { CreatePostModal } from './components/feed/CreatePostModal';
 
 // Pages
+import { SplashScreen } from './pages/SplashScreen';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { HomePage } from './pages/HomePage';
 import { ExplorePage } from './pages/ExplorePage';
 import { SearchPage } from './pages/SearchPage';
+import { SearchResultsPage } from './pages/SearchResultsPage';
+import { StoryViewerPage } from './pages/StoryViewerPage';
+import { CreatePostPage } from './pages/CreatePostPage';
+import { CreateVoicePostPage } from './pages/CreateVoicePostPage';
+import { CreatePhotoPostPage } from './pages/CreatePhotoPostPage';
+import { CreateReelPostPage } from './pages/CreateReelPostPage';
 import { ReelsPage } from './pages/ReelsPage';
 import { MessagesPage } from './pages/MessagesPage';
+import { DirectChatPage } from './pages/DirectChatPage';
+import { GroupChatPage } from './pages/GroupChatPage';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { EditProfilePage } from './pages/EditProfilePage';
+import { FollowersPage } from './pages/FollowersPage';
+import { FollowingPage } from './pages/FollowingPage';
+import { LiveAudioRoomPage } from './pages/LiveAudioRoomPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { AccountSettingsPage } from './pages/AccountSettingsPage';
+import { PrivacySettingsPage } from './pages/PrivacySettingsPage';
+import { NotificationSettingsPage } from './pages/NotificationSettingsPage';
+import { AppearanceSettingsPage } from './pages/AppearanceSettingsPage';
+import { HelpSupportPage } from './pages/HelpSupportPage';
+import { AboutBoundUpPage } from './pages/AboutBoundUpPage';
 import { PostDetailPage } from './pages/PostDetailPage';
 import { HashtagPage } from './pages/HashtagPage';
-import { AdminPage } from './pages/AdminPage';
-import { CommunitiesPage } from './pages/CommunitiesPage';
-import { AnalyticsPage } from './pages/AnalyticsPage';
-import { LiveStreamModal } from './components/live/LiveStreamModal';
 import { Radio } from 'lucide-react';
-
-// Protected Route Wrapper
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuthStore();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-bg">
-        <div className="flex flex-col items-center gap-3">
-          <span className="font-heading font-extrabold text-3xl text-brand-primary animate-pulse">BOUNDUP</span>
-          <span className="text-xs font-semibold text-brand-muted">Loading application...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <>{children}</>;
-};
 
 const MainLayout: React.FC = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isLiveOpen, setIsLiveOpen] = useState(false);
   const location = useLocation();
 
-  const isAuthRoute = location.pathname === '/login' || location.pathname === '/register';
-
-  if (isAuthRoute) {
-    return (
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-      </Routes>
-    );
-  }
+  // Fullscreen standalone mobile pages (no header/footer overlay)
+  const isFullscreenPage =
+    location.pathname === '/splash' ||
+    location.pathname === '/login' ||
+    location.pathname === '/register' ||
+    location.pathname === '/forgot-password' ||
+    location.pathname.startsWith('/story/') ||
+    location.pathname.startsWith('/live/');
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen flex flex-col bg-brand-bg text-brand-text">
-        {/* TOP HEADER */}
-        <Header onCreateClick={() => setIsCreateOpen(true)} />
+    <div className="w-full min-h-screen bg-[#FAFAFC] sm:bg-[#EAEAEA] sm:py-4 flex justify-center items-start">
+      {/* MOBILE APPLICATION CONTAINER FRAME (390 x 844 PROPORTIONS) */}
+      <div className="w-full max-w-[430px] min-h-screen sm:min-h-[844px] bg-[#F7F7F7] text-[#111111] shadow-2xl sm:rounded-[36px] sm:border-[8px] sm:border-slate-900 relative flex flex-col overflow-hidden">
+        {!isFullscreenPage && <Header onCreateClick={() => setIsCreateOpen(true)} />}
 
-        {/* MAIN BODY CONTAINER WITH DESKTOP SIDEBAR OFFSET */}
-        <div className="flex-1 flex w-full max-w-[1200px] mx-auto md:pl-64 pb-20 md:pb-6">
-          <main className="flex-1 w-full">
-            <Routes>
-              <Route path="/" element={<Navigate to="/home" replace />} />
-              <Route path="/home" element={<HomePage onCreateClick={() => setIsCreateOpen(true)} />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/explore" element={<ExplorePage />} />
-              <Route path="/communities" element={<CommunitiesPage />} />
-              <Route path="/reels" element={<ReelsPage />} />
-              <Route path="/analytics" element={<AnalyticsPage />} />
-              <Route path="/messages" element={<MessagesPage />} />
-              <Route path="/messages/:conversationId" element={<MessagesPage />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="/profile/:username" element={<ProfilePage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/post/:id" element={<PostDetailPage />} />
-              <Route path="/hashtag/:tag" element={<HashtagPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-            </Routes>
-          </main>
-        </div>
+        <main className="flex-1 w-full pb-20 overflow-y-auto">
+          <Routes>
+            <Route path="/" element={<Navigate to="/splash" replace />} />
+            <Route path="/splash" element={<SplashScreen />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/home" element={<HomePage onCreateClick={() => setIsCreateOpen(true)} />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/search/results" element={<SearchResultsPage />} />
+            <Route path="/story/:id" element={<StoryViewerPage />} />
+            <Route path="/create" element={<CreatePostPage />} />
+            <Route path="/create/voice" element={<CreateVoicePostPage />} />
+            <Route path="/create/photo" element={<CreatePhotoPostPage />} />
+            <Route path="/create/reel" element={<CreateReelPostPage />} />
+            <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/reels" element={<ReelsPage />} />
+            <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/messages/direct/:id" element={<DirectChatPage />} />
+            <Route path="/messages/group/:id" element={<GroupChatPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/profile/:username" element={<ProfilePage />} />
+            <Route path="/profile/edit" element={<EditProfilePage />} />
+            <Route path="/profile/:username/followers" element={<FollowersPage />} />
+            <Route path="/profile/:username/following" element={<FollowingPage />} />
+            <Route path="/live/:id" element={<LiveAudioRoomPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/settings/account" element={<AccountSettingsPage />} />
+            <Route path="/settings/privacy" element={<PrivacySettingsPage />} />
+            <Route path="/settings/notifications" element={<NotificationSettingsPage />} />
+            <Route path="/settings/appearance" element={<AppearanceSettingsPage />} />
+            <Route path="/settings/help" element={<HelpSupportPage />} />
+            <Route path="/settings/about" element={<AboutBoundUpPage />} />
+            <Route path="/post/:id" element={<PostDetailPage />} />
+            <Route path="/hashtag/:tag" element={<HashtagPage />} />
+          </Routes>
+        </main>
 
-        {/* FLOATING LIVE STREAM LAUNCHER BUTTON */}
-        <button
-          onClick={() => setIsLiveOpen(true)}
-          className="fixed bottom-20 right-5 md:bottom-6 md:right-6 z-40 bg-red-600 text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 hover:bg-red-700 transition-transform active:scale-95 animate-pulse"
-          title="Join / Go Live"
-        >
-          <Radio className="w-5 h-5" />
-          <span className="text-xs font-black uppercase tracking-wider hidden sm:inline">Go Live</span>
-        </button>
-
-        {/* NAVIGATION (DESKTOP SIDEBAR + MOBILE BOTTOM BAR) */}
-        <Navbar onCreateClick={() => setIsCreateOpen(true)} />
+        {!isFullscreenPage && <Navbar onCreateClick={() => setIsCreateOpen(true)} />}
 
         {/* CREATE POST MODAL */}
         <CreatePostModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
-
-        {/* LIVE STREAM MODAL */}
-        <LiveStreamModal
-          isOpen={isLiveOpen}
-          roomId="boundup-main-stage"
-          hostName="Elena Vance"
-          onClose={() => setIsLiveOpen(false)}
-        />
       </div>
-    </ProtectedRoute>
+    </div>
   );
 };
 
