@@ -86,18 +86,18 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
   const currentMedia = post.media && post.media.length > 0 ? post.media[activeMediaIndex] : null;
 
   return (
-    <article className="w-full bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px my-3.5 overflow-hidden shadow-sm card-shadow transition-all duration-300 select-none">
+    <article className="w-full bg-white border border-[#E5E7EB] rounded-24px my-3.5 overflow-hidden shadow-sm transition-all duration-300 select-none">
       {/* POST HEADER */}
-      <header className="flex items-center justify-between p-4 border-b border-brand-border/40 dark:border-slate-800/60">
+      <header className="flex items-center justify-between p-4 border-b border-[#E5E7EB]/60">
         <NavLink to={`/profile/${post.author.username}`} className="flex items-center gap-3 group">
           <Avatar src={post.author.avatarUrl} alt={post.author.fullName} size="md" />
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-sm text-brand-text dark:text-gray-100 group-hover:text-brand-primary transition-colors">
+              <span className="font-extrabold text-sm text-[#111111] group-hover:text-[#FF5A1F] transition-colors">
                 @{post.author.username}
               </span>
               <CheckCircle className="w-4 h-4 text-[#FF5A1F] fill-[#FF5A1F]/10" />
-              <span className="text-[11px] text-brand-muted dark:text-slate-400 font-normal">• 2h</span>
+              <span className="text-[11px] text-[#666666] font-normal">• 2h</span>
             </div>
             <span className="text-[11px] text-brand-muted dark:text-slate-400 font-medium">
               {post.location || 'Coimbatore, India'}

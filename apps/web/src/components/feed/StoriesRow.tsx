@@ -111,11 +111,11 @@ export const StoriesRow: React.FC<StoriesRowProps> = ({ storyGroups = [], onRefr
   };
 
   return (
-    <div className="w-full bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px p-4 my-3 shadow-sm card-shadow select-none flex flex-col gap-3">
+    <div className="w-full bg-white border border-[#E5E7EB] rounded-24px p-4 my-3 shadow-sm select-none flex flex-col gap-3">
       {/* Header Row on Desktop */}
       <div className="flex items-center justify-between px-1">
-        <span className="font-extrabold text-sm text-brand-text dark:text-gray-100">Stories</span>
-        <button className="text-xs font-bold text-brand-primary hover:underline">See all</button>
+        <span className="font-extrabold text-sm text-[#111111]">Stories</span>
+        <button className="text-xs font-bold text-[#FF5A1F] hover:underline">See all</button>
       </div>
 
       <div className="flex items-center gap-4 overflow-x-auto no-scrollbar py-1">
@@ -124,13 +124,13 @@ export const StoriesRow: React.FC<StoriesRowProps> = ({ storyGroups = [], onRefr
           className="flex flex-col items-center gap-1.5 flex-shrink-0 cursor-pointer group"
           onClick={() => setIsCreating(true)}
         >
-          <div className="relative p-[2px] rounded-full border-2 border-dashed border-brand-primary/60 group-hover:border-brand-primary transition-colors">
+          <div className="relative p-[2px] rounded-full border-2 border-dashed border-[#FF5A1F]/60 group-hover:border-[#FF5A1F] transition-colors">
             <Avatar src={user?.avatarUrl} alt={user?.fullName} size="lg" />
-            <div className="absolute bottom-0 right-0 w-5 h-5 bg-brand-primary text-white rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm">
+            <div className="absolute bottom-0 right-0 w-5 h-5 bg-[#FF5A1F] text-white rounded-full flex items-center justify-center border-2 border-white shadow-sm">
               <Plus className="w-3.5 h-3.5 stroke-[3]" />
             </div>
           </div>
-          <span className="text-[11px] font-extrabold text-brand-text dark:text-gray-200 truncate w-16 text-center">
+          <span className="text-[11px] font-extrabold text-[#111111] truncate w-16 text-center">
             Your Story
           </span>
         </div>
@@ -150,11 +150,11 @@ export const StoriesRow: React.FC<StoriesRowProps> = ({ storyGroups = [], onRefr
                   hasViewed ? 'story-ring-viewed' : 'story-ring-gradient shadow-sm'
                 }`}
               >
-                <div className="p-[2px] bg-white dark:bg-slate-900 rounded-full">
+                <div className="p-[2px] bg-white rounded-full">
                   <Avatar src={author.avatarUrl} alt={author.fullName || author.username} size="lg" />
                 </div>
               </div>
-              <span className="text-[11px] font-bold text-brand-text dark:text-gray-200 truncate w-16 text-center group-hover:text-brand-primary transition-colors">
+              <span className="text-[11px] font-bold text-[#111111] truncate w-16 text-center group-hover:text-[#FF5A1F] transition-colors">
                 {author.username}
               </span>
             </div>

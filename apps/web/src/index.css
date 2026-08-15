@@ -15,13 +15,15 @@
 }
 
 .dark {
-  --primary-light: #2A1710;
-  --bg-color: #090D16;
-  --card-bg: #121826;
-  --card-border: rgba(255, 255, 255, 0.08);
-  --text-main: #F8FAFC;
-  --text-muted: #94A3B8;
-  --accent-glow: rgba(255, 90, 31, 0.3);
+  --primary-color: #FF5A1F;
+  --primary-hover: #E04810;
+  --primary-light: #FFF2EC;
+  --bg-color: #FAFAFC;
+  --card-bg: #FFFFFF;
+  --card-border: #E5E7EB;
+  --text-main: #111111;
+  --text-muted: #666666;
+  --accent-glow: rgba(255, 90, 31, 0.15);
 }
 
 @layer base {

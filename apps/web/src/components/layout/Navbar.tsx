@@ -56,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
   return (
     <>
       {/* DESKTOP SIDEBAR */}
-      <aside className="hidden md:flex flex-col fixed left-0 top-0 h-screen w-64 border-r border-brand-border/60 dark:border-slate-800/80 bg-white dark:bg-slate-900 z-40 px-4 py-5 justify-between select-none overflow-y-auto no-scrollbar">
+      <aside className="hidden md:flex flex-col fixed left-0 top-0 h-screen w-64 border-r border-[#E5E7EB] bg-white z-40 px-4 py-5 justify-between select-none overflow-y-auto no-scrollbar">
         <div className="flex flex-col gap-5">
           {/* Logo Branding */}
           <NavLink to="/home" className="px-2 py-1">
@@ -74,10 +74,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
                   <button
                     key={item.label}
                     onClick={item.onClick}
-                    className="flex items-center justify-between px-3.5 py-2.5 rounded-16px text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 hover:text-brand-primary transition-all text-sm font-bold min-h-[42px] group"
+                    className="flex items-center justify-between px-3.5 py-2.5 rounded-16px text-[#111111] hover:bg-orange-50 hover:text-[#FF5A1F] transition-all text-sm font-bold min-h-[42px] group"
                   >
                     <div className="flex items-center gap-3.5">
-                      <Icon className="w-5 h-5 stroke-[2] text-brand-text dark:text-gray-200 group-hover:text-brand-primary transition-colors" />
+                      <Icon className="w-5 h-5 stroke-[2] text-[#111111] group-hover:text-[#FF5A1F] transition-colors" />
                       <span>{item.label}</span>
                     </div>
                   </button>
@@ -91,8 +91,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
                   className={({ isActive }) =>
                     `flex items-center justify-between px-3.5 py-2.5 rounded-16px transition-all text-sm font-bold min-h-[42px] ${
                       isActive
-                        ? 'bg-brand-primary/10 text-brand-primary dark:bg-brand-primary/20 dark:text-brand-primary'
-                        : 'text-brand-text dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-brand-primary'
+                        ? 'bg-orange-50 text-[#FF5A1F]'
+                        : 'text-[#111111] hover:bg-gray-50 hover:text-[#FF5A1F]'
                     }`
                   }
                 >
@@ -114,20 +114,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
         </div>
 
         {/* BOTTOM SECTION OF SIDEBAR */}
-        <div className="flex flex-col gap-3 pt-4 border-t border-brand-border/60 dark:border-slate-800">
+        <div className="flex flex-col gap-3 pt-4 border-t border-[#E5E7EB]">
           {/* User Card */}
           {user && (
-            <div className="flex items-center justify-between p-2 rounded-16px hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+            <div className="flex items-center justify-between p-2 rounded-16px hover:bg-gray-50 transition-colors">
               <NavLink to={`/profile/${user.username}`} className="flex items-center gap-3 truncate">
                 <Avatar src={user.avatarUrl} alt={user.fullName} size="md" />
                 <div className="flex flex-col truncate">
-                  <span className="text-xs font-extrabold text-brand-text dark:text-gray-100 truncate">
+                  <span className="text-xs font-extrabold text-[#111111] truncate">
                     {user.fullName || 'Karthik K'}
                   </span>
-                  <span className="text-[11px] text-brand-muted dark:text-slate-400 truncate">@{user.username}</span>
+                  <span className="text-[11px] text-[#666666] truncate">@{user.username}</span>
                 </div>
               </NavLink>
-              <button className="p-1.5 text-brand-muted hover:text-brand-text rounded-full hover:bg-gray-200 dark:hover:bg-slate-700">
+              <button className="p-1.5 text-[#666666] hover:text-[#111111] rounded-full hover:bg-gray-100">
                 <MoreVertical className="w-4 h-4" />
               </button>
             </div>
@@ -136,15 +136,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
           {/* BRIGHT ORANGE GO LIVE BUTTON */}
           <button
             onClick={onGoLiveClick}
-            className="w-full py-2.5 px-4 bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white rounded-16px text-xs font-extrabold flex items-center justify-center gap-2 shadow-lg hover:opacity-95 active:scale-95 transition-all"
+            className="w-full py-2.5 px-4 bg-[#FF5A1F] text-white rounded-16px text-xs font-extrabold flex items-center justify-center gap-2 shadow-md hover:opacity-95 active:scale-95 transition-all"
           >
             <Radio className="w-4 h-4 animate-pulse" />
             <span>((o)) Go Live</span>
           </button>
 
           {/* Footer Copyright */}
-          <div className="text-[10px] text-brand-muted dark:text-slate-500 flex flex-col gap-1 px-1">
-            <span>© BoundUp 2025</span>
+          <div className="text-[10px] text-[#666666] flex flex-col gap-1 px-1">
+            <span>© BoundUp 2026</span>
             <div className="flex gap-2">
               <span className="hover:underline cursor-pointer">About</span>
               <span>•</span>
@@ -159,7 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
       </aside>
 
       {/* MOBILE BOTTOM NAVIGATION BAR (IMAGE 1) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[64px] glass-nav z-40 flex items-center justify-around px-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-gray-200 dark:border-slate-800">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[64px] z-40 flex items-center justify-around px-2 bg-white border-t border-[#E5E7EB]">
         {mobileNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;

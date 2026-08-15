@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-3 md:px-6 select-none border-b border-brand-border/60 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
+    <header className="sticky top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-3 md:px-6 select-none border-b border-[#E5E7EB] bg-white">
       {/* MOBILE BRAND LOGO */}
       <div className="flex items-center gap-2 md:hidden">
         <NavLink to="/home" className="flex items-center gap-2">
@@ -32,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* DESKTOP SEARCH INPUT FIELD (IMAGE 3) */}
       <div className="hidden md:flex items-center flex-1 max-w-md">
         <div className="relative w-full">
-          <Search className="w-4 h-4 text-brand-muted dark:text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#666666] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search BoundUp"
@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
                 navigate(`/search?q=${encodeURIComponent(e.currentTarget.value)}`);
               }
             }}
-            className="w-full pl-9 pr-4 py-2 bg-gray-100 dark:bg-slate-800/80 border border-transparent focus:border-brand-primary/40 rounded-full text-xs text-brand-text dark:text-gray-100 placeholder:text-brand-muted dark:placeholder:text-slate-400 focus:outline-none transition-colors"
+            className="w-full pl-9 pr-4 py-2 bg-[#F7F7F7] border border-[#E5E7EB] focus:border-[#FF5A1F] rounded-full text-xs text-[#111111] placeholder:text-[#666666] focus:outline-none transition-colors"
           />
         </div>
       </div>

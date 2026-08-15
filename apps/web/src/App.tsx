@@ -79,6 +79,7 @@ const MainLayout: React.FC = () => {
             <Route path="/messages/direct/:id" element={<DirectChatPage />} />
             <Route path="/messages/group/:id" element={<GroupChatPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/:username" element={<ProfilePage />} />
             <Route path="/profile/edit" element={<EditProfilePage />} />
             <Route path="/profile/:username/followers" element={<FollowersPage />} />

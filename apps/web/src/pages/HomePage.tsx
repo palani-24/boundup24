@@ -104,40 +104,40 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
           <StoriesRow storyGroups={storyGroups} onRefresh={fetchFeed} />
 
           {/* LIVE AUDIO ROOM BANNER (IMAGE 3) */}
-          <div className="my-3 p-4 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-orange-500/10 dark:from-purple-950/30 dark:via-pink-950/30 dark:to-orange-950/30 border border-purple-500/20 dark:border-purple-500/30 rounded-24px shadow-sm card-shadow flex items-center justify-between">
+          <div className="my-3 p-4 bg-white border border-[#E5E7EB] rounded-24px shadow-sm flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-purple-600 text-white rounded-20px shadow-md">
-                <Radio className="w-5 h-5 animate-pulse" />
+              <div className="p-3 bg-orange-50 text-[#FF5A1F] rounded-20px border border-orange-200 shadow-sm">
+                <Radio className="w-5 h-5 animate-pulse text-[#FF5A1F]" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded-full bg-red-500 text-white text-[9px] font-black uppercase tracking-wider">
+                  <span className="px-2 py-0.5 rounded-full bg-[#FF5A1F] text-white text-[9px] font-black uppercase tracking-wider">
                     LIVE
                   </span>
-                  <span className="text-xs font-extrabold text-brand-text dark:text-gray-100">Creators Audio Room</span>
+                  <span className="text-xs font-extrabold text-[#111111]">Creators Audio Room</span>
                 </div>
-                <p className="text-[11px] text-brand-muted dark:text-slate-400 font-semibold truncate max-w-[200px] sm:max-w-[280px] mt-0.5">
+                <p className="text-[11px] text-[#666666] font-semibold truncate max-w-[200px] sm:max-w-[280px] mt-0.5">
                   Discussing Cinematic Design & Mobile Web Experiences 🎙️
                 </p>
               </div>
             </div>
             <button
               onClick={() => alert('Joining Live Audio Room... Mic connected!')}
-              className="px-5 py-2 bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white rounded-16px text-xs font-extrabold shadow-md hover:opacity-95 transition-all active:scale-95 flex-shrink-0"
+              className="px-5 py-2 bg-[#FF5A1F] text-white rounded-16px text-xs font-extrabold shadow-md hover:opacity-95 transition-all active:scale-95 flex-shrink-0"
             >
               Join
             </button>
           </div>
 
           {/* FEED MODE SWITCHER TABS */}
-          <div className="flex items-center justify-between my-2 bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px p-1.5 shadow-sm card-shadow">
+          <div className="flex items-center justify-between my-2 bg-white border border-[#E5E7EB] rounded-24px p-1.5 shadow-sm">
             <div className="flex items-center gap-1 w-full">
               <button
                 onClick={() => setFeedMode('forYou')}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-16px text-xs font-extrabold transition-all ${
                   feedMode === 'forYou'
-                    ? 'bg-brand-primary text-white shadow-md'
-                    : 'text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white'
+                    ? 'bg-[#FF5A1F] text-white shadow-md'
+                    : 'text-[#666666] hover:text-[#111111]'
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -148,8 +148,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
                 onClick={() => setFeedMode('following')}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-16px text-xs font-extrabold transition-all ${
                   feedMode === 'following'
-                    ? 'bg-brand-primary text-white shadow-md'
-                    : 'text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white'
+                    ? 'bg-[#FF5A1F] text-white shadow-md'
+                    : 'text-[#666666] hover:text-[#111111]'
                 }`}
               >
                 <Users className="w-3.5 h-3.5" />
@@ -160,8 +160,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
                 onClick={() => setFeedMode('latest')}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-16px text-xs font-extrabold transition-all ${
                   feedMode === 'latest'
-                    ? 'bg-brand-primary text-white shadow-md'
-                    : 'text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white'
+                    ? 'bg-[#FF5A1F] text-white shadow-md'
+                    : 'text-[#666666] hover:text-[#111111]'
                 }`}
               >
                 <Clock className="w-3.5 h-3.5" />
@@ -178,8 +178,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
                 onClick={() => setActiveTag(t)}
                 className={`px-4 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 whitespace-nowrap transition-all ${
                   activeTag === t
-                    ? 'bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white shadow-sm'
-                    : 'bg-white dark:bg-slate-900 text-brand-muted dark:text-slate-400 border border-brand-border dark:border-slate-800 hover:border-brand-primary'
+                    ? 'bg-[#FF5A1F] text-white shadow-sm'
+                    : 'bg-white text-[#666666] border border-[#E5E7EB] hover:border-[#FF5A1F] hover:text-[#111111]'
                 }`}
               >
                 {t === 'All' ? (
@@ -189,7 +189,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
                   </>
                 ) : (
                   <>
-                    <Hash className="w-3.5 h-3.5 text-brand-primary" />
+                    <Hash className="w-3.5 h-3.5 text-[#FF5A1F]" />
                     <span>{t}</span>
                   </>
                 )}
@@ -199,23 +199,23 @@ export const HomePage: React.FC<HomePageProps> = ({ onCreateClick }) => {
 
           {/* QUICK VOICE POST BANNER */}
           {onCreateClick && (
-            <div className="mb-4 p-4 bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px flex items-center justify-between shadow-sm card-shadow">
+            <div className="mb-4 p-4 bg-white border border-[#E5E7EB] rounded-24px flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-brand-primary/10 text-brand-primary rounded-20px border border-brand-primary/20">
-                  <Mic className="w-5 h-5" />
+                <div className="p-3 bg-orange-50 text-[#FF5A1F] rounded-20px border border-orange-200">
+                  <Mic className="w-5 h-5 text-[#FF5A1F]" />
                 </div>
                 <div>
-                  <p className="text-xs font-extrabold text-brand-text dark:text-gray-100">Share a Voice Post</p>
-                  <p className="text-[10px] text-brand-muted dark:text-slate-400 font-medium mt-0.5">
+                  <p className="text-xs font-extrabold text-[#111111]">Share a Voice Post</p>
+                  <p className="text-[10px] text-[#666666] font-medium mt-0.5">
                     Record a quick 30s audio snippet for your followers
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xs font-mono text-brand-muted dark:text-slate-400 font-bold hidden sm:inline">00:00</span>
+                <span className="text-xs font-mono text-[#666666] font-bold hidden sm:inline">00:00</span>
                 <button
                   onClick={onCreateClick}
-                  className="px-5 py-2 bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white rounded-16px text-xs font-extrabold shadow-sm hover:opacity-90 transition-opacity active:scale-95"
+                  className="px-5 py-2 bg-[#FF5A1F] text-white rounded-16px text-xs font-extrabold shadow-sm hover:opacity-90 transition-opacity active:scale-95"
                 >
                   Record
                 </button>
