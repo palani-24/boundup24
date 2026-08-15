@@ -51,22 +51,19 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Mobile search button */}
         <NavLink
           to="/search"
-          className="md:hidden text-brand-text dark:text-gray-100 p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+          className="md:hidden text-[#111111] p-2 hover:bg-orange-50 rounded-full transition-colors"
           aria-label="Search"
         >
-          <Search className="w-5 h-5 stroke-[2]" />
+          <Search className="w-5 h-5 stroke-[2] text-[#111111]" />
         </NavLink>
-
-        {/* Theme Switcher */}
-        <ThemeSelector />
 
         {/* Messages Shortcut with Orange Badge */}
         <NavLink
           to="/messages"
-          className="relative p-2 text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-95"
+          className="relative p-2 text-[#111111] hover:bg-orange-50 rounded-full transition-colors active:scale-95"
           aria-label="Messages"
         >
-          <MessageSquare className="w-5 h-5 stroke-[2]" />
+          <MessageSquare className="w-5 h-5 stroke-[2] text-[#111111]" />
           {unreadMessages > 0 && (
             <span className="absolute top-1 right-1 bg-[#FF5A1F] text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
               {unreadMessages}
@@ -77,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Notifications Shortcut with Orange Badge */}
         <NavLink
           to="/notifications"
-          className="relative p-2 text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-95"
+          className="relative p-2 text-[#111111] hover:bg-orange-50 rounded-full transition-colors active:scale-95"
           aria-label="Notifications"
         >
           <Bell className="w-5 h-5 stroke-[2]" />

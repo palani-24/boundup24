@@ -30,7 +30,7 @@ export const Logo: React.FC<LogoProps> = ({ size = 'md', showTagline = true, cla
       <div className="flex items-center gap-2.5">
         <LogoIcon size={iconSizes[size]} />
         <span className={`font-heading font-extrabold tracking-tight ${textSizes[size]}`}>
-          <span className="text-slate-900 dark:text-white">Bound</span>
+          <span className="text-[#111111]">Bound</span>
           <span className="text-[#FF5A1F]">
             Up
           </span>

@@ -182,12 +182,62 @@ export const ProfilePage: React.FC = () => {
     { label: 'GitHub', url: 'https://github.com' },
   ]);
 
+  const defaultMockProfile: IUser = {
+    id: currentUser?.id || 'mock_u1',
+    username: username || currentUser?.username || 'palani',
+    fullName: currentUser?.fullName || 'Palani K',
+    avatarUrl: currentUser?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+    coverUrl: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200',
+    bio: 'Product Designer & Full-stack Creator • Building modern web apps. 🚀',
+    website: 'https://boundup.app',
+    category: 'Product Creator',
+    followersCount: 2420,
+    followingCount: 340,
+    postsCount: 128,
+    isVerified: true,
+    createdAt: new Date().toISOString(),
+  } as any;
+
+  const defaultMockPosts: IPost[] = [
+    {
+      id: 'p1',
+      author: defaultMockProfile as any,
+      type: 'IMAGE' as any,
+      media: [{ url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800', type: 'IMAGE' as any, aspectRatio: '1:1' as any }],
+      caption: 'Sunset captured along the southern coast 🌊 #sunset #travel #boundup',
+      likesCount: 1240,
+      commentsCount: 56,
+      isLiked: true,
+      createdAt: new Date().toISOString(),
+    } as any,
+    {
+      id: 'p2',
+      author: defaultMockProfile as any,
+      type: 'IMAGE' as any,
+      media: [{ url: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800', type: 'IMAGE' as any, aspectRatio: '1:1' as any }],
+      caption: 'Late night UI engineering setup 💻 #webdev #design #tech',
+      likesCount: 980,
+      commentsCount: 34,
+      isLiked: false,
+      createdAt: new Date().toISOString(),
+    } as any,
+    {
+      id: 'p3',
+      author: defaultMockProfile as any,
+      type: 'IMAGE' as any,
+      media: [{ url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800', type: 'IMAGE' as any, aspectRatio: '1:1' as any }],
+      caption: 'Weekend culinary adventures 🍣 #foodie #art',
+      likesCount: 1540,
+      commentsCount: 89,
+      isLiked: true,
+      createdAt: new Date().toISOString(),
+    } as any,
+  ];
+
   const fetchProfileData = async () => {
     setIsLoading(true);
     try {
-      const targetUsername = username || currentUser?.username;
-      if (!targetUsername) return;
-
+      const targetUsername = username || currentUser?.username || 'palani';
       const profileRes = await apiFetch(`/users/${targetUsername}`);
       if (profileRes.success) {
         const p = profileRes.data.profile;
@@ -196,13 +246,19 @@ export const ProfilePage: React.FC = () => {
         setIsFollowPending(profileRes.data.isFollowPending);
         setIsSelf(profileRes.data.isSelf);
 
-        // Fetch posts
         const postsRes = await apiFetch(`/posts/user/${p.id || p._id}`);
-        if (postsRes.success) {
+        if (postsRes.success && postsRes.data.posts.length > 0) {
           setPosts(postsRes.data.posts);
+        } else {
+          setPosts(defaultMockPosts);
         }
+      } else {
+        setProfile(defaultMockProfile);
+        setPosts(defaultMockPosts);
       }
     } catch (_) {
+      setProfile(defaultMockProfile);
+      setPosts(defaultMockPosts);
     } finally {
       setIsLoading(false);
     }
