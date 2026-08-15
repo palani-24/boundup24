@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { X, Image, Film, MapPin, Tag, Sliders, Sparkles, BarChart2, Lock, Globe } from 'lucide-react';
-import { Button } from '../ui/Button';
+import React, { useState, useRef } from 'react';
+import { X, Image, Film, MapPin, Tag, Sliders, Sparkles, BarChart2, Lock, Globe, Upload } from 'lucide-react';
 import { api, apiFetch } from '../../services/api';
 
 interface CreatePostModalProps {
@@ -22,6 +21,8 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // Poll state
   const [enablePoll, setEnablePoll] = useState(false);
   const [pollQuestion, setPollQuestion] = useState('');
@@ -29,6 +30,19 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
   const [pollOption2, setPollOption2] = useState('');
 
   if (!isOpen) return null;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const isVideo = file.type.startsWith('video/');
+      setMediaType(isVideo ? 'VIDEO' : 'IMAGE');
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMediaUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleGenerateAICaption = async () => {
     setIsGeneratingAI(true);
@@ -49,7 +63,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
 
   const handleSubmit = async () => {
     if (!mediaUrl && !enablePoll) {
-      alert('Please enter a valid media URL or create a poll');
+      alert('Please select a photo/video from your device or create a poll');
       return;
     }
 
@@ -99,61 +113,49 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-24px max-w-2xl w-full overflow-hidden shadow-glass flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-24px max-w-2xl w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] border border-[#E5E7EB]">
         {/* HEADER */}
-        <header className="flex items-center justify-between px-6 py-4 border-b border-brand-border dark:border-slate-700 select-none">
-          <button onClick={onClose} className="text-sm font-semibold text-brand-muted dark:text-slate-400 hover:text-brand-text">
+        <header className="flex items-center justify-between px-6 py-4 border-b border-[#E5E7EB] select-none bg-white">
+          <button onClick={onClose} className="text-xs font-bold text-[#666666] hover:text-[#111111]">
             Cancel
           </button>
-          <h2 className="text-base font-bold text-brand-text dark:text-gray-100 font-heading">Create New Post</h2>
+          <h2 className="text-sm font-extrabold text-[#111111] font-heading">Create New Post</h2>
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="text-sm font-bold text-brand-primary hover:text-brand-accent disabled:opacity-50"
+            className="text-xs font-extrabold text-[#FF5A1F] hover:opacity-90 disabled:opacity-50"
           >
             {isSubmitting ? 'Publishing...' : 'Share'}
           </button>
         </header>
 
+        {/* HIDDEN NATIVE FILE INPUT */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/*,video/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+
         {/* BODY */}
         <div className="flex flex-col md:flex-row overflow-y-auto">
-          {/* MEDIA PREVIEW & INPUT */}
-          <div className="md:w-1/2 p-6 bg-gray-50 dark:bg-slate-900 flex flex-col gap-4 border-r border-brand-border dark:border-slate-700">
+          {/* MEDIA PREVIEW & LOCAL FILE PICKER */}
+          <div className="md:w-1/2 p-6 bg-[#FAFAFC] flex flex-col gap-4 border-r border-[#E5E7EB]">
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold text-brand-muted dark:text-slate-400 uppercase">Media Source URL</label>
-              <input
-                type="text"
-                placeholder="Paste image or video URL..."
-                value={mediaUrl}
-                onChange={(e) => setMediaUrl(e.target.value)}
-                className="w-full h-11 border border-brand-border dark:border-slate-700 rounded-12px px-4 text-xs bg-white dark:bg-slate-800 dark:text-gray-100 focus:outline-none focus:border-brand-primary"
-              />
-            </div>
-
-            {/* Media Type Toggle */}
-            <div className="flex gap-2">
+              <label className="text-[11px] font-extrabold text-[#666666] uppercase">Device File Upload</label>
               <button
                 type="button"
-                onClick={() => setMediaType('IMAGE')}
-                className={`flex-1 h-9 rounded-12px text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${
-                  mediaType === 'IMAGE' ? 'bg-brand-primary text-white' : 'bg-white dark:bg-slate-800 border border-brand-border dark:border-slate-700 text-brand-text dark:text-gray-200'
-                }`}
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full h-11 border-2 border-dashed border-[#FF5A1F]/50 hover:border-[#FF5A1F] bg-white rounded-16px px-4 text-xs font-extrabold text-[#FF5A1F] flex items-center justify-center gap-2 transition-all"
               >
-                <Image className="w-4 h-4" /> Image
-              </button>
-              <button
-                type="button"
-                onClick={() => setMediaType('VIDEO')}
-                className={`flex-1 h-9 rounded-12px text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${
-                  mediaType === 'VIDEO' ? 'bg-brand-primary text-white' : 'bg-white dark:bg-slate-800 border border-brand-border dark:border-slate-700 text-brand-text dark:text-gray-200'
-                }`}
-              >
-                <Film className="w-4 h-4" /> Video
+                <Upload className="w-4 h-4" />
+                Select Photo or Video
               </button>
             </div>
 
             {/* PREVIEW CONTAINER */}
-            <div className="w-full h-48 bg-black/10 rounded-16px overflow-hidden flex items-center justify-center border border-dashed border-brand-border dark:border-slate-700 mt-1">
+            <div className="w-full h-52 bg-black/5 rounded-20px overflow-hidden flex items-center justify-center border border-[#E5E7EB] mt-1 relative">
               {mediaUrl ? (
                 mediaType === 'VIDEO' ? (
                   <video src={mediaUrl} controls className="w-full h-full object-cover" />
@@ -161,24 +163,28 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
                   <img src={mediaUrl} alt="Preview" className="w-full h-full object-cover" />
                 )
               ) : (
-                <div className="flex flex-col items-center gap-2 text-brand-muted dark:text-slate-400 p-4 text-center">
-                  <Image className="w-8 h-8 stroke-[1.5]" />
-                  <span className="text-xs font-medium">Media preview will appear here</span>
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex flex-col items-center gap-2 text-[#666666] p-4 text-center cursor-pointer hover:text-[#FF5A1F] transition-colors"
+                >
+                  <Image className="w-8 h-8 stroke-[1.5] text-[#FF5A1F]" />
+                  <span className="text-xs font-bold text-[#111111]">Tap to select file from device</span>
+                  <span className="text-[10px] text-[#666666]">Photos & videos up to 50MB</span>
                 </div>
               )}
             </div>
 
-            {/* Visibility Options */}
+            {/* Audience Visibility Options */}
             <div className="flex flex-col gap-1.5 pt-2">
-              <label className="text-xs font-bold text-brand-muted dark:text-slate-400 uppercase">Audience Visibility</label>
+              <label className="text-[11px] font-extrabold text-[#666666] uppercase">Audience Visibility</label>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setVisibility('PUBLIC')}
-                  className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-all ${
+                  className={`flex-1 py-2 rounded-12px text-xs font-extrabold flex items-center justify-center gap-1.5 border transition-all ${
                     visibility === 'PUBLIC'
-                      ? 'border-orange-500 bg-orange-500/10 text-orange-500'
-                      : 'border-gray-200 dark:border-slate-700 text-gray-500'
+                      ? 'border-[#FF5A1F] bg-orange-50 text-[#FF5A1F]'
+                      : 'border-[#E5E7EB] bg-white text-[#666666]'
                   }`}
                 >
                   <Globe className="w-3.5 h-3.5" /> Public
@@ -187,10 +193,10 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
                 <button
                   type="button"
                   onClick={() => setVisibility('CLOSE_FRIENDS')}
-                  className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-all ${
+                  className={`flex-1 py-2 rounded-12px text-xs font-extrabold flex items-center justify-center gap-1.5 border transition-all ${
                     visibility === 'CLOSE_FRIENDS'
-                      ? 'border-emerald-500 bg-emerald-500/10 text-emerald-500'
-                      : 'border-gray-200 dark:border-slate-700 text-gray-500'
+                      ? 'border-emerald-500 bg-emerald-50 text-emerald-600'
+                      : 'border-[#E5E7EB] bg-white text-[#666666]'
                   }`}
                 >
                   <Lock className="w-3.5 h-3.5" /> Close Friends
@@ -200,15 +206,15 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
           </div>
 
           {/* POST DETAILS & ADVANCED OPTIONS */}
-          <div className="md:w-1/2 p-6 flex flex-col gap-4">
+          <div className="md:w-1/2 p-6 flex flex-col gap-4 bg-white">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-brand-muted dark:text-slate-400 uppercase">Caption</label>
+                <label className="text-[11px] font-extrabold text-[#666666] uppercase">Caption</label>
                 <button
                   type="button"
                   onClick={handleGenerateAICaption}
                   disabled={isGeneratingAI}
-                  className="text-xs font-bold text-orange-500 flex items-center gap-1 hover:underline"
+                  className="text-xs font-bold text-[#FF5A1F] flex items-center gap-1 hover:underline"
                 >
                   <Sparkles className="w-3.5 h-3.5" /> {isGeneratingAI ? 'Generating...' : 'AI Caption'}
                 </button>
@@ -219,41 +225,41 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
                 placeholder="Write a caption... Or tap AI Caption to auto-suggest!"
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
-                className="w-full border border-brand-border dark:border-slate-700 rounded-12px p-3 text-xs bg-white dark:bg-slate-900 dark:text-gray-100 focus:outline-none focus:border-brand-primary resize-none"
+                className="w-full border border-[#E5E7EB] rounded-16px p-3 text-xs bg-white text-[#111111] focus:outline-none focus:border-[#FF5A1F] resize-none"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold text-brand-muted dark:text-slate-400 uppercase flex items-center gap-1">
-                <Tag className="w-3.5 h-3.5" /> Hashtags
+              <label className="text-[11px] font-extrabold text-[#666666] uppercase flex items-center gap-1">
+                <Tag className="w-3.5 h-3.5 text-[#FF5A1F]" /> Hashtags
               </label>
               <input
                 type="text"
                 placeholder="photography, travel, tech"
                 value={hashtagsInput}
                 onChange={(e) => setHashtagsInput(e.target.value)}
-                className="w-full h-10 border border-brand-border dark:border-slate-700 rounded-12px px-3 text-xs bg-white dark:bg-slate-900 dark:text-gray-100 focus:outline-none focus:border-brand-primary"
+                className="w-full h-10 border border-[#E5E7EB] rounded-16px px-3 text-xs bg-white text-[#111111] focus:outline-none focus:border-[#FF5A1F]"
               />
             </div>
 
             {/* Poll Builder Section */}
-            <div className="border-t border-brand-border dark:border-slate-700 pt-3">
+            <div className="border-t border-[#E5E7EB] pt-3">
               <button
                 type="button"
                 onClick={() => setEnablePoll(!enablePoll)}
-                className="text-xs font-bold text-orange-500 flex items-center gap-1.5 mb-2"
+                className="text-xs font-extrabold text-[#FF5A1F] flex items-center gap-1.5 mb-2"
               >
                 <BarChart2 className="w-4 h-4" /> {enablePoll ? 'Remove Interactive Poll' : 'Add Interactive Poll'}
               </button>
 
               {enablePoll && (
-                <div className="space-y-2 bg-orange-50/50 dark:bg-slate-900 p-3 rounded-2xl border border-orange-100 dark:border-slate-700">
+                <div className="space-y-2 bg-[#FAFAFC] p-3 rounded-20px border border-[#E5E7EB]">
                   <input
                     type="text"
                     placeholder="Poll Question (e.g. Which camera set is best?)"
                     value={pollQuestion}
                     onChange={(e) => setPollQuestion(e.target.value)}
-                    className="w-full h-9 border border-gray-200 dark:border-slate-700 rounded-xl px-3 text-xs bg-white dark:bg-slate-800 dark:text-gray-100"
+                    className="w-full h-9 border border-[#E5E7EB] rounded-12px px-3 text-xs bg-white text-[#111111] focus:outline-none focus:border-[#FF5A1F]"
                   />
                   <div className="grid grid-cols-2 gap-2">
                     <input
@@ -261,14 +267,14 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClos
                       placeholder="Option 1"
                       value={pollOption1}
                       onChange={(e) => setPollOption1(e.target.value)}
-                      className="h-8 border border-gray-200 dark:border-slate-700 rounded-xl px-3 text-xs bg-white dark:bg-slate-800 dark:text-gray-100"
+                      className="h-8 border border-[#E5E7EB] rounded-12px px-3 text-xs bg-white text-[#111111] focus:outline-none focus:border-[#FF5A1F]"
                     />
                     <input
                       type="text"
                       placeholder="Option 2"
                       value={pollOption2}
                       onChange={(e) => setPollOption2(e.target.value)}
-                      className="h-8 border border-gray-200 dark:border-slate-700 rounded-xl px-3 text-xs bg-white dark:bg-slate-800 dark:text-gray-100"
+                      className="h-8 border border-[#E5E7EB] rounded-12px px-3 text-xs bg-white text-[#111111] focus:outline-none focus:border-[#FF5A1F]"
                     />
                   </div>
                 </div>

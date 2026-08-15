@@ -42,10 +42,10 @@ export const PollCard: React.FC<PollCardProps> = ({ postId, poll: initialPoll, c
   };
 
   return (
-    <div className="mt-3 p-4 rounded-2xl bg-orange-50/50 dark:bg-slate-800/80 border border-orange-100 dark:border-slate-700">
-      <h4 className="font-semibold text-sm text-gray-900 dark:text-gray-100 mb-3 flex items-center justify-between">
-        <span>📊 {poll.question}</span>
-        <span className="text-xs font-normal text-gray-500 dark:text-slate-400">{totalVotes} votes</span>
+    <div className="mt-3 p-4 rounded-2xl bg-white border border-[#E5E7EB] shadow-sm">
+      <h4 className="font-extrabold text-xs text-[#111111] mb-3 flex items-center justify-between">
+        <span className="flex items-center gap-1.5 font-heading">📊 {poll.question}</span>
+        <span className="text-[11px] font-medium text-[#666666]">{totalVotes} votes</span>
       </h4>
 
       <div className="space-y-2.5">
@@ -59,24 +59,24 @@ export const PollCard: React.FC<PollCardProps> = ({ postId, poll: initialPoll, c
               key={opt.id}
               onClick={() => handleVote(opt.id)}
               disabled={isVoting}
-              className={`w-full relative overflow-hidden rounded-xl p-3 text-left transition-all border ${
+              className={`w-full relative overflow-hidden rounded-16px p-3 text-left transition-all border ${
                 hasVotedThis
-                  ? 'border-orange-500 bg-orange-500/10 font-semibold'
-                  : 'border-gray-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-slate-600 bg-white/70 dark:bg-slate-900/50'
+                  ? 'border-[#FF5A1F] bg-orange-50 font-bold text-[#FF5A1F]'
+                  : 'border-[#E5E7EB] hover:border-[#FF5A1F] bg-white text-[#111111]'
               }`}
             >
               {/* Progress fill bar */}
               <div
-                className="absolute left-0 top-0 bottom-0 bg-orange-500/15 dark:bg-orange-500/25 transition-all duration-500"
+                className="absolute left-0 top-0 bottom-0 bg-[#FF5A1F]/15 transition-all duration-500"
                 style={{ width: `${percentage}%` }}
               />
 
-              <div className="relative flex items-center justify-between z-10 text-sm">
-                <span className="flex items-center gap-2 text-gray-800 dark:text-gray-200">
-                  {hasVotedThis && <CheckCircle2 className="w-4 h-4 text-orange-500 shrink-0" />}
+              <div className="relative flex items-center justify-between z-10 text-xs font-semibold">
+                <span className="flex items-center gap-2 text-[#111111]">
+                  {hasVotedThis && <CheckCircle2 className="w-4 h-4 text-[#FF5A1F] shrink-0" />}
                   {opt.text}
                 </span>
-                <span className="text-xs font-bold text-gray-600 dark:text-slate-300 ml-2">{percentage}%</span>
+                <span className="text-xs font-extrabold text-[#111111] ml-2">{percentage}%</span>
               </div>
             </button>
           );

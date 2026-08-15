@@ -99,12 +99,12 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
               <CheckCircle className="w-4 h-4 text-[#FF5A1F] fill-[#FF5A1F]/10" />
               <span className="text-[11px] text-[#666666] font-normal">• 2h</span>
             </div>
-            <span className="text-[11px] text-brand-muted dark:text-slate-400 font-medium">
+            <span className="text-[11px] text-[#666666] font-medium">
               {post.location || 'Coimbatore, India'}
             </span>
           </div>
         </NavLink>
-        <button className="text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white p-2 rounded-full hover:bg-black/5 dark:hover:bg-slate-800 transition-colors">
+        <button className="text-[#666666] hover:text-[#111111] p-2 rounded-full hover:bg-black/5 transition-colors">
           <MoreHorizontal className="w-5 h-5" />
         </button>
       </header>
@@ -112,7 +112,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
       {/* CAPTION BEFORE MEDIA */}
       {post.caption && (
         <div className="px-4 py-3">
-          <p className="text-xs text-brand-text dark:text-gray-200 leading-relaxed font-medium">
+          <p className="text-xs text-[#111111] leading-relaxed font-medium">
             {post.caption}
           </p>
           <div className="flex flex-wrap gap-1.5 mt-2">
@@ -185,16 +185,16 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
       )}
 
       {/* ACTION BAR */}
-      <div className="p-4 flex items-center justify-between border-t border-brand-border/40 dark:border-slate-800">
+      <div className="p-4 flex items-center justify-between border-t border-[#E5E7EB]">
         <div className="flex items-center gap-6">
           {/* LIKE BUTTON WITH COUNT */}
           <button
             onClick={handleLikeToggle}
-            className="flex items-center gap-1.5 text-xs font-bold text-brand-text dark:text-gray-200 hover:text-brand-primary transition-colors"
+            className="flex items-center gap-1.5 text-xs font-bold text-[#111111] hover:text-[#FF5A1F] transition-colors"
           >
             <Heart
               className={`w-5 h-5 transition-colors ${
-                isLiked ? 'text-[#FF5A1F] fill-[#FF5A1F]' : 'text-brand-text dark:text-gray-200'
+                isLiked ? 'text-[#FF5A1F] fill-[#FF5A1F]' : 'text-[#111111]'
               }`}
             />
             <span>{likesCount > 0 ? (likesCount >= 1000 ? `${(likesCount/1000).toFixed(1)}K` : likesCount) : '1.2K'}</span>
@@ -203,7 +203,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
           {/* COMMENT BUTTON WITH COUNT */}
           <button
             onClick={() => setShowCommentsModal(true)}
-            className="flex items-center gap-1.5 text-xs font-bold text-brand-text dark:text-gray-200 hover:text-brand-primary transition-colors"
+            className="flex items-center gap-1.5 text-xs font-bold text-[#111111] hover:text-[#FF5A1F] transition-colors"
           >
             <MessageCircle className="w-5 h-5 stroke-[2]" />
             <span>{commentsCount > 0 ? commentsCount : 56}</span>
@@ -212,7 +212,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
           {/* SHARE BUTTON WITH COUNT */}
           <button
             onClick={() => setShowShareModal(true)}
-            className="flex items-center gap-1.5 text-xs font-bold text-brand-text dark:text-gray-200 hover:text-brand-primary transition-colors"
+            className="flex items-center gap-1.5 text-xs font-bold text-[#111111] hover:text-[#FF5A1F] transition-colors"
           >
             <Send className="w-5 h-5 stroke-[2]" />
             <span>128</span>

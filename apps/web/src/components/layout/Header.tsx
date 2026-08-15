@@ -21,9 +21,10 @@ export const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-3 md:px-6 select-none border-b border-[#E5E7EB] bg-white">
-      {/* MOBILE BRAND LOGO */}
-      <div className="flex items-center gap-2 md:hidden">
+    <header className="sticky top-0 left-0 right-0 z-40 w-full border-b border-[#E5E7EB] bg-white select-none">
+      <div className="w-full max-w-[1280px] mx-auto md:pl-64 h-14 px-3.5 sm:px-6 flex items-center justify-between">
+        {/* MOBILE BRAND LOGO */}
+        <div className="flex items-center gap-2 md:hidden">
         <NavLink to="/home" className="flex items-center gap-2">
           <Logo size="sm" showTagline={false} />
         </NavLink>
@@ -95,6 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
           </NavLink>
         )}
       </div>
-    </header>
-  );
+    </div>
+  </header>
+);
 };
