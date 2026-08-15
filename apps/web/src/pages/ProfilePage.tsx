@@ -24,6 +24,21 @@ import {
   VolumeX,
   MoreHorizontal,
   CheckCircle,
+  Bell,
+  ChevronDown,
+  Mail,
+  Settings,
+  QrCode,
+  Archive,
+  Star,
+  Heart,
+  Activity,
+  Menu,
+  Link as LinkIcon,
+  User,
+  Shield,
+  HelpCircle,
+  LogOut,
 } from 'lucide-react';
 import { Avatar } from '../components/ui/Avatar';
 import { Button } from '../components/ui/Button';
@@ -422,191 +437,156 @@ export const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto py-4 px-2 sm:px-4 select-none flex flex-col gap-5">
-      {/* PROFILE CARD WITH COVER PHOTO */}
-      <div className="w-full bg-white border border-[#E5E7EB] rounded-24px p-4 sm:p-6 shadow-sm flex flex-col gap-4 relative overflow-hidden">
-        {/* COVER PHOTO BANNER (IMAGE 1 & 2) */}
-        <div className="h-36 sm:h-44 -mx-4 -mt-4 sm:-mx-6 sm:-mt-6 relative bg-slate-800">
-          <img
-            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200"
-            alt="Profile cover banner"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
+    <div className="w-full max-w-xl mx-auto py-2 px-3 sm:px-4 select-none flex flex-col gap-4 bg-white min-h-screen">
+      {/* 1. INSTAGRAM TOP NAVIGATION BAR */}
+      <header className="flex items-center justify-between py-2 border-b border-[#E5E7EB] bg-white sticky top-0 z-20">
+        <button onClick={() => navigate(-1)} className="p-1.5 text-[#111111] hover:bg-gray-100 rounded-full transition-colors">
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <div className="flex items-center gap-1 cursor-pointer">
+          <span className="font-extrabold text-base text-[#111111]">@{profile.username}</span>
+          <ChevronDown className="w-4 h-4 text-[#111111]" />
         </div>
+        <div className="flex items-center gap-3">
+          <button onClick={() => alert('Notifications settings')} className="text-[#111111] hover:opacity-75 transition-opacity">
+            <Bell className="w-6 h-6" />
+          </button>
+          <button onClick={() => setShowProfileMenu(true)} className="text-[#111111] hover:opacity-75 transition-opacity">
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+      </header>
 
-        {/* OVERLAPPING AVATAR & HEADER CONTROLS */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-4 -mt-16 sm:-mt-20 z-10 px-2">
-          <div className="relative">
-            <div className="p-1 bg-white dark:bg-slate-900 rounded-full shadow-xl">
-              <Avatar
-                src={profile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300'}
-                alt={profile.fullName}
-                size="xl"
-              />
-            </div>
-            {/* Green Online Dot */}
-            <span className="absolute bottom-1 right-2 w-4 h-4 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
-          </div>
-
-          {/* Action Buttons & Dropdown Menu */}
-          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-center relative">
-            <button
-              onClick={handleFollowToggle}
-              className={`px-5 py-2.5 rounded-16px text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition-all active:scale-95 ${
-                isFollowing
-                  ? 'bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white'
-                  : 'bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white hover:opacity-90'
-              }`}
-            >
-              {isFollowing ? (
-                <>
-                  <UserCheck className="w-4 h-4" />
-                  <span>Following</span>
-                </>
-              ) : (
-                <>
-                  <UserPlus className="w-4 h-4" />
-                  <span>Follow</span>
-                </>
-              )}
-            </button>
-
-            <button
-              onClick={handleStartChat}
-              className="px-5 py-2.5 bg-gray-100 dark:bg-slate-800 text-brand-text dark:text-gray-200 border border-brand-border dark:border-slate-700 rounded-16px text-xs font-extrabold hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5"
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span>Message</span>
-            </button>
-
-            <button
-              onClick={() => setShowShareModal(true)}
-              className="p-2.5 bg-gray-100 dark:bg-slate-800 text-brand-text dark:text-gray-200 rounded-16px border border-brand-border dark:border-slate-700 hover:bg-gray-200 transition-colors"
-            >
-              <Share2 className="w-4 h-4" />
-            </button>
-
-            {/* 3 DOTS OPTIONS OVERFLOW BUTTON & DROPDOWN (IMAGE 2) */}
-            <div className="relative">
-              <button
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="p-2.5 bg-gray-100 dark:bg-slate-800 text-brand-text dark:text-gray-200 rounded-16px border border-brand-border dark:border-slate-700 hover:bg-gray-200 transition-colors"
-              >
-                <MoreHorizontal className="w-4 h-4" />
-              </button>
-
-              {showProfileMenu && (
-                <div className="absolute right-0 top-12 w-48 bg-white dark:bg-slate-800 border border-brand-border dark:border-slate-700 rounded-20px shadow-2xl p-2 z-30 flex flex-col gap-1">
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      setShowShareModal(true);
-                    }}
-                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-extrabold text-brand-text dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-12px transition-colors text-left"
-                  >
-                    <Share2 className="w-4 h-4 text-brand-primary" />
-                    <span>Share Profile</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      navigator.clipboard.writeText(window.location.href);
-                      alert('Profile link copied to clipboard!');
-                    }}
-                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-extrabold text-brand-text dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-12px transition-colors text-left"
-                  >
-                    <Globe className="w-4 h-4 text-blue-500" />
-                    <span>Copy Link</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      alert('Profile reported to moderation team.');
-                    }}
-                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-extrabold text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 rounded-12px transition-colors text-left"
-                  >
-                    <Pin className="w-4 h-4" />
-                    <span>Report</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      alert('User blocked.');
-                    }}
-                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-extrabold text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-12px transition-colors text-left"
-                  >
-                    <X className="w-4 h-4" />
-                    <span>Block</span>
-                  </button>
-                </div>
-              )}
-            </div>
+      {/* 2. INSTAGRAM AVATAR & 3-STAT NUMERICAL COUNTERS */}
+      <div className="flex items-center justify-between px-2 pt-2">
+        {/* AVATAR WITH STORY GRADIENT RING */}
+        <div className="relative cursor-pointer" onClick={() => setShowCreateHighlightModal(true)}>
+          <div className="w-20 h-20 sm:w-24 sm:h-24 p-[3px] bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 rounded-full shadow-md">
+            <Avatar
+              src={profile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300'}
+              alt={profile.fullName}
+              size="xl"
+              className="w-full h-full object-cover rounded-full border-2 border-white"
+            />
           </div>
         </div>
 
-        {/* USER NAME, HANDLE & STATS */}
-        <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-3 px-2 pt-2">
-          <div className="flex items-center gap-2">
-            <h1 className="font-heading font-extrabold text-2xl text-brand-text dark:text-gray-100">
-              {profile.fullName || 'Karthik K'}
-            </h1>
-            <CheckCircle className="w-5 h-5 text-[#FF5A1F] fill-[#FF5A1F]/10" />
+        {/* 3 NUMERICAL STAT COUNTERS */}
+        <div className="flex items-center justify-around flex-1 ml-4 sm:ml-8">
+          <div className="flex flex-col items-center cursor-pointer">
+            <span className="font-extrabold text-base sm:text-lg text-[#111111]">{posts.length || 346}</span>
+            <span className="text-xs text-[#111111] font-normal">Posts</span>
           </div>
-          <span className="text-xs text-brand-muted dark:text-slate-400 font-medium -mt-2">@{profile.username}</span>
-
-          {/* Stats Bar */}
-          <div className="flex items-center gap-6 py-2 border-y border-brand-border/60 dark:border-slate-800 w-full justify-around sm:justify-start">
-            <div className="flex flex-col items-center sm:items-start">
-              <span className="font-extrabold text-base text-brand-text dark:text-gray-100">128</span>
-              <span className="text-xs text-brand-muted dark:text-slate-400 font-medium">Posts</span>
-            </div>
-            <div className="flex flex-col items-center sm:items-start border-x border-brand-border/60 dark:border-slate-800 px-6 sm:px-8">
-              <span className="font-extrabold text-base text-brand-text dark:text-gray-100">2.4K</span>
-              <span className="text-xs text-brand-muted dark:text-slate-400 font-medium">Followers</span>
-            </div>
-            <div className="flex flex-col items-center sm:items-start">
-              <span className="font-extrabold text-base text-brand-text dark:text-gray-100">340</span>
-              <span className="text-xs text-brand-muted dark:text-slate-400 font-medium">Following</span>
-            </div>
+          <div className="flex flex-col items-center cursor-pointer">
+            <span className="font-extrabold text-base sm:text-lg text-[#111111]">17 k</span>
+            <span className="text-xs text-[#111111] font-normal">Followers</span>
           </div>
-
-          {/* Bio & Creator Badge */}
-          <p className="text-xs text-brand-muted dark:text-slate-400 font-medium leading-relaxed max-w-lg">
-            Designer • Developer • Dreamer. Building products that matter.
-          </p>
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full text-[11px] font-bold border border-amber-500/20">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>BoundUp Creator</span>
+          <div className="flex flex-col items-center cursor-pointer">
+            <span className="font-extrabold text-base sm:text-lg text-[#111111]">151</span>
+            <span className="text-xs text-[#111111] font-normal">Following</span>
           </div>
-        </div>
-
-        {/* STORY HIGHLIGHTS ROW (TRAVEL, DESIGN, TECH, AI, LIFE - IMAGE 1 & 2) */}
-        <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pt-4 border-t border-brand-border/60 dark:border-slate-800">
-          {[
-            { title: 'Travel', cover: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300' },
-            { title: 'Design', cover: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300' },
-            { title: 'Tech', cover: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=300' },
-            { title: 'AI', cover: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=300' },
-            { title: 'Life', cover: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300' },
-          ].map((h) => (
-            <div key={h.title} className="flex flex-col items-center gap-1.5 flex-shrink-0 cursor-pointer group">
-              <div className="w-14 h-14 rounded-full p-[2px] story-ring-gradient shadow-sm group-hover:scale-105 transition-transform">
-                <img src={h.cover} alt={h.title} className="w-full h-full object-cover rounded-full border-2 border-white dark:border-slate-900" />
-              </div>
-              <span className="text-[11px] font-bold text-brand-text dark:text-gray-200">{h.title}</span>
-            </div>
-          ))}
         </div>
       </div>
 
-      {/* CONTENT TABS (IMAGE 2: POSTS, MEDIA, REPLIES, TAGGED) */}
-      <div className="flex items-center justify-around bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px p-2 shadow-sm card-shadow">
+      {/* 3. BIO INFORMATION SECTION */}
+      <div className="flex flex-col gap-1.5 px-2 pt-1">
+        <h1 className="font-bold text-xs text-[#111111]">
+          {profile.fullName || 'Dilara'} | Sell premium offers without being salesy
+        </h1>
+
+        <div className="text-xs text-[#111111] font-normal space-y-0.5 leading-relaxed">
+          <p>💰 Experts, coaches, consultants - sell $5K-20K offers without being salesy or burnout</p>
+          <p>💯 We work till you hit ROI</p>
+          <p>⚡ Double your close rate in 15 mins</p>
+        </div>
+
+        {/* CLICKABLE LINK */}
+        <a
+          href="https://bit.ly/thesalesmultiplier"
+          target="_blank"
+          rel="noreferrer"
+          className="text-xs font-bold text-[#00376B] hover:underline flex items-center gap-1 mt-0.5"
+        >
+          <LinkIcon className="w-3.5 h-3.5" />
+          bit.ly/thesalesmultiplier
+        </a>
+
+        {/* MUTUAL FOLLOWERS */}
+        <div className="flex items-center gap-2 mt-2 pt-1 text-xs text-[#666666]">
+          <div className="flex -space-x-1.5 overflow-hidden">
+            <img className="inline-block h-5 w-5 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" alt="Mutual 1" />
+            <img className="inline-block h-5 w-5 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="Mutual 2" />
+            <img className="inline-block h-5 w-5 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" alt="Mutual 3" />
+          </div>
+          <span>Followed by <strong className="text-[#111111]">theharryneedham</strong>, <strong className="text-[#111111]">thesenuka</strong> and <strong className="text-[#111111]">26 others</strong></span>
+        </div>
+      </div>
+
+      {/* 4. ACTION BUTTONS ROW */}
+      <div className="grid grid-cols-12 gap-2 px-2 pt-2">
+        <button
+          onClick={handleFollowToggle}
+          className="col-span-4 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold flex items-center justify-center gap-1 transition-colors"
+        >
+          <span>{isFollowing ? 'Following' : 'Follow'}</span>
+          <ChevronDown className="w-3.5 h-3.5" />
+        </button>
+
+        <button
+          onClick={handleStartChat}
+          className="col-span-4 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold text-center transition-colors"
+        >
+          Message
+        </button>
+
+        <button
+          onClick={() => alert('Sending email...')}
+          className="col-span-3 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold text-center transition-colors"
+        >
+          Email
+        </button>
+
+        <button
+          onClick={() => alert('Suggested accounts')}
+          className="col-span-1 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px flex items-center justify-center transition-colors"
+        >
+          <UserPlus className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* 5. STORY HIGHLIGHTS ROW */}
+      <div className="flex items-center gap-4 overflow-x-auto no-scrollbar px-2 py-3 border-b border-[#E5E7EB]">
+        {[
+          { title: 'Free guide', cover: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300' },
+          { title: 'Testimonials', cover: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300' },
+          { title: 'Start here', cover: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=300' },
+          { title: 'Work with us', cover: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=300' },
+        ].map((h) => (
+          <div key={h.title} className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer group">
+            <div className="w-16 h-16 rounded-full p-[2px] border-2 border-[#1572A1] shadow-sm group-hover:scale-105 transition-transform flex items-center justify-center bg-teal-50">
+              <img src={h.cover} alt={h.title} className="w-full h-full object-cover rounded-full" />
+            </div>
+            <span className="text-[11px] text-[#111111] font-normal truncate max-w-[70px]">{h.title}</span>
+          </div>
+        ))}
+
+        <div
+          onClick={() => setShowCreateHighlightModal(true)}
+          className="flex flex-col items-center gap-1 flex-shrink-0 cursor-pointer group"
+        >
+          <div className="w-16 h-16 rounded-full border border-[#E5E7EB] bg-white flex items-center justify-center text-[#111111]">
+            <Plus className="w-6 h-6" />
+          </div>
+          <span className="text-[11px] text-[#111111] font-normal">New</span>
+        </div>
+      </div>
+
+      {/* 6. CONTENT TABS (GRID ▦, REELS 🎬, TAGGED 👤) */}
+      <div className="flex items-center justify-around border-b border-[#E5E7EB]">
         {[
           { id: 'grid', label: 'Posts', icon: Grid },
-          { id: 'videos', label: 'Media', icon: Film },
-          { id: 'replies', label: 'Replies', icon: MessageSquare },
-          { id: 'tagged', label: 'Tagged', icon: Tag },
+          { id: 'videos', label: 'Reels', icon: Film },
+          { id: 'tagged', label: 'Tagged', icon: User },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === (tab.id as any);
@@ -614,31 +594,156 @@ export const ProfilePage: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-16px text-xs font-extrabold transition-all relative ${
-                isActive
-                  ? 'text-brand-primary font-black'
-                  : 'text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white'
+              className={`flex-1 py-3 flex items-center justify-center transition-colors relative ${
+                isActive ? 'text-[#111111]' : 'text-[#8E8E8E]'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-brand-primary' : ''}`} />
-              <span>{tab.label}</span>
+              <Icon className="w-6 h-6" />
               {isActive && (
-                <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-gradient-to-r from-[#FF5722] to-[#FF7A00] rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#111111]" />
               )}
             </button>
           );
         })}
       </div>
 
-      {/* TAB CONTENT MASONRY / GRID */}
+      {/* 7. 3-COLUMN SQUARE MEDIA GRID */}
       {filteredPosts.length > 0 ? (
-        <MasonryGrid posts={filteredPosts} />
+        <div className="grid grid-cols-3 gap-0.5">
+          {filteredPosts.map((post) => (
+            <div key={post.id} className="relative aspect-square bg-gray-100 overflow-hidden cursor-pointer group">
+              <img
+                src={post.media[0]?.url || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500'}
+                alt={post.caption || 'Post image'}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              {post.type === 'VIDEO' && (
+                <Film className="absolute top-2 right-2 w-4 h-4 text-white drop-shadow-md" />
+              )}
+            </div>
+          ))}
+        </div>
       ) : (
         <EmptyState
           icon={<Grid className="w-8 h-8" />}
           title={`No ${activeTab} posts yet`}
           description={`When content is published under ${activeTab}, it will show up here.`}
         />
+      )}
+
+      {/* 8. INSTAGRAM SETTINGS & ACTIVITY DRAWER MODAL */}
+      {showProfileMenu && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end justify-center select-none" onClick={() => setShowProfileMenu(false)}>
+          <div
+            className="w-full max-w-lg bg-white rounded-t-3xl overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-300 border-t border-[#E5E7EB]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* HANDLE DRAG BAR */}
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+            </div>
+
+            {/* INSTAGRAM DRAWER MENU ITEMS */}
+            <div className="p-4 flex flex-col gap-1 max-h-[80vh] overflow-y-auto">
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  navigate('/settings');
+                }}
+                className="flex items-center gap-3.5 px-4 py-3 text-sm font-bold text-[#111111] hover:bg-gray-100 rounded-16px transition-colors text-left"
+              >
+                <Settings className="w-5 h-5 text-[#111111]" />
+                <span>Settings and privacy</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  alert('Opening Your Activity analytics...');
+                }}
+                className="flex items-center gap-3.5 px-4 py-3 text-sm font-bold text-[#111111] hover:bg-gray-100 rounded-16px transition-colors text-left"
+              >
+                <Activity className="w-5 h-5 text-[#111111]" />
+                <span>Your activity</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  alert('Opening Archive...');
+                }}
+                className="flex items-center gap-3.5 px-4 py-3 text-sm font-bold text-[#111111] hover:bg-gray-100 rounded-16px transition-colors text-left"
+              >
+                <Archive className="w-5 h-5 text-[#111111]" />
+                <span>Archive</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  alert('Generating your Instagram QR Code...');
+                }}
+                className="flex items-center gap-3.5 px-4 py-3 text-sm font-bold text-[#111111] hover:bg-gray-100 rounded-16px transition-colors text-left"
+              >
+                <QrCode className="w-5 h-5 text-[#111111]" />
+                <span>QR code</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  setActiveTab('saved' as any);
+                }}
+                className="flex items-center gap-3.5 px-4 py-3 text-sm font-bold text-[#111111] hover:bg-gray-100 rounded-16px transition-colors text-left"
+              >
+                <Bookmark className="w-5 h-5 text-[#111111]" />
+                <span>Saved</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  alert('Close Friends list opened.');
+                }}
+                className="flex items-center gap-3.5 px-4 py-3 text-sm font-bold text-[#111111] hover:bg-gray-100 rounded-16px transition-colors text-left"
+              >
+                <Star className="w-5 h-5 text-emerald-500" />
+                <span>Close Friends</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  alert('Favorites updated.');
+                }}
+                className="flex items-center gap-3.5 px-4 py-3 text-sm font-bold text-[#111111] hover:bg-gray-100 rounded-16px transition-colors text-left"
+              >
+                <Heart className="w-5 h-5 text-[#FF5A1F]" />
+                <span>Favorites</span>
+              </button>
+
+              <div className="my-2 border-t border-[#E5E7EB]" />
+
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  alert('Meta Accounts Center');
+                }}
+                className="flex items-center gap-3.5 px-4 py-3 text-sm font-bold text-blue-600 hover:bg-blue-50 rounded-16px transition-colors text-left"
+              >
+                <Shield className="w-5 h-5 text-blue-600" />
+                <span>Accounts Center</span>
+              </button>
+
+              <button
+                onClick={() => setShowProfileMenu(false)}
+                className="w-full mt-2 py-3 bg-gray-100 hover:bg-gray-200 text-[#111111] font-bold rounded-16px text-xs text-center transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* FULLSCREEN STORY HIGHLIGHT VIEWER MODAL */}

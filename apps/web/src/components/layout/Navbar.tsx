@@ -45,11 +45,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
     { label: 'Settings', path: '/settings', icon: Settings },
   ];
 
-  const mobileNavItems = [
+  const mobileNavItems: Array<{
+    label: string;
+    path: string;
+    icon: any;
+    isCreateBtn?: boolean;
+    onClick?: () => void;
+    isAvatar?: boolean;
+    badge?: number;
+  }> = [
     { label: 'Home', path: '/home', icon: Home },
     { label: 'Search', path: '/search', icon: Search },
     { label: 'Create', path: '#create', icon: Plus, isCreateBtn: true, onClick: onCreateClick },
-    { label: 'Messages', path: '/messages', icon: MessageSquare, badge: 3 },
+    { label: 'Reels', path: '/reels', icon: Film },
     { label: 'Profile', path: user ? `/profile/${user.username}` : '/login', icon: User, isAvatar: true },
   ];
 
