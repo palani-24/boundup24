@@ -13,5 +13,5 @@
       "@boundup/shared": ["../../packages/shared/src/index.ts"]
     }
   },
-  "include": ["src/**/*", "api/**/*", "../../packages/shared/src/**/*"]
+  "include": ["src/**/*", "../../packages/shared/src/**/*"]
 }
