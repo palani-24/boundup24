@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { MessageSquare, Bell, Search, Camera } from 'lucide-react';
+import { MessageSquare, Bell, Search, Download } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Logo } from '../ui/Logo';
 import { ThemeSelector } from '../ui/ThemeSelector';
@@ -19,6 +19,31 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setIsInstalled(true);
+      }
+      setDeferredPrompt(null);
+    } else {
+      alert('To install BoundUp on your mobile or desktop: Tap browser menu (⋮) and select "Add to Home screen" or "Install App".');
+    }
+  };
 
   return (
     <header className="sticky top-0 left-0 right-0 z-40 w-full border-b border-[#E5E7EB] bg-white select-none">
@@ -49,6 +74,15 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* ACTION ICONS & USER PROFILE (RIGHT SIDE OF TOP HEADER) */}
       <div className="flex items-center gap-2">
+        {/* PWA Install App Button */}
+        <button
+          onClick={handleInstallClick}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FF5A1F] text-white hover:bg-[#e04d16] rounded-full text-xs font-extrabold shadow-sm transition-all active:scale-95"
+          title="Install BoundUp on Mobile / Desktop"
+        >
+          <Download className="w-3.5 h-3.5 stroke-[2.5]" />
+          <span className="hidden sm:inline">Install App</span>
+        </button>
         {/* Mobile search button */}
         <NavLink
           to="/search"

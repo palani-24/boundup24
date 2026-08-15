@@ -186,35 +186,68 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
     },
   ];
 
+  // Initial default active conversation with mock messages
+  useEffect(() => {
+    if (!activeConv && mockConversations.length > 0) {
+      const first = mockConversations[0];
+      setActiveConv({
+        id: first.id,
+        participants: [first.partner],
+      } as any);
+
+      setMessages([
+        {
+          id: 'm1',
+          sender: first.partner as any,
+          text: 'Hey! Check out this design asset I just created! 🚀',
+          mediaUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600',
+          createdAt: new Date(Date.now() - 3600000).toISOString(),
+        } as any,
+        {
+          id: 'm2',
+          sender: { id: user?.id || 'me', fullName: user?.fullName || 'You', avatarUrl: user?.avatarUrl } as any,
+          text: 'Wow this looks amazing! Pure BoundUp orange vibe 🔥',
+          createdAt: new Date(Date.now() - 1800000).toISOString(),
+        } as any,
+        {
+          id: 'm3',
+          sender: first.partner as any,
+          text: 'Thanks! Let me know if you want to collaborate on the next post.',
+          createdAt: new Date(Date.now() - 600000).toISOString(),
+        } as any,
+      ]);
+    }
+  }, []);
+
   return (
-    <div className="w-full h-[calc(100vh-100px)] bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px my-2 shadow-sm card-shadow overflow-hidden grid grid-cols-1 md:grid-cols-12 select-none">
+    <div className="w-full h-[calc(100vh-100px)] bg-white border border-[#E5E7EB] rounded-24px my-2 shadow-sm card-shadow overflow-hidden grid grid-cols-1 md:grid-cols-12 select-none">
       {/* COLUMN 1: CONVERSATIONS LIST */}
-      <div className={`md:col-span-4 border-r border-brand-border dark:border-slate-800 flex flex-col h-full ${activeConv ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`md:col-span-4 border-r border-[#E5E7EB] flex flex-col h-full ${activeConv ? 'hidden md:flex' : 'flex'}`}>
         {/* HEADER & EDIT NEW MESSAGE BUTTON */}
-        <div className="p-4 border-b border-brand-border/60 dark:border-slate-800 flex items-center justify-between">
-          <h2 className="font-heading font-extrabold text-xl text-brand-text dark:text-gray-100">Messages</h2>
+        <div className="p-4 border-b border-[#E5E7EB] flex items-center justify-between">
+          <h2 className="font-extrabold text-xl text-[#111111]">Messages</h2>
           <button
-            onClick={() => alert('New Message Modal')}
-            className="p-2 text-brand-text dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+            onClick={() => alert('New Direct Message Modal')}
+            className="p-2 text-[#111111] hover:bg-orange-50 rounded-full transition-colors"
             title="New Chat"
           >
-            <Smile className="w-5 h-5" />
+            <Smile className="w-5 h-5 text-[#FF5A1F]" />
           </button>
         </div>
 
         {/* SEARCH INPUT BAR */}
-        <div className="p-3 border-b border-brand-border/40 dark:border-slate-800">
+        <div className="p-3 border-b border-[#E5E7EB]">
           <input
             type="text"
             placeholder="Search chats..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full py-2 px-3.5 bg-gray-100 dark:bg-slate-800 border border-transparent rounded-full text-xs text-brand-text dark:text-gray-100 placeholder:text-brand-muted dark:placeholder:text-slate-400 focus:outline-none focus:border-brand-primary"
+            className="w-full py-2 px-3.5 bg-[#F7F7F7] border border-[#E5E7EB] focus:border-[#FF5A1F] rounded-full text-xs text-[#111111] placeholder:text-[#666666] focus:outline-none transition-colors"
           />
         </div>
 
-        {/* CATEGORY FILTER TABS (ALL, DIRECT, GROUPS - IMAGE 1) */}
-        <div className="flex items-center gap-1.5 p-3 border-b border-brand-border/40 dark:border-slate-800">
+        {/* CATEGORY FILTER TABS (ALL, DIRECT, GROUPS) */}
+        <div className="flex items-center gap-1.5 p-3 border-b border-[#E5E7EB]">
           {[
             { id: 'all', label: 'All' },
             { id: 'direct', label: 'Direct' },
@@ -225,8 +258,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
               onClick={() => setActiveTab(t.id as any)}
               className={`px-4 py-1.5 rounded-full text-xs font-extrabold transition-all ${
                 activeTab === t.id
-                  ? 'bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white shadow-sm'
-                  : 'bg-gray-100 dark:bg-slate-800 text-brand-muted dark:text-slate-400 hover:text-brand-text'
+                  ? 'bg-[#FF5A1F] text-white shadow-sm'
+                  : 'bg-gray-100 text-[#666666] hover:text-[#111111]'
               }`}
             >
               {t.label}
@@ -242,31 +275,46 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
             return (
               <div
                 key={conv.id}
-                onClick={() =>
+                onClick={() => {
                   setActiveConv({
                     id: conv.id,
                     participants: [conv.partner],
-                  } as any)
-                }
+                  } as any);
+
+                  setMessages([
+                    {
+                      id: `m_${conv.id}_1`,
+                      sender: conv.partner as any,
+                      text: `Hey! Message from @${conv.partner.username}`,
+                      createdAt: new Date(Date.now() - 3600000).toISOString(),
+                    } as any,
+                    {
+                      id: `m_${conv.id}_2`,
+                      sender: { id: user?.id || 'me', fullName: user?.fullName || 'You', avatarUrl: user?.avatarUrl } as any,
+                      text: conv.lastMessageText,
+                      createdAt: new Date(Date.now() - 600000).toISOString(),
+                    } as any,
+                  ]);
+                }}
                 className={`flex items-center justify-between p-3 rounded-20px cursor-pointer transition-colors ${
                   isActive
-                    ? 'bg-brand-primary/10 border border-brand-primary/20'
-                    : 'hover:bg-gray-50 dark:hover:bg-slate-800/60'
+                    ? 'bg-orange-50 border border-orange-200'
+                    : 'hover:bg-gray-50'
                 }`}
               >
                 <div className="flex items-center gap-3 truncate">
                   <div className="relative">
                     <Avatar src={conv.partner.avatarUrl} alt={conv.partner.username} size="md" />
-                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
+                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
                   </div>
                   <div className="flex flex-col truncate">
                     <div className="flex items-center gap-1">
-                      <span className="font-extrabold text-xs text-brand-text dark:text-gray-100 truncate">
+                      <span className="font-extrabold text-xs text-[#111111] truncate">
                         {conv.partner.username}
                       </span>
                       {conv.partner.isVerified && <Check className="w-3.5 h-3.5 text-blue-500" />}
                     </div>
-                    <span className="text-[11px] text-brand-muted dark:text-slate-400 font-medium truncate mt-0.5">
+                    <span className="text-[11px] text-[#666666] font-medium truncate mt-0.5">
                       {conv.lastMessageText} • {conv.time}
                     </span>
                   </div>
@@ -274,7 +322,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
 
                 {/* UNREAD BADGE */}
                 {conv.unreadBadge > 0 && (
-                  <span className="w-5 h-5 bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-sm">
+                  <span className="w-5 h-5 bg-[#FF5A1F] text-white text-[10px] font-extrabold rounded-full flex items-center justify-center shadow-sm">
                     {conv.unreadBadge}
                   </span>
                 )}
@@ -288,89 +336,92 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
       <div className={`md:col-span-8 flex flex-col h-full ${!activeConv ? 'hidden md:flex items-center justify-center' : 'flex'}`}>
         {activeConv ? (
           <>
-            {/* CHAT HEADER */}
-            <header className="p-3.5 border-b border-brand-border flex items-center justify-between bg-white/80 backdrop-blur-md">
-              <div className="flex items-center gap-3">
-                <button onClick={() => setActiveConv(null)} className="md:hidden text-brand-muted hover:text-brand-text">
+            {/* CHAT HEADER WITH PROFILE VISIT ACTION */}
+            <header className="p-3.5 border-b border-[#E5E7EB] flex items-center justify-between bg-white">
+              <div
+                onClick={() => {
+                  if (otherParticipant?.username) {
+                    window.location.href = `/profile/${otherParticipant.username}`;
+                  }
+                }}
+                className="flex items-center gap-3 cursor-pointer group"
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveConv(null);
+                  }}
+                  className="md:hidden text-[#666666] hover:text-[#111111]"
+                >
                   ←
                 </button>
                 <Avatar src={otherParticipant?.avatarUrl} alt={otherParticipant?.fullName} size="md" />
                 <div className="flex flex-col">
-                  <span className="font-bold text-sm text-brand-text flex items-center gap-1.5">
-                    {otherParticipant?.fullName}
+                  <span className="font-extrabold text-sm text-[#111111] flex items-center gap-1.5 group-hover:text-[#FF5A1F] transition-colors">
+                    {otherParticipant?.fullName || otherParticipant?.username}
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Online" />
                   </span>
-                  <span className="text-[11px] text-brand-primary font-medium">
-                    {typingUsers.get(activeConv.id || (activeConv as any)._id) ? 'typing...' : `@${otherParticipant?.username}`}
+                  <span className="text-[11px] text-[#666666] font-medium">
+                    {typingUsers.get(activeConv.id || (activeConv as any)._id) ? 'typing...' : `@${otherParticipant?.username || 'user'}`} • View Profile
                   </span>
                 </div>
               </div>
 
-              {/* CALL & VANISH MODE CONTROLS */}
+              {/* CALL & PROFILE CONTROLS */}
               <div className="flex items-center gap-1.5">
                 <button
-                  onClick={() => alert(`Starting voice call with @${otherParticipant?.username}...`)}
-                  className="p-2.5 rounded-full hover:bg-brand-primary/10 text-brand-primary transition-colors"
+                  onClick={() => alert(`Starting audio call with @${otherParticipant?.username}...`)}
+                  className="p-2.5 rounded-full hover:bg-orange-50 text-[#FF5A1F] transition-colors"
                   title="Audio Call"
                 >
                   <Phone className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => alert(`Starting video call with @${otherParticipant?.username}...`)}
-                  className="p-2.5 rounded-full hover:bg-purple-500/10 text-purple-600 transition-colors"
+                  className="p-2.5 rounded-full hover:bg-purple-50 text-purple-600 transition-colors"
                   title="Video Call"
                 >
                   <VideoCall className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => {
-                    const isVanish = !activeConv.isVanishMode;
-                    setActiveConv({ ...activeConv, isVanishMode: isVanish });
+                    if (otherParticipant?.username) {
+                      window.location.href = `/profile/${otherParticipant.username}`;
+                    }
                   }}
-                  className={`p-2.5 rounded-full transition-all ${
-                    activeConv.isVanishMode
-                      ? 'bg-amber-500 text-white shadow-sm'
-                      : 'hover:bg-amber-500/10 text-amber-500'
-                  }`}
-                  title="Toggle Vanish / Disappearing Mode"
+                  className="p-2.5 text-[#666666] hover:text-[#FF5A1F] rounded-full hover:bg-orange-50 transition-colors"
+                  title="View Profile"
                 >
-                  <Flame className="w-4 h-4" />
-                </button>
-                <button onClick={() => setShowDetails(!showDetails)} className="p-2.5 text-brand-muted hover:text-brand-text">
-                  <Info className="w-4 h-4" />
+                  <User className="w-4 h-4" />
                 </button>
               </div>
             </header>
 
-            {/* VANISH MODE WARNING BANNER */}
-            {activeConv.isVanishMode && (
-              <div className="bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-amber-500/20 border-b border-amber-500/30 px-4 py-2 flex items-center justify-between text-xs font-bold text-amber-700">
-                <span className="flex items-center gap-1.5">
-                  <Flame className="w-3.5 h-3.5 text-amber-500 animate-bounce" />
-                  Vanish Mode Active — Messages disappear after leaving chat
-                </span>
-                <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full">Encrypted</span>
-              </div>
-            )}
-
             {/* MESSAGES LIST */}
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 bg-gray-50/50">
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 bg-[#FAFAFA]">
               {messages.map((msg) => {
-                const isMine = (msg.sender.id || (msg.sender as any)._id || (msg.sender as any)) === user?.id;
+                const isMine = (msg.sender?.id || (msg.sender as any)?._id || (msg.sender as any)) === user?.id;
 
                 return (
                   <div key={msg.id || (msg as any)._id} className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
                     <div className="flex items-end gap-2 group">
-                      {!isMine && <Avatar src={msg.sender.avatarUrl} alt={msg.sender.fullName} size="sm" />}
+                      {!isMine && <Avatar src={msg.sender?.avatarUrl} alt={msg.sender?.fullName} size="sm" />}
                       <div
-                        className={`max-w-xs md:max-w-md p-3.5 rounded-24px text-xs leading-relaxed ${
-                          isMine ? 'bg-brand-primary text-white rounded-br-none shadow-soft' : 'bg-white text-brand-text rounded-bl-none border border-brand-border'
+                        className={`max-w-xs md:max-w-md p-3.5 rounded-24px text-xs leading-relaxed font-medium relative ${
+                          isMine
+                            ? 'bg-[#FF5A1F] text-white rounded-br-none shadow-sm'
+                            : 'bg-white text-[#111111] rounded-bl-none border border-[#E5E7EB] shadow-sm'
                         }`}
                       >
                         {msg.mediaUrl && (
-                          <img src={msg.mediaUrl} alt="Message media" className="w-full h-40 object-cover rounded-16px mb-2" />
+                          <img src={msg.mediaUrl} alt="Attachment" className="w-full h-44 object-cover rounded-16px mb-2 border border-black/10" />
                         )}
                         {msg.text}
+
+                        {/* Heart reaction badge */}
+                        <div className="absolute -bottom-2 -right-1 bg-white border border-[#E5E7EB] rounded-full px-1 py-0.5 shadow-sm text-[10px] flex items-center gap-0.5">
+                          ❤️
+                        </div>
                       </div>
 
                       {isMine && (
@@ -382,8 +433,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
                         </button>
                       )}
                     </div>
-                    <span className="text-[10px] text-brand-muted mt-1 px-1">
-                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <span className="text-[10px] text-[#666666] font-medium mt-1.5 px-1">
+                      {new Date(msg.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                 );
@@ -393,25 +444,26 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
 
             {/* MEDIA INPUT EXPANSION */}
             {showMediaInput && (
-              <div className="p-3 bg-gray-100 border-t border-brand-border flex gap-2">
+              <div className="p-3 bg-orange-50 border-t border-[#E5E7EB] flex gap-2">
                 <input
                   type="text"
-                  placeholder="Image URL attachment..."
+                  placeholder="Paste photo attachment URL..."
                   value={mediaUrlInput}
                   onChange={(e) => setMediaUrlInput(e.target.value)}
-                  className="flex-1 h-9 bg-white border border-brand-border rounded-12px px-3 text-xs focus:outline-none"
+                  className="flex-1 h-9 bg-white border border-[#E5E7EB] rounded-12px px-3 text-xs focus:outline-none focus:border-[#FF5A1F]"
                 />
               </div>
             )}
 
             {/* MESSAGE INPUT BOX */}
-            <form onSubmit={handleSendMessage} className="p-3 border-t border-brand-border bg-white flex items-center gap-2">
+            <form onSubmit={handleSendMessage} className="p-3 border-t border-[#E5E7EB] bg-white flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setShowMediaInput(!showMediaInput)}
-                className="p-2 text-brand-muted hover:text-brand-primary transition-colors"
+                className="p-2 text-[#666666] hover:text-[#FF5A1F] transition-colors"
+                title="Attach Photo"
               >
-                <Image className="w-5 h-5" />
+                <Image className="w-5 h-5 text-[#FF5A1F]" />
               </button>
 
               <input
@@ -419,26 +471,27 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
                 placeholder="Message..."
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
-                className="flex-1 h-11 border border-brand-border rounded-16px px-4 text-xs focus:outline-none focus:border-brand-primary"
+                className="flex-1 h-11 border border-[#E5E7EB] rounded-16px px-4 text-xs font-medium text-[#111111] placeholder:text-[#666666] focus:outline-none focus:border-[#FF5A1F]"
               />
 
               <button
                 type="submit"
                 disabled={!textInput.trim() && !mediaUrlInput.trim()}
-                className="w-11 h-11 bg-brand-primary text-white rounded-16px flex items-center justify-center hover:bg-brand-accent transition-colors disabled:opacity-50"
+                className="w-11 h-11 bg-[#FF5A1F] text-white rounded-16px flex items-center justify-center hover:bg-[#e04d16] transition-colors disabled:opacity-50 shadow-sm"
               >
                 <Send className="w-5 h-5" />
               </button>
             </form>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center p-8 text-center text-brand-muted">
-            <User className="w-12 h-12 stroke-[1.5] mb-2 text-brand-primary/40" />
-            <h3 className="font-bold text-brand-text font-heading text-lg">Your Messages</h3>
-            <p className="text-xs">Select a conversation to start messaging in real-time.</p>
+          <div className="flex flex-col items-center justify-center p-8 text-center text-[#666666]">
+            <User className="w-12 h-12 stroke-[1.5] mb-2 text-[#FF5A1F]" />
+            <h3 className="font-extrabold text-[#111111] text-lg">Your Direct Messages</h3>
+            <p className="text-xs font-medium">Select a conversation to start chatting in real-time.</p>
           </div>
         )}
       </div>
     </div>
   );
 };
+
