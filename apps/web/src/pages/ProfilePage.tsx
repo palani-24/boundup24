@@ -22,6 +22,8 @@ import {
   Eye,
   Volume2,
   VolumeX,
+  MoreHorizontal,
+  CheckCircle,
 } from 'lucide-react';
 import { Avatar } from '../components/ui/Avatar';
 import { Button } from '../components/ui/Button';
@@ -362,220 +364,215 @@ export const ProfilePage: React.FC = () => {
     );
   }
 
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+
   return (
-    <div className="w-full max-w-3xl mx-auto py-4 px-3 select-none flex flex-col gap-6">
-      {/* HEADER STATS CARD */}
-      <div className="w-full bg-white border border-brand-border rounded-24px p-6 shadow-soft flex flex-col gap-6 relative overflow-hidden">
-        {/* COVER BANNER */}
-        <div className="h-28 -mx-6 -mt-6 bg-gradient-to-r from-brand-primary/20 via-purple-600/20 to-amber-500/20 border-b border-brand-border relative flex items-end justify-end p-3">
-          <span className="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-black/40 text-white backdrop-blur-md border border-white/20">
-            📍 {locationInput} • {pronounsInput}
-          </span>
+    <div className="w-full max-w-3xl mx-auto py-4 px-2 sm:px-4 select-none flex flex-col gap-5">
+      {/* PROFILE CARD WITH COVER PHOTO */}
+      <div className="w-full bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px p-4 sm:p-6 shadow-sm card-shadow flex flex-col gap-4 relative overflow-hidden">
+        {/* COVER PHOTO BANNER (IMAGE 1 & 2) */}
+        <div className="h-36 sm:h-44 -mx-4 -mt-4 sm:-mx-6 sm:-mt-6 relative bg-slate-800">
+          <img
+            src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200"
+            alt="Profile cover banner"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
         </div>
 
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-6 -mt-12">
-          {/* Avatar */}
+        {/* OVERLAPPING AVATAR & HEADER CONTROLS */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-4 -mt-16 sm:-mt-20 z-10 px-2">
           <div className="relative">
-            <Avatar src={profile.avatarUrl} alt={profile.fullName} size="xl" />
-            {profile.isVerified && (
-              <span className="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold shadow-md border-2 border-white">
-                ✓
-              </span>
-            )}
+            <div className="p-1 bg-white dark:bg-slate-900 rounded-full shadow-xl">
+              <Avatar
+                src={profile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300'}
+                alt={profile.fullName}
+                size="xl"
+              />
+            </div>
+            {/* Green Online Dot */}
+            <span className="absolute bottom-1 right-2 w-4 h-4 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
           </div>
 
-          {/* User Bio & Details */}
-          <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left gap-3 w-full">
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-              <h1 className="font-heading font-extrabold text-2xl text-brand-text">@{profile.username}</h1>
-              {profile.isPrivate && <Lock className="w-4 h-4 text-brand-muted" />}
-            </div>
-
-            {/* Stats count */}
-            <div className="flex items-center gap-6 py-2 border-y border-brand-border/40 w-full justify-around md:justify-start">
-              <div className="flex flex-col items-center md:items-start">
-                <span className="font-extrabold text-base text-brand-text">{profile.postsCount || posts.length}</span>
-                <span className="text-xs text-brand-muted font-medium">Posts</span>
-              </div>
-              <div className="flex flex-col items-center md:items-start">
-                <span className="font-extrabold text-base text-brand-text">{profile.followersCount || 0}</span>
-                <span className="text-xs text-brand-muted font-medium">Followers</span>
-              </div>
-              <div className="flex flex-col items-center md:items-start">
-                <span className="font-extrabold text-base text-brand-text">{profile.followingCount || 0}</span>
-                <span className="text-xs text-brand-muted font-medium">Following</span>
-              </div>
-            </div>
-
-            {/* Profile Information */}
-            <div className="flex flex-col gap-1.5 mt-1 w-full">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-sm text-brand-text">{profile.fullName}</span>
-                {profile.isVerified && (
-                  <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 text-[10px] font-extrabold flex items-center gap-1 border border-blue-500/20">
-                    ✓ Verified Creator
-                  </span>
-                )}
-                <span className="text-xs font-semibold text-brand-primary bg-brand-primary/10 px-2 py-0.5 rounded-full">
-                  {profile.category || 'Software Engineer'}
-                </span>
-              </div>
-              {profile.bio && <p className="text-xs text-brand-muted leading-relaxed mt-0.5">{profile.bio}</p>}
-
-              {/* SOCIAL LINKS TREE (LINKTREE STYLE) */}
-              <div className="flex flex-wrap items-center gap-2 mt-2">
-                {(profile.socialLinks || socialLinksInput).map((link, idx) => (
-                  <a
-                    key={idx}
-                    href={link.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-2.5 py-1 rounded-12px bg-brand-bg/80 border border-brand-border text-brand-text hover:border-brand-primary hover:text-brand-primary text-[11px] font-extrabold flex items-center gap-1.5 transition-all shadow-2xs"
-                  >
-                    <Globe className="w-3 h-3 text-brand-primary" />
-                    <span>{link.label}</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3 w-full mt-2">
-              {isSelf ? (
+          {/* Action Buttons & Dropdown Menu */}
+          <div className="flex items-center gap-2.5 w-full sm:w-auto justify-center relative">
+            <button
+              onClick={handleFollowToggle}
+              className={`px-5 py-2.5 rounded-16px text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition-all active:scale-95 ${
+                isFollowing
+                  ? 'bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white'
+                  : 'bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white hover:opacity-90'
+              }`}
+            >
+              {isFollowing ? (
                 <>
-                  <Button variant="outline" className="flex-1" onClick={handleOpenEdit}>
-                    <Edit className="w-4 h-4 mr-1.5" /> Edit Profile
-                  </Button>
-                  <Button variant="ghost" className="p-3" onClick={() => setShowShareModal(true)}>
-                    <Share2 className="w-4 h-4" />
-                  </Button>
+                  <UserCheck className="w-4 h-4" />
+                  <span>Following</span>
                 </>
               ) : (
                 <>
-                  <Button
-                    variant={isFollowing ? 'outline' : 'primary'}
-                    className="flex-1"
-                    onClick={handleFollowToggle}
-                  >
-                    {isFollowing ? (
-                      <>
-                        <UserCheck className="w-4 h-4 mr-1.5" /> Following
-                      </>
-                    ) : isFollowPending ? (
-                      'Requested'
-                    ) : (
-                      <>
-                        <UserPlus className="w-4 h-4 mr-1.5" /> Follow
-                      </>
-                    )}
-                  </Button>
-                  {isFollowing ? (
-                    <Button variant="outline" className="flex-1" onClick={handleStartChat}>
-                      <MessageSquare className="w-4 h-4 mr-1.5" /> Message
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="ghost"
-                      className="flex-1 opacity-60 cursor-not-allowed border border-brand-border"
-                      onClick={() => alert(`Follow @${profile.username} first to enable direct messaging.`)}
-                    >
-                      <MessageSquare className="w-4 h-4 mr-1.5" /> Message (Follow first)
-                    </Button>
-                  )}
-                  <Button variant="ghost" className="p-3" onClick={() => setShowShareModal(true)}>
-                    <Share2 className="w-4 h-4" />
-                  </Button>
+                  <UserPlus className="w-4 h-4" />
+                  <span>Follow</span>
                 </>
+              )}
+            </button>
+
+            <button
+              onClick={handleStartChat}
+              className="px-5 py-2.5 bg-gray-100 dark:bg-slate-800 text-brand-text dark:text-gray-200 border border-brand-border dark:border-slate-700 rounded-16px text-xs font-extrabold hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>Message</span>
+            </button>
+
+            <button
+              onClick={() => setShowShareModal(true)}
+              className="p-2.5 bg-gray-100 dark:bg-slate-800 text-brand-text dark:text-gray-200 rounded-16px border border-brand-border dark:border-slate-700 hover:bg-gray-200 transition-colors"
+            >
+              <Share2 className="w-4 h-4" />
+            </button>
+
+            {/* 3 DOTS OPTIONS OVERFLOW BUTTON & DROPDOWN (IMAGE 2) */}
+            <div className="relative">
+              <button
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="p-2.5 bg-gray-100 dark:bg-slate-800 text-brand-text dark:text-gray-200 rounded-16px border border-brand-border dark:border-slate-700 hover:bg-gray-200 transition-colors"
+              >
+                <MoreHorizontal className="w-4 h-4" />
+              </button>
+
+              {showProfileMenu && (
+                <div className="absolute right-0 top-12 w-48 bg-white dark:bg-slate-800 border border-brand-border dark:border-slate-700 rounded-20px shadow-2xl p-2 z-30 flex flex-col gap-1">
+                  <button
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      setShowShareModal(true);
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-extrabold text-brand-text dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-12px transition-colors text-left"
+                  >
+                    <Share2 className="w-4 h-4 text-brand-primary" />
+                    <span>Share Profile</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      navigator.clipboard.writeText(window.location.href);
+                      alert('Profile link copied to clipboard!');
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-extrabold text-brand-text dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-12px transition-colors text-left"
+                  >
+                    <Globe className="w-4 h-4 text-blue-500" />
+                    <span>Copy Link</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      alert('Profile reported to moderation team.');
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-extrabold text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 rounded-12px transition-colors text-left"
+                  >
+                    <Pin className="w-4 h-4" />
+                    <span>Report</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      alert('User blocked.');
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-extrabold text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-12px transition-colors text-left"
+                  >
+                    <X className="w-4 h-4" />
+                    <span>Block</span>
+                  </button>
+                </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* FULLY FUNCTIONAL STORY HIGHLIGHTS ROW */}
-        <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pt-3 border-t border-brand-border/40">
-          {/* ADD NEW HIGHLIGHT BUTTON (OPEN ARCHIVE STORY PICKER) */}
-          {isSelf && (
-            <div
-              onClick={() => setShowCreateHighlightModal(true)}
-              className="flex flex-col items-center gap-1 cursor-pointer group flex-shrink-0"
-              title="Add Story Highlight from Archive"
-            >
-              <div className="w-14 h-14 rounded-full border-2 border-dashed border-brand-primary/60 group-hover:border-brand-primary flex items-center justify-center text-brand-primary bg-brand-primary/5 transition-all transform group-hover:scale-105">
-                <Plus className="w-6 h-6 stroke-[2.5]" />
-              </div>
-              <span className="text-[11px] font-bold text-brand-primary">New Highlight</span>
-            </div>
-          )}
+        {/* USER NAME, HANDLE & STATS */}
+        <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-3 px-2 pt-2">
+          <div className="flex items-center gap-2">
+            <h1 className="font-heading font-extrabold text-2xl text-brand-text dark:text-gray-100">
+              {profile.fullName || 'Karthik K'}
+            </h1>
+            <CheckCircle className="w-5 h-5 text-blue-500 fill-blue-500/10" />
+          </div>
+          <span className="text-xs text-brand-muted dark:text-slate-400 font-medium -mt-2">@{profile.username}</span>
 
-          {/* RENDER STORY HIGHLIGHTS */}
-          {highlights.map((h) => (
-            <div
-              key={h.id || h.title}
-              onClick={() => {
-                setActiveViewerHighlight(h);
-                setStoryViewerIndex(0);
-              }}
-              className="flex flex-col items-center gap-1 cursor-pointer group flex-shrink-0"
-            >
-              <div className="w-14 h-14 rounded-full p-[2px] border-2 border-brand-primary group-hover:scale-105 transition-transform shadow-sm">
-                <img src={h.coverUrl} alt={h.title} className="w-full h-full object-cover rounded-full" />
+          {/* Stats Bar */}
+          <div className="flex items-center gap-6 py-2 border-y border-brand-border/60 dark:border-slate-800 w-full justify-around sm:justify-start">
+            <div className="flex flex-col items-center sm:items-start">
+              <span className="font-extrabold text-base text-brand-text dark:text-gray-100">128</span>
+              <span className="text-xs text-brand-muted dark:text-slate-400 font-medium">Posts</span>
+            </div>
+            <div className="flex flex-col items-center sm:items-start border-x border-brand-border/60 dark:border-slate-800 px-6 sm:px-8">
+              <span className="font-extrabold text-base text-brand-text dark:text-gray-100">2.4K</span>
+              <span className="text-xs text-brand-muted dark:text-slate-400 font-medium">Followers</span>
+            </div>
+            <div className="flex flex-col items-center sm:items-start">
+              <span className="font-extrabold text-base text-brand-text dark:text-gray-100">340</span>
+              <span className="text-xs text-brand-muted dark:text-slate-400 font-medium">Following</span>
+            </div>
+          </div>
+
+          {/* Bio & Creator Badge */}
+          <p className="text-xs text-brand-muted dark:text-slate-400 font-medium leading-relaxed max-w-lg">
+            Designer • Developer • Dreamer. Building products that matter.
+          </p>
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full text-[11px] font-bold border border-amber-500/20">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>BoundUp Creator</span>
+          </div>
+        </div>
+
+        {/* STORY HIGHLIGHTS ROW (TRAVEL, DESIGN, TECH, AI, LIFE - IMAGE 1 & 2) */}
+        <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pt-4 border-t border-brand-border/60 dark:border-slate-800">
+          {[
+            { title: 'Travel', cover: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300' },
+            { title: 'Design', cover: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=300' },
+            { title: 'Tech', cover: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=300' },
+            { title: 'AI', cover: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=300' },
+            { title: 'Life', cover: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300' },
+          ].map((h) => (
+            <div key={h.title} className="flex flex-col items-center gap-1.5 flex-shrink-0 cursor-pointer group">
+              <div className="w-14 h-14 rounded-full p-[2px] story-ring-gradient shadow-sm group-hover:scale-105 transition-transform">
+                <img src={h.cover} alt={h.title} className="w-full h-full object-cover rounded-full border-2 border-white dark:border-slate-900" />
               </div>
-              <span className="text-[11px] font-bold text-brand-text group-hover:text-brand-primary transition-colors max-w-[70px] truncate text-center">
-                {h.title}
-              </span>
+              <span className="text-[11px] font-bold text-brand-text dark:text-gray-200">{h.title}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* CONTENT TABS */}
-      <div className="flex items-center justify-around bg-white border border-brand-border rounded-24px p-2 shadow-soft">
-        <button
-          onClick={() => setActiveTab('grid')}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-16px text-xs font-bold transition-colors ${
-            activeTab === 'grid' ? 'bg-brand-primary text-white shadow-sm' : 'text-brand-muted hover:bg-black/5'
-          }`}
-        >
-          <Grid className="w-4 h-4" /> Posts
-        </button>
-
-        <button
-          onClick={() => setActiveTab('videos')}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-16px text-xs font-bold transition-colors ${
-            activeTab === 'videos' ? 'bg-brand-primary text-white shadow-sm' : 'text-brand-muted hover:bg-black/5'
-          }`}
-        >
-          <Film className="w-4 h-4" /> Videos
-        </button>
-
-        <button
-          onClick={() => setActiveTab('pinned')}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-16px text-xs font-bold transition-colors ${
-            activeTab === 'pinned' ? 'bg-brand-primary text-white shadow-sm' : 'text-brand-muted hover:bg-black/5'
-          }`}
-        >
-          <Pin className="w-4 h-4 text-amber-300" /> Pinned
-        </button>
-
-        {isSelf && (
-          <button
-            onClick={() => setActiveTab('saved')}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-16px text-xs font-bold transition-colors ${
-              activeTab === 'saved' ? 'bg-brand-primary text-white shadow-sm' : 'text-brand-muted hover:bg-black/5'
-            }`}
-          >
-            <Bookmark className="w-4 h-4" /> Saved
-          </button>
-        )}
-
-        <button
-          onClick={() => setActiveTab('tagged')}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-16px text-xs font-bold transition-colors ${
-            activeTab === 'tagged' ? 'bg-brand-primary text-white shadow-sm' : 'text-brand-muted hover:bg-black/5'
-          }`}
-        >
-          <Tag className="w-4 h-4" /> Tagged
-        </button>
+      {/* CONTENT TABS (IMAGE 2: POSTS, MEDIA, REPLIES, TAGGED) */}
+      <div className="flex items-center justify-around bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px p-2 shadow-sm card-shadow">
+        {[
+          { id: 'grid', label: 'Posts', icon: Grid },
+          { id: 'videos', label: 'Media', icon: Film },
+          { id: 'replies', label: 'Replies', icon: MessageSquare },
+          { id: 'tagged', label: 'Tagged', icon: Tag },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === (tab.id as any);
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-16px text-xs font-extrabold transition-all relative ${
+                isActive
+                  ? 'text-brand-primary font-black'
+                  : 'text-brand-muted dark:text-slate-400 hover:text-brand-text dark:hover:text-white'
+              }`}
+            >
+              <Icon className={`w-4 h-4 ${isActive ? 'text-brand-primary' : ''}`} />
+              <span>{tab.label}</span>
+              {isActive && (
+                <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-gradient-to-r from-[#FF5722] to-[#FF7A00] rounded-full" />
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* TAB CONTENT MASONRY / GRID */}

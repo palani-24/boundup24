@@ -30,8 +30,8 @@ export const Logo: React.FC<LogoProps> = ({ size = 'md', showTagline = true, cla
       <div className="flex items-center gap-2.5">
         <LogoIcon size={iconSizes[size]} />
         <span className={`font-heading font-extrabold tracking-tight ${textSizes[size]}`}>
-          <span className="text-white">Bound</span>
-          <span className="text-brand-primary bg-gradient-to-r from-[#FF5722] to-[#FFC107] bg-clip-text text-transparent">
+          <span className="text-slate-900 dark:text-white">Bound</span>
+          <span className="text-brand-primary bg-gradient-to-r from-[#FF5722] to-[#FF7A00] bg-clip-text text-transparent">
             Up
           </span>
         </span>

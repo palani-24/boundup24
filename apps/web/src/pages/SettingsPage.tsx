@@ -1,110 +1,116 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuthStore } from '../store/useAuthStore';
-import { Button } from '../components/ui/Button';
-import { LogOut, Shield, Bell, Lock, User, Palette, Download, KeyRound, Check } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Avatar } from '../components/ui/Avatar';
+import {
+  User,
+  Lock,
+  Bell,
+  Palette,
+  HelpCircle,
+  Info,
+  LogOut,
+  ChevronRight,
+  ArrowLeft,
+} from 'lucide-react';
 
 export const SettingsPage: React.FC = () => {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
-  const [selectedTheme, setSelectedTheme] = useState<'light' | 'dark' | 'midnight'>('dark');
-  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
-  const [isPrivateAccount, setIsPrivateAccount] = useState(user?.isPrivate || false);
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
 
+  const settingsMenuItems = [
+    { label: 'Account', icon: User, path: '/settings/account' },
+    { label: 'Privacy', icon: Lock, path: '/settings/privacy' },
+    { label: 'Notifications', icon: Bell, path: '/settings/notifications' },
+    { label: 'Appearance', icon: Palette, path: '/settings/appearance', badge: 'Beta' },
+    { label: 'Help & Support', icon: HelpCircle, path: '/settings/help' },
+    { label: 'About BoundUp', icon: Info, path: '/settings/about' },
+  ];
+
   return (
-    <div className="w-full max-w-xl mx-auto py-4 px-3 select-none flex flex-col gap-6">
-      <h1 className="text-xl font-extrabold font-heading text-brand-text">Settings & Preferences</h1>
+    <div className="w-full max-w-xl mx-auto py-4 px-3 select-none flex flex-col gap-5">
+      {/* HEADER BAR */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => navigate(-1)}
+          className="p-2 text-brand-text dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <h1 className="text-xl font-extrabold font-heading text-brand-text dark:text-gray-100">Settings</h1>
+      </div>
 
-      <div className="bg-white border border-brand-border rounded-24px p-6 shadow-soft flex flex-col gap-5">
-        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-16px">
-          <User className="w-5 h-5 text-brand-primary" />
+      {/* USER PROFILE HEADER CARD (IMAGE 1) */}
+      <NavLink
+        to={`/profile/${user?.username || 'k2d'}`}
+        className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px shadow-sm card-shadow hover:border-brand-primary transition-all group"
+      >
+        <div className="flex items-center gap-3.5">
+          <Avatar
+            src={user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300'}
+            alt={user?.fullName || 'Karthik K'}
+            size="lg"
+          />
           <div className="flex flex-col">
-            <span className="font-bold text-xs text-brand-text">Logged in as</span>
-            <span className="text-xs text-brand-muted">@{user?.username} ({user?.email})</span>
+            <span className="font-extrabold text-sm text-brand-text dark:text-gray-100 group-hover:text-brand-primary transition-colors">
+              {user?.fullName || 'Karthik K'}
+            </span>
+            <span className="text-xs text-brand-muted dark:text-slate-400 font-medium">@{user?.username || 'k2d'}</span>
           </div>
         </div>
+        <ChevronRight className="w-5 h-5 text-brand-muted group-hover:text-brand-primary transition-colors" />
+      </NavLink>
 
-        {/* THEME SELECTOR SECTION */}
-        <div className="flex flex-col gap-2 pt-2 border-t border-brand-border/40">
-          <div className="flex items-center gap-2 text-xs font-bold text-brand-text">
-            <Palette className="w-4 h-4 text-brand-primary" /> Theme Accent & Mode
-          </div>
-          <div className="grid grid-cols-3 gap-2 mt-1">
-            {[
-              { id: 'dark', label: 'Dark Mode', color: 'bg-slate-900 text-white' },
-              { id: 'light', label: 'Light Mode', color: 'bg-gray-100 text-gray-800' },
-              { id: 'midnight', label: 'Midnight Blue', color: 'bg-blue-950 text-blue-200' },
-            ].map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setSelectedTheme(t.id as any)}
-                className={`p-3 rounded-16px text-xs font-bold flex items-center justify-between border transition-all ${
-                  t.color
-                } ${
-                  selectedTheme === t.id ? 'border-brand-primary ring-2 ring-brand-primary/30' : 'border-transparent opacity-80'
-                }`}
-              >
-                <span>{t.label}</span>
-                {selectedTheme === t.id && <Check className="w-3.5 h-3.5 text-brand-primary" />}
-              </button>
-            ))}
-          </div>
-        </div>
+      {/* SETTINGS MENU LIST (IMAGE 1) */}
+      <div className="bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px p-2 shadow-sm card-shadow flex flex-col gap-1">
+        {settingsMenuItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.label}
+              onClick={() => alert(`Navigating to ${item.label}...`)}
+              className="flex items-center justify-between p-3.5 rounded-20px hover:bg-gray-50 dark:hover:bg-slate-800/70 cursor-pointer transition-colors group"
+            >
+              <div className="flex items-center gap-3.5">
+                <Icon className="w-5 h-5 text-brand-text dark:text-gray-200 group-hover:text-brand-primary transition-colors stroke-[2]" />
+                <span className="font-extrabold text-xs text-brand-text dark:text-gray-100 group-hover:text-brand-primary transition-colors">
+                  {item.label}
+                </span>
+              </div>
 
-        {/* SECURITY & PRIVACY CONTROLS */}
-        <div className="flex flex-col gap-3 pt-3 border-t border-brand-border/40">
-          <div className="flex items-center justify-between p-2">
-            <div className="flex items-center gap-3">
-              <Lock className="w-4 h-4 text-brand-muted" />
-              <div>
-                <p className="text-xs font-bold text-brand-text">Private Account</p>
-                <p className="text-[10px] text-brand-muted">Only approved followers can view your content</p>
+              <div className="flex items-center gap-2">
+                {item.badge && (
+                  <span className="px-2.5 py-0.5 bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white text-[10px] font-black rounded-full shadow-sm">
+                    {item.badge}
+                  </span>
+                )}
+                <ChevronRight className="w-4 h-4 text-brand-muted dark:text-slate-500 group-hover:text-brand-primary transition-colors" />
               </div>
             </div>
-            <input
-              type="checkbox"
-              checked={isPrivateAccount}
-              onChange={(e) => setIsPrivateAccount(e.target.checked)}
-              className="w-4 h-4 accent-brand-primary rounded cursor-pointer"
-            />
-          </div>
+          );
+        })}
+      </div>
 
-          <div className="flex items-center justify-between p-2">
-            <div className="flex items-center gap-3">
-              <KeyRound className="w-4 h-4 text-brand-muted" />
-              <div>
-                <p className="text-xs font-bold text-brand-text">Two-Factor Authentication (2FA)</p>
-                <p className="text-[10px] text-brand-muted">Secure your account using an authenticator app</p>
-              </div>
-            </div>
-            <input
-              type="checkbox"
-              checked={is2FAEnabled}
-              onChange={(e) => setIs2FAEnabled(e.target.checked)}
-              className="w-4 h-4 accent-brand-primary rounded cursor-pointer"
-            />
-          </div>
-        </div>
+      {/* BIG ORANGE LOG OUT BUTTON (IMAGE 1) */}
+      <button
+        onClick={handleLogout}
+        className="w-full py-3.5 bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white rounded-24px text-xs font-extrabold flex items-center justify-center gap-2 shadow-lg hover:opacity-95 active:scale-95 transition-all mt-2"
+      >
+        <LogOut className="w-4 h-4" />
+        <span>Log Out</span>
+      </button>
 
-        {/* DATA EXPORT & LOGOUT */}
-        <div className="pt-4 border-t border-brand-border flex flex-col gap-3">
-          <Button
-            variant="outline"
-            className="w-full justify-center"
-            onClick={() => alert('Preparing ZIP archive of your posts, media, and profile data...')}
-          >
-            <Download className="w-4 h-4 mr-2" /> Export Account Data (ZIP)
-          </Button>
-
-          <Button variant="danger" className="w-full justify-center" onClick={handleLogout}>
-            <LogOut className="w-4 h-4 mr-2" /> Log Out
-          </Button>
-        </div>
+      {/* FOOTER TEXT */}
+      <div className="flex flex-col items-center justify-center gap-1 py-3 text-center">
+        <span className="text-[11px] font-semibold text-brand-muted dark:text-slate-500">BoundUp v2.0.1</span>
+        <span className="text-[11px] font-semibold text-brand-muted dark:text-slate-500">
+          Made with ❤️ for creators
+        </span>
       </div>
     </div>
   );

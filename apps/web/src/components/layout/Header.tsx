@@ -1,9 +1,10 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Camera, MessageSquare, Bell, Search, Compass } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { MessageSquare, Bell, Search, Camera } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Logo } from '../ui/Logo';
 import { ThemeSelector } from '../ui/ThemeSelector';
+import { Avatar } from '../ui/Avatar';
 
 interface HeaderProps {
   onCreateClick?: () => void;
@@ -13,75 +14,89 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   onCreateClick,
-  unreadNotifications = 0,
-  unreadMessages = 0,
+  unreadNotifications = 3,
+  unreadMessages = 8,
 }) => {
   const { user } = useAuthStore();
+  const navigate = useNavigate();
 
   return (
-    <header className="sticky top-0 left-0 right-0 h-14 glass-header z-40 flex items-center justify-between px-3 md:px-8 select-none border-b border-brand-border/60 dark:border-slate-800/80 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md">
-      {/* Mobile Left Camera Action */}
-      <div className="flex items-center gap-1">
-        <button
-          onClick={onCreateClick}
-          className="md:hidden text-brand-text dark:text-gray-100 p-2 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-90"
-          aria-label="Create Post"
-        >
-          <Camera className="w-5 h-5 text-brand-primary" />
-        </button>
+    <header className="sticky top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-3 md:px-6 select-none border-b border-brand-border/60 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
+      {/* MOBILE BRAND LOGO */}
+      <div className="flex items-center gap-2 md:hidden">
+        <NavLink to="/home" className="flex items-center gap-2">
+          <Logo size="sm" showTagline={false} />
+        </NavLink>
+      </div>
 
-        {/* Quick Search Shortcut for Mobile */}
+      {/* DESKTOP SEARCH INPUT FIELD (IMAGE 3) */}
+      <div className="hidden md:flex items-center flex-1 max-w-md">
+        <div className="relative w-full">
+          <Search className="w-4 h-4 text-brand-muted dark:text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search BoundUp"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && e.currentTarget.value) {
+                navigate(`/search?q=${encodeURIComponent(e.currentTarget.value)}`);
+              }
+            }}
+            className="w-full pl-9 pr-4 py-2 bg-gray-100 dark:bg-slate-800/80 border border-transparent focus:border-brand-primary/40 rounded-full text-xs text-brand-text dark:text-gray-100 placeholder:text-brand-muted dark:placeholder:text-slate-400 focus:outline-none transition-colors"
+          />
+        </div>
+      </div>
+
+      {/* ACTION ICONS & USER PROFILE (RIGHT SIDE OF TOP HEADER) */}
+      <div className="flex items-center gap-2">
+        {/* Mobile search button */}
         <NavLink
           to="/search"
-          className="md:hidden text-brand-text dark:text-gray-100 p-2 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-90"
+          className="md:hidden text-brand-text dark:text-gray-100 p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors"
           aria-label="Search"
         >
           <Search className="w-5 h-5 stroke-[2]" />
         </NavLink>
-      </div>
 
-      {/* Brand Logo */}
-      <NavLink to="/home" className="flex items-center gap-2">
-        <Logo size="sm" showTagline={false} />
-      </NavLink>
-
-      {/* Action Icons */}
-      <div className="flex items-center gap-1">
+        {/* Theme Switcher */}
         <ThemeSelector />
 
-        <NavLink
-          to="/explore"
-          className="hidden sm:flex relative p-2 text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 rounded-full transition-colors"
-          aria-label="Explore"
-        >
-          <Compass className="w-5 h-5 stroke-[2]" />
-        </NavLink>
-
-        <NavLink
-          to="/notifications"
-          className="relative p-2 text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-90"
-          aria-label="Notifications"
-        >
-          <Bell className="w-5 h-5 stroke-[2]" />
-          {unreadNotifications > 0 && (
-            <span className="absolute top-1 right-1 bg-brand-primary text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-pulse shadow-sm">
-              {unreadNotifications > 9 ? '9+' : unreadNotifications}
-            </span>
-          )}
-        </NavLink>
-
+        {/* Messages Shortcut with Red Badge */}
         <NavLink
           to="/messages"
-          className="relative p-2 text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-90"
+          className="relative p-2 text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-95"
           aria-label="Messages"
         >
           <MessageSquare className="w-5 h-5 stroke-[2]" />
           {unreadMessages > 0 && (
-            <span className="absolute top-1 right-1 bg-brand-primary text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-              {unreadMessages > 9 ? '9+' : unreadMessages}
+            <span className="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+              {unreadMessages}
             </span>
           )}
         </NavLink>
+
+        {/* Notifications Shortcut with Red Badge */}
+        <NavLink
+          to="/notifications"
+          className="relative p-2 text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-95"
+          aria-label="Notifications"
+        >
+          <Bell className="w-5 h-5 stroke-[2]" />
+          {unreadNotifications > 0 && (
+            <span className="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+              {unreadNotifications}
+            </span>
+          )}
+        </NavLink>
+
+        {/* User Profile Avatar Pill */}
+        {user && (
+          <NavLink
+            to={`/profile/${user.username}`}
+            className="ml-1 p-0.5 rounded-full ring-2 ring-brand-primary/40 hover:ring-brand-primary transition-all"
+          >
+            <Avatar src={user.avatarUrl} alt={user.fullName} size="sm" />
+          </NavLink>
+        )}
       </div>
     </header>
   );

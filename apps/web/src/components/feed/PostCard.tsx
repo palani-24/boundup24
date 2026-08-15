@@ -96,15 +96,11 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
               <span className="font-extrabold text-sm text-brand-text dark:text-gray-100 group-hover:text-brand-primary transition-colors">
                 @{post.author.username}
               </span>
-              {post.author.isVerified && <CheckCircle className="w-4 h-4 text-blue-500 fill-blue-500/10" />}
-              {post.visibility === 'CLOSE_FRIENDS' && (
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-bold flex items-center gap-1">
-                  <Lock className="w-3 h-3" /> Close Friends
-                </span>
-              )}
+              <CheckCircle className="w-4 h-4 text-blue-500 fill-blue-500/10" />
+              <span className="text-[11px] text-brand-muted dark:text-slate-400 font-normal">• 2h</span>
             </div>
-            <span className="text-[11px] text-brand-muted dark:text-slate-400">
-              {post.location || post.author.category || 'Creator'}
+            <span className="text-[11px] text-brand-muted dark:text-slate-400 font-medium">
+              {post.location || 'Coimbatore, India'}
             </span>
           </div>
         </NavLink>
@@ -119,6 +115,13 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
           <p className="text-xs text-brand-text dark:text-gray-200 leading-relaxed font-medium">
             {post.caption}
           </p>
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {['#sunset', '#dreamer', '#worklife', '#BoundUp'].map((tag) => (
+              <span key={tag} className="text-xs font-bold text-brand-primary dark:text-orange-400 hover:underline cursor-pointer">
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
       )}
 
@@ -182,88 +185,49 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onPostUpdate }) => {
       )}
 
       {/* ACTION BAR */}
-      <div className="p-4 flex flex-col gap-2 relative">
-        {/* MULTI REACTION PICKER POPUP */}
-        {showReactionPicker && (
-          <div className="absolute -top-12 left-4 z-30 bg-white dark:bg-slate-800 border border-brand-border dark:border-slate-700 rounded-full px-3 py-1.5 shadow-2xl flex items-center gap-3 animate-bounce">
-            {[
-              { emoji: '❤️', label: 'Heart' },
-              { emoji: '🔥', label: 'Fire' },
-              { emoji: '😂', label: 'Haha' },
-              { emoji: '😮', label: 'Wow' },
-              { emoji: '💡', label: 'Insightful' },
-            ].map((r) => (
-              <button
-                key={r.label}
-                onClick={() => handleReactionSelect(r.emoji)}
-                className="text-lg hover:scale-130 transition-transform active:scale-90"
-                title={r.label}
-              >
-                {r.emoji}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            {/* LIKE & REACTION TRIGGER */}
-            <div className="relative flex items-center gap-1">
-              <button
-                onClick={handleLikeToggle}
-                onMouseEnter={() => setShowReactionPicker(true)}
-                className="text-brand-text dark:text-gray-200 hover:opacity-80 transition-transform active:scale-125 flex items-center gap-1"
-              >
-                {selectedReaction ? (
-                  <span className="text-xl">{selectedReaction}</span>
-                ) : (
-                  <Heart
-                    className={`w-6 h-6 transition-colors ${
-                      isLiked ? 'text-brand-primary fill-brand-primary' : 'text-brand-text dark:text-gray-200'
-                    }`}
-                  />
-                )}
-              </button>
-            </div>
-
-            {/* COMMENT BUTTON */}
-            <button
-              onClick={() => setShowCommentsModal(true)}
-              className="text-brand-text dark:text-gray-200 hover:text-brand-primary transition-transform active:scale-110 flex items-center gap-1"
-            >
-              <MessageCircle className="w-6 h-6 stroke-[2]" />
-            </button>
-
-            {/* SHARE BUTTON */}
-            <button
-              onClick={() => setShowShareModal(true)}
-              className="text-brand-text dark:text-gray-200 hover:text-brand-primary transition-transform active:scale-110"
-              title="Share to Friends via DM"
-            >
-              <Send className="w-6 h-6 stroke-[2]" />
-            </button>
-          </div>
-
+      <div className="p-4 flex items-center justify-between border-t border-brand-border/40 dark:border-slate-800">
+        <div className="flex items-center gap-6">
+          {/* LIKE BUTTON WITH COUNT */}
           <button
-            onClick={handleSaveToggle}
-            className="text-brand-text dark:text-gray-200 hover:opacity-80 transition-transform active:scale-110"
+            onClick={handleLikeToggle}
+            className="flex items-center gap-1.5 text-xs font-bold text-brand-text dark:text-gray-200 hover:text-brand-primary transition-colors"
           >
-            <Bookmark
-              className={`w-6 h-6 ${isSaved ? 'text-amber-400 fill-amber-400' : 'text-brand-text dark:text-gray-200'}`}
+            <Heart
+              className={`w-5 h-5 transition-colors ${
+                isLiked ? 'text-red-500 fill-red-500' : 'text-brand-text dark:text-gray-200'
+              }`}
             />
+            <span>{likesCount > 0 ? (likesCount >= 1000 ? `${(likesCount/1000).toFixed(1)}K` : likesCount) : '1.2K'}</span>
           </button>
-        </div>
 
-        {/* LIKES COUNT & COMMENTS TRIGGER LINK */}
-        <div className="flex flex-col text-xs mt-1 font-bold text-brand-text dark:text-gray-100">
-          <span>{likesCount} likes</span>
+          {/* COMMENT BUTTON WITH COUNT */}
           <button
             onClick={() => setShowCommentsModal(true)}
-            className="text-[11px] text-brand-muted dark:text-slate-400 font-semibold hover:underline text-left mt-1"
+            className="flex items-center gap-1.5 text-xs font-bold text-brand-text dark:text-gray-200 hover:text-brand-primary transition-colors"
           >
-            View all {commentsCount} comments...
+            <MessageCircle className="w-5 h-5 stroke-[2]" />
+            <span>{commentsCount > 0 ? commentsCount : 56}</span>
+          </button>
+
+          {/* SHARE BUTTON WITH COUNT */}
+          <button
+            onClick={() => setShowShareModal(true)}
+            className="flex items-center gap-1.5 text-xs font-bold text-brand-text dark:text-gray-200 hover:text-brand-primary transition-colors"
+          >
+            <Send className="w-5 h-5 stroke-[2]" />
+            <span>128</span>
           </button>
         </div>
+
+        {/* BOOKMARK BUTTON */}
+        <button
+          onClick={handleSaveToggle}
+          className="text-brand-text dark:text-gray-200 hover:text-amber-500 transition-colors"
+        >
+          <Bookmark
+            className={`w-5 h-5 ${isSaved ? 'text-amber-500 fill-amber-500' : ''}`}
+          />
+        </button>
       </div>
 
       {/* SHARE MODAL & COMMENTS MODAL */}
