@@ -533,34 +533,61 @@ export const ProfilePage: React.FC = () => {
 
       {/* 4. ACTION BUTTONS ROW */}
       <div className="grid grid-cols-12 gap-2 px-2 pt-2">
-        <button
-          onClick={handleFollowToggle}
-          className="col-span-4 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold flex items-center justify-center gap-1 transition-colors"
-        >
-          <span>{isFollowing ? 'Following' : 'Follow'}</span>
-          <ChevronDown className="w-3.5 h-3.5" />
-        </button>
+        {isSelf || !username || username === currentUser?.username ? (
+          <>
+            <button
+              onClick={() => navigate('/profile/edit')}
+              className="col-span-5 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold text-center transition-colors shadow-sm"
+            >
+              Edit Profile
+            </button>
 
-        <button
-          onClick={handleStartChat}
-          className="col-span-4 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold text-center transition-colors"
-        >
-          Message
-        </button>
+            <button
+              onClick={() => setShowShareModal(true)}
+              className="col-span-5 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold text-center transition-colors shadow-sm"
+            >
+              Share Profile
+            </button>
 
-        <button
-          onClick={() => alert('Sending email...')}
-          className="col-span-3 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold text-center transition-colors"
-        >
-          Email
-        </button>
+            <button
+              onClick={() => alert('Suggested accounts')}
+              className="col-span-2 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px flex items-center justify-center transition-colors shadow-sm"
+            >
+              <UserPlus className="w-4 h-4" />
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={handleFollowToggle}
+              className="col-span-4 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold flex items-center justify-center gap-1 transition-colors"
+            >
+              <span>{isFollowing ? 'Following' : 'Follow'}</span>
+              <ChevronDown className="w-3.5 h-3.5" />
+            </button>
 
-        <button
-          onClick={() => alert('Suggested accounts')}
-          className="col-span-1 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px flex items-center justify-center transition-colors"
-        >
-          <UserPlus className="w-4 h-4" />
-        </button>
+            <button
+              onClick={handleStartChat}
+              className="col-span-4 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px text-xs font-extrabold text-center transition-colors"
+            >
+              Message
+            </button>
+
+            <button
+              onClick={() => navigate('/profile/edit')}
+              className="col-span-3 py-2 bg-[#FF5A1F] hover:bg-[#e04d16] text-white rounded-12px text-xs font-extrabold text-center transition-colors shadow-sm"
+            >
+              Edit
+            </button>
+
+            <button
+              onClick={() => alert('Suggested accounts')}
+              className="col-span-1 py-2 bg-[#EFEFEF] hover:bg-[#DBDBDB] text-[#111111] rounded-12px flex items-center justify-center transition-colors"
+            >
+              <UserPlus className="w-4 h-4" />
+            </button>
+          </>
+        )}
       </div>
 
       {/* 5. STORY HIGHLIGHTS ROW */}
@@ -654,6 +681,17 @@ export const ProfilePage: React.FC = () => {
 
             {/* INSTAGRAM DRAWER MENU ITEMS */}
             <div className="p-4 flex flex-col gap-1 max-h-[80vh] overflow-y-auto">
+              <button
+                onClick={() => {
+                  setShowProfileMenu(false);
+                  navigate('/profile/edit');
+                }}
+                className="flex items-center gap-3.5 px-4 py-3 text-sm font-extrabold text-[#FF5A1F] hover:bg-orange-50 rounded-16px transition-colors text-left"
+              >
+                <User className="w-5 h-5 text-[#FF5A1F]" />
+                <span>Edit profile & options</span>
+              </button>
+
               <button
                 onClick={() => {
                   setShowProfileMenu(false);
