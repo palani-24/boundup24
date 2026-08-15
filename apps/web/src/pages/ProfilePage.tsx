@@ -45,6 +45,7 @@ export const ProfilePage: React.FC = () => {
   const [isSelf, setIsSelf] = useState(false);
   const [activeTab, setActiveTab] = useState<'grid' | 'videos' | 'saved' | 'tagged' | 'pinned'>('grid');
   const [isLoading, setIsLoading] = useState(true);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   // STORY HIGHLIGHTS & ARCHIVE STATE
   const [highlights, setHighlights] = useState<IStoryHighlight[]>([
@@ -420,12 +421,10 @@ export const ProfilePage: React.FC = () => {
     );
   }
 
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
-
   return (
     <div className="w-full max-w-3xl mx-auto py-4 px-2 sm:px-4 select-none flex flex-col gap-5">
       {/* PROFILE CARD WITH COVER PHOTO */}
-      <div className="w-full bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px p-4 sm:p-6 shadow-sm card-shadow flex flex-col gap-4 relative overflow-hidden">
+      <div className="w-full bg-white border border-[#E5E7EB] rounded-24px p-4 sm:p-6 shadow-sm flex flex-col gap-4 relative overflow-hidden">
         {/* COVER PHOTO BANNER (IMAGE 1 & 2) */}
         <div className="h-36 sm:h-44 -mx-4 -mt-4 sm:-mx-6 sm:-mt-6 relative bg-slate-800">
           <img
