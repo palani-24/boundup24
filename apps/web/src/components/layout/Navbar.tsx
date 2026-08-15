@@ -158,8 +158,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
         </div>
       </aside>
 
-      {/* MOBILE BOTTOM NAVIGATION BAR */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[60px] glass-nav z-40 flex items-center justify-around px-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-brand-border/60 dark:border-slate-800/80">
+      {/* MOBILE BOTTOM NAVIGATION BAR (IMAGE 1) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[64px] glass-nav z-40 flex items-center justify-around px-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-gray-200 dark:border-slate-800">
         {mobileNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
@@ -169,10 +169,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
               <button
                 key={item.label}
                 onClick={item.onClick}
-                className="flex items-center justify-center active:scale-90 transition-transform -mt-3"
+                className="flex flex-col items-center justify-center h-full active:scale-95 transition-transform"
                 aria-label="Create Post"
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white flex items-center justify-center shadow-lg neon-glow-primary">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-r from-[#FF5722] to-[#FF7A00] text-white flex items-center justify-center shadow-md">
                   <Icon className="w-6 h-6 stroke-[3]" />
                 </div>
               </button>
@@ -183,7 +183,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
             <NavLink
               key={item.label}
               to={item.path}
-              className="flex flex-col items-center justify-center h-full w-14 relative active:scale-90 transition-transform"
+              className={`flex flex-col items-center justify-center h-full w-14 relative active:scale-95 transition-transform ${
+                isActive ? 'text-brand-primary font-black' : 'text-slate-500 dark:text-slate-400 font-medium'
+              }`}
             >
               {item.isAvatar && user ? (
                 <Avatar
@@ -195,22 +197,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
               ) : (
                 <div className="relative">
                   <Icon
-                    className={`w-6 h-6 transition-colors ${
-                      isActive ? 'text-brand-primary stroke-[2.5]' : 'text-brand-muted dark:text-slate-400 stroke-[1.8]'
+                    className={`w-5 h-5 transition-colors ${
+                      isActive ? 'text-brand-primary stroke-[2.5]' : 'text-slate-600 dark:text-slate-400 stroke-[1.8]'
                     }`}
                   />
                   {item.badge && item.badge > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
                       {item.badge}
                     </span>
                   )}
                 </div>
               )}
 
-              {/* Active Indicator Line */}
-              {isActive && !item.isAvatar && (
-                <span className="w-1.5 h-1.5 bg-brand-primary rounded-full absolute bottom-1 shadow-sm" />
-              )}
+              <span className={`text-[10px] mt-0.5 ${isActive ? 'text-brand-primary font-extrabold' : 'text-slate-500 dark:text-slate-400'}`}>
+                {item.label}
+              </span>
             </NavLink>
           );
         })}

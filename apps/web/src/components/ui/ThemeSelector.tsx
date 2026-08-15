@@ -10,7 +10,8 @@ const ACCENTS = [
 
 export const ThemeSelector: React.FC = () => {
   const [isDark, setIsDark] = useState<boolean>(() => {
-    return localStorage.getItem('boundup_theme') === 'dark';
+    const saved = localStorage.getItem('boundup_theme');
+    return saved === 'dark';
   });
   const [currentAccent, setCurrentAccent] = useState<string>(() => {
     return localStorage.getItem('boundup_accent') || '#FF5722';
