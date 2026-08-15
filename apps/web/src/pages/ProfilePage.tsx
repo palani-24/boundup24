@@ -438,29 +438,34 @@ export const ProfilePage: React.FC = () => {
 
   return (
     <div className="w-full max-w-xl mx-auto py-2 px-3 sm:px-4 select-none flex flex-col gap-4 bg-white min-h-screen">
-      {/* 1. INSTAGRAM TOP NAVIGATION BAR */}
+      {/* 1. INSTAGRAM TOP NAVIGATION BAR (MATCHING WIREFRAME LEFT PHONE) */}
       <header className="flex items-center justify-between py-2 border-b border-[#E5E7EB] bg-white sticky top-0 z-20">
         <button onClick={() => navigate(-1)} className="p-1.5 text-[#111111] hover:bg-gray-100 rounded-full transition-colors">
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <div className="flex items-center gap-1 cursor-pointer">
-          <span className="font-extrabold text-base text-[#111111]">@{profile.username}</span>
+        <div className="flex items-center gap-1.5 cursor-pointer">
+          <Lock className="w-4 h-4 text-[#111111]" />
+          <span className="font-extrabold text-base text-[#111111]">{profile.username || 'bigeat'}</span>
           <ChevronDown className="w-4 h-4 text-[#111111]" />
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => alert('Notifications settings')} className="text-[#111111] hover:opacity-75 transition-opacity">
-            <Bell className="w-6 h-6" />
+          <button
+            onClick={() => setShowCreateHighlightModal(true)}
+            className="text-[#111111] hover:opacity-75 transition-opacity"
+            title="Create Post / Story"
+          >
+            <Plus className="w-6 h-6 stroke-[2.5]" />
           </button>
-          <button onClick={() => setShowProfileMenu(true)} className="text-[#111111] hover:opacity-75 transition-opacity">
+          <button onClick={() => setShowProfileMenu(true)} className="text-[#111111] hover:opacity-75 transition-opacity" title="Menu">
             <Menu className="w-6 h-6" />
           </button>
         </div>
       </header>
 
-      {/* 2. INSTAGRAM AVATAR & 3-STAT NUMERICAL COUNTERS */}
+      {/* 2. INSTAGRAM AVATAR WITH BLUE PLUS & 3-STAT NUMERICAL COUNTERS */}
       <div className="flex items-center justify-between px-2 pt-2">
-        {/* AVATAR WITH STORY GRADIENT RING */}
-        <div className="relative cursor-pointer" onClick={() => setShowCreateHighlightModal(true)}>
+        {/* AVATAR WITH BLUE PLUS STORY ADD BADGE (MATCHING WIREFRAME LEFT PHONE) */}
+        <div className="relative cursor-pointer group" onClick={() => setShowCreateHighlightModal(true)}>
           <div className="w-20 h-20 sm:w-24 sm:h-24 p-[3px] bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 rounded-full shadow-md">
             <Avatar
               src={profile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300'}
@@ -468,6 +473,10 @@ export const ProfilePage: React.FC = () => {
               size="xl"
               className="w-full h-full object-cover rounded-full border-2 border-white"
             />
+          </div>
+          {/* BLUE PLUS BADGE OVERLAY */}
+          <div className="absolute bottom-0 right-0 w-6 h-6 bg-[#0095F6] text-white rounded-full flex items-center justify-center border-2 border-white shadow-md group-hover:scale-110 transition-transform">
+            <Plus className="w-4 h-4 stroke-[3]" />
           </div>
         </div>
 

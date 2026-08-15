@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Heart, MessageCircle, Send, Bookmark, ArrowLeft, MoreHorizontal, Gift } from 'lucide-react';
+import { Heart, MessageCircle, Send, Bookmark, ArrowLeft, MoreHorizontal, Gift, Volume2, VolumeX, Disc, Music } from 'lucide-react';
 import { Avatar } from '../ui/Avatar';
 import { IPost } from '@boundup/shared';
 import { apiFetch } from '../../services/api';
@@ -21,12 +21,21 @@ export const ReelPlayer: React.FC<ReelPlayerProps> = ({ post, reelIndex = 1, tot
   const [isSaved, setIsSaved] = useState(post.isSaved || false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [commentInput, setCommentInput] = useState('');
+  const [isMuted, setIsMuted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const [showShareModal, setShowShareModal] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
 
   const navigate = useNavigate();
   const media = post.media?.[0];
+
+  const toggleSound = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+    }
+    setIsMuted(!isMuted);
+  };
 
   const handleLikeToggle = async () => {
     const nextState = !isLiked;
@@ -60,12 +69,14 @@ export const ReelPlayer: React.FC<ReelPlayerProps> = ({ post, reelIndex = 1, tot
       {/* BACKGROUND MEDIA PHOTO / VIDEO */}
       {media?.type === 'VIDEO' ? (
         <video
+          ref={videoRef}
           src={media.url}
           autoPlay
           loop
-          muted
+          muted={isMuted}
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          onClick={toggleSound}
+          className="absolute inset-0 w-full h-full object-cover cursor-pointer"
         />
       ) : (
         <img
@@ -78,7 +89,7 @@ export const ReelPlayer: React.FC<ReelPlayerProps> = ({ post, reelIndex = 1, tot
       {/* DARK GRADIENT OVERLAY */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90 pointer-events-none" />
 
-      {/* TOP HEADER BAR (BACK BUTTON, 1/5 COUNTER, 3 DOTS - IMAGE 1 REELS) */}
+      {/* TOP HEADER BAR (BACK BUTTON, 1/5 COUNTER, VOLUME BUTTON & MORE) */}
       <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between text-white">
         <button
           onClick={() => navigate(-1)}
@@ -87,9 +98,18 @@ export const ReelPlayer: React.FC<ReelPlayerProps> = ({ post, reelIndex = 1, tot
           <ArrowLeft className="w-5 h-5 text-white" />
         </button>
 
-        <span className="text-xs font-extrabold px-3 py-1 bg-black/40 rounded-full backdrop-blur-md border border-white/20">
-          {reelIndex}/{totalReels}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-extrabold px-3 py-1 bg-black/40 rounded-full backdrop-blur-md border border-white/20">
+            {reelIndex}/{totalReels}
+          </span>
+          <button
+            onClick={toggleSound}
+            className="p-2 bg-black/40 hover:bg-black/60 rounded-full backdrop-blur-md transition-all text-white"
+            title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
+          >
+            {isMuted ? <VolumeX className="w-5 h-5 text-rose-400" /> : <Volume2 className="w-5 h-5 text-emerald-400 animate-pulse" />}
+          </button>
+        </div>
 
         <button className="p-2 bg-black/40 hover:bg-black/60 rounded-full backdrop-blur-md transition-all">
           <MoreHorizontal className="w-5 h-5 text-white" />
@@ -162,6 +182,19 @@ export const ReelPlayer: React.FC<ReelPlayerProps> = ({ post, reelIndex = 1, tot
                 {t}
               </span>
             ))}
+          </div>
+
+          {/* AUDIO MARQUEE & VINYL DISC */}
+          <div className="flex items-center justify-between mt-1 pt-1">
+            <div className="flex items-center gap-2 text-white/90 bg-black/40 px-2.5 py-1 rounded-full backdrop-blur-md border border-white/10 max-w-[200px] overflow-hidden">
+              <Music className="w-3.5 h-3.5 text-orange-400 shrink-0 animate-pulse" />
+              <span className="text-[11px] font-bold truncate whitespace-nowrap animate-marquee">
+                Original Audio - BoundUp Beats & Chill Vibes 🎵
+              </span>
+            </div>
+            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-orange-500 to-amber-300 p-0.5 animate-spin duration-3000 shrink-0 shadow-md">
+              <Avatar src={post.author?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300'} size="sm" className="w-full h-full rounded-full" />
+            </div>
           </div>
         </div>
 
