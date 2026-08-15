@@ -54,12 +54,11 @@ const MainLayout: React.FC = () => {
     location.pathname.startsWith('/live/');
 
   return (
-    <div className="w-full min-h-screen bg-[#FAFAFC] sm:bg-[#EAEAEA] sm:py-4 flex justify-center items-start">
-      {/* MOBILE APPLICATION CONTAINER FRAME (390 x 844 PROPORTIONS) */}
-      <div className="w-full max-w-[430px] min-h-screen sm:min-h-[844px] bg-[#F7F7F7] text-[#111111] shadow-2xl sm:rounded-[36px] sm:border-[8px] sm:border-slate-900 relative flex flex-col overflow-hidden">
-        {!isFullscreenPage && <Header onCreateClick={() => setIsCreateOpen(true)} />}
+    <div className="min-h-screen w-full bg-[#FAFAFC] text-[#111111] flex flex-col justify-between">
+      {!isFullscreenPage && <Header onCreateClick={() => setIsCreateOpen(true)} />}
 
-        <main className="flex-1 w-full pb-20 overflow-y-auto">
+      <div className={`flex-1 w-full ${isFullscreenPage ? '' : 'max-w-[1280px] mx-auto md:pl-64 pb-16 md:pb-6'}`}>
+        <main className="w-full flex-1">
           <Routes>
             <Route path="/" element={<Navigate to="/splash" replace />} />
             <Route path="/splash" element={<SplashScreen />} />
@@ -96,12 +95,12 @@ const MainLayout: React.FC = () => {
             <Route path="/hashtag/:tag" element={<HashtagPage />} />
           </Routes>
         </main>
-
-        {!isFullscreenPage && <Navbar onCreateClick={() => setIsCreateOpen(true)} />}
-
-        {/* CREATE POST MODAL */}
-        <CreatePostModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
       </div>
+
+      {!isFullscreenPage && <Navbar onCreateClick={() => setIsCreateOpen(true)} />}
+
+      {/* CREATE POST MODAL */}
+      <CreatePostModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
     </div>
   );
 };

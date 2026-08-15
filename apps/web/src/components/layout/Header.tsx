@@ -60,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Theme Switcher */}
         <ThemeSelector />
 
-        {/* Messages Shortcut with Red Badge */}
+        {/* Messages Shortcut with Orange Badge */}
         <NavLink
           to="/messages"
           className="relative p-2 text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-95"
@@ -68,13 +68,13 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <MessageSquare className="w-5 h-5 stroke-[2]" />
           {unreadMessages > 0 && (
-            <span className="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+            <span className="absolute top-1 right-1 bg-[#FF5A1F] text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
               {unreadMessages}
             </span>
           )}
         </NavLink>
 
-        {/* Notifications Shortcut with Red Badge */}
+        {/* Notifications Shortcut with Orange Badge */}
         <NavLink
           to="/notifications"
           className="relative p-2 text-brand-text dark:text-gray-200 hover:bg-brand-primary/10 rounded-full transition-colors active:scale-95"
@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Bell className="w-5 h-5 stroke-[2]" />
           {unreadNotifications > 0 && (
-            <span className="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+            <span className="absolute top-1 right-1 bg-[#FF5A1F] text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
               {unreadNotifications}
             </span>
           )}

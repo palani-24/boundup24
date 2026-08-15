@@ -44,12 +44,12 @@ export const RightSidebar: React.FC = () => {
       <div className="bg-white dark:bg-slate-900 border border-brand-border dark:border-slate-800 rounded-24px p-4 shadow-sm card-shadow flex flex-col items-center text-center">
         <div className="relative mb-2">
           <Avatar src={mockUser.avatarUrl} alt={mockUser.fullName} size="xl" />
-          <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
+          <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#FF5A1F] border-2 border-white dark:border-slate-900 rounded-full" />
         </div>
 
         <div className="flex items-center gap-1 mt-1">
           <span className="font-extrabold text-base text-brand-text dark:text-gray-100">{mockUser.fullName}</span>
-          <CheckCircle className="w-4 h-4 text-blue-500 fill-blue-500/10" />
+          <CheckCircle className="w-4 h-4 text-[#FF5A1F] fill-[#FF5A1F]/10" />
         </div>
         <span className="text-xs text-brand-muted dark:text-slate-400 font-medium">@{mockUser.username}</span>
 
@@ -75,8 +75,8 @@ export const RightSidebar: React.FC = () => {
         </p>
 
         {/* Creator Badge */}
-        <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full text-[11px] font-bold mb-3 border border-amber-500/20">
-          <Sparkles className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-orange-50 text-[#FF5A1F] rounded-full text-[11px] font-bold mb-3 border border-orange-200">
+          <Sparkles className="w-3.5 h-3.5 text-[#FF5A1F]" />
           <span>BoundUp Creator</span>
         </div>
 
@@ -107,13 +107,13 @@ export const RightSidebar: React.FC = () => {
               <span className="text-[11px] text-brand-muted dark:text-slate-400 font-semibold">Profile Views</span>
               <div className="flex items-center gap-1.5">
                 <span className="font-extrabold text-sm text-brand-text dark:text-gray-100">3.2K</span>
-                <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold text-[#FF5A1F] bg-orange-50 px-1.5 py-0.5 rounded-full">
                   +12%
                 </span>
               </div>
             </div>
             {/* SVG Sparkline */}
-            <svg className="w-20 h-7 text-brand-primary" viewBox="0 0 80 28" fill="none">
+            <svg className="w-20 h-7 text-[#FF5A1F]" viewBox="0 0 80 28" fill="none">
               <path
                 d="M2 22 L15 16 L30 20 L45 8 L60 14 L78 4"
                 stroke="currentColor"
@@ -130,13 +130,13 @@ export const RightSidebar: React.FC = () => {
               <span className="text-[11px] text-brand-muted dark:text-slate-400 font-semibold">Post Reach</span>
               <div className="flex items-center gap-1.5">
                 <span className="font-extrabold text-sm text-brand-text dark:text-gray-100">12.8K</span>
-                <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold text-[#FF5A1F] bg-orange-50 px-1.5 py-0.5 rounded-full">
                   +18%
                 </span>
               </div>
             </div>
             {/* SVG Sparkline */}
-            <svg className="w-20 h-7 text-brand-primary" viewBox="0 0 80 28" fill="none">
+            <svg className="w-20 h-7 text-[#FF5A1F]" viewBox="0 0 80 28" fill="none">
               <path
                 d="M2 24 L18 18 L32 22 L48 10 L62 12 L78 2"
                 stroke="currentColor"
@@ -153,7 +153,7 @@ export const RightSidebar: React.FC = () => {
               <span className="text-[11px] text-brand-muted dark:text-slate-400 font-semibold">Engagement</span>
               <div className="flex items-center gap-1.5">
                 <span className="font-extrabold text-sm text-brand-text dark:text-gray-100">8.7K</span>
-                <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold text-[#FF5A1F] bg-orange-50 px-1.5 py-0.5 rounded-full">
                   +8%
                 </span>
               </div>

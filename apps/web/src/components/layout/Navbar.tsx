@@ -101,9 +101,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
                     <span>{item.label}</span>
                   </div>
 
-                  {/* Red Pill Notification Badge */}
+                  {/* Orange Pill Notification Badge */}
                   {item.badge && item.badge > 0 && (
-                    <span className="px-2 py-0.5 bg-red-500 text-white text-[11px] font-extrabold rounded-full shadow-sm">
+                    <span className="px-2 py-0.5 bg-[#FF5A1F] text-white text-[11px] font-extrabold rounded-full shadow-sm">
                       {item.badge}
                     </span>
                   )}
@@ -202,7 +202,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onCreateClick, onGoLiveClick }) 
                     }`}
                   />
                   {item.badge && item.badge > 0 && (
-                    <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+                    <span className="absolute -top-1.5 -right-2 bg-[#FF5A1F] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
                       {item.badge}
                     </span>
                   )}
